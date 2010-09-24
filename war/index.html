@@ -1,27 +1,26 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
-<!-- above set at the top of the file will set     -->
-<!-- the browser's rendering engine into           -->
-<!-- "Quirks Mode". Replacing this declaration     -->
-<!-- with a "Standards Mode" doctype is supported, -->
-<!-- but may lead to some differences in layout.   -->
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Hello App Engine</title>
-  </head>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Volunteer Coordinator</title>
+</head>
+<body>
 
-  <body>
-    <h1>Hello App Engine!</h1>
-	
-    <table>
-      <tr>
-        <td colspan="2" style="font-weight:bold;">Available Servlets:</td>        
-      </tr>
-      <tr>
-        <td><a href="volunteercoordinator">VolunteerCoordinator</a></td>
-      </tr>
-    </table>
-  </body>
+<p><form method="post" action="xx.jsp">
+I am: <input type="text" name="name" /> <a href="index.html">(Not me)</a></p>
+
+<p>I want to:<br />
+<input type="radio" name="role" value="volunteer" id="volunteer" />
+<label for="volunteer">Volunteer for a job</label><br />
+<input type="radio" name="role" value="initiator" id="initiator" />
+<label for="initiator">Initiate a job needing volunteers</label><br />
+<input type="radio" name="role" value="manage" id="manage" />
+<label for="manage">Manage a project</label><br />
+<input type="radio" name="role" value="dashboard" id="dashboard" />
+<label for="dashboard">View the dashboard</label><br />
+<input type="radio" name="role" value="preferences" id="preferences" />
+<label for="preferences">Change my preferences</label><br />
+</form></p>
+
+</body>
 </html>
