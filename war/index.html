@@ -2,25 +2,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<link rel="stylesheet" type="text/css" href="stylesheets/layout.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/colors.css">
+
 <title>Volunteer Coordinator</title>
 </head>
+
 <body>
-
-<p><form method="post" action="xx.jsp">
-I am: <input type="text" name="name" /> <a href="index.html">(Not me)</a></p>
-
-<p>I want to:<br />
-<input type="radio" name="role" value="volunteer" id="volunteer" />
-<label for="volunteer">Volunteer for a job</label><br />
-<input type="radio" name="role" value="initiator" id="initiator" />
-<label for="initiator">Initiate a job needing volunteers</label><br />
-<input type="radio" name="role" value="manage" id="manage" />
-<label for="manage">Manage a project</label><br />
-<input type="radio" name="role" value="dashboard" id="dashboard" />
-<label for="dashboard">View the dashboard</label><br />
-<input type="radio" name="role" value="preferences" id="preferences" />
-<label for="preferences">Change my preferences</label><br />
-</form></p>
-
+<div class="inputs"> 
+	<form action="/volunteercoordinator" method="post">	
+		I am: <input type="text" name="name" class="textfield" size ="22"><br><br>
+		I want to: <select name="task" class ="dropdown">
+			<option value="volunteer" selected="selected">Volunteer</option>
+			<option value="initiate">Initiate a Job</option>
+			<option value="manage">Manage Jobs</option>
+			<option value="dashboard">View Dashboard</option>
+			<option value="preferences">View/Change Preferences</option>
+		</select>
+		<div class="submit">
+		<input type="submit" class="submitButton" value="Submit"/>
+		</div>
+	</form>
+</div>
 </body>
 </html>

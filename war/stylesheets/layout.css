@@ -1,0 +1,27 @@
+
+.inputs { 
+	margin-right:auto; 
+	margin-left:auto; 
+	margin-top: 15%; 
+	border-style: solid;
+	border-width: 3px;
+	border-color:#77cc00; 
+	padding: 3% 3% 3% 3%; 
+	width:275px; 
+}
+.textfield {
+	float:right; 
+	margin: 0% 2% 2% 2%; 
+}
+
+.dropdown { 
+	float:right;
+}
+.submit {
+	text-align:center; 
+	margin-top: 5%; 
+}
+.submitButton {
+	width:10em; 
+	height: 2em; 	
+}
