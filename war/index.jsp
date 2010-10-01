@@ -2,7 +2,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-
 <link rel="stylesheet" type="text/css" href="stylesheets/layout.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/colors.css">
 
@@ -11,8 +10,20 @@
 
 <body>
 <div class="inputs"> 
+<%
+    String first = request.getParameter("first");
+    String last = request.getParameter("last");
+    String name;
+    if (first != null) {
+        name = first + " " + last;
+    }
+    else {
+        name = "";
+    }
+
+%>
 	<form action="/volunteercoordinator" method="post">	
-		I am: <input type="text" name="name" class="textfield" size ="22"><br><br>
+		I am: <input type="text" name="name" class="textfield" value="<%= name %>" size ="22"><br><br>
 		I want to: <select name="task" class ="dropdown">
 			<option value="volunteer" selected="selected">Volunteer</option>
 			<option value="initiate">Initiate a Job</option>

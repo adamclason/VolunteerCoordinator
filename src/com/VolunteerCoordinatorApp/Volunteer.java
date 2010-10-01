@@ -20,14 +20,18 @@ public class Volunteer {
 	
 	@Persistent
 	private String email; 
-	
+
 	@Persistent
 	private String phone; 
 	
-	public Volunteer(String firstname, String lastname, String email, String phone) {
+	@Persistent
+	private String reminder; 
+	
+	public Volunteer(String firstname, String lastname, String email, String phone, String reminder) {
 		this.name = firstname.trim() + " " + lastname.trim();
 		this.email = email; 
 		this.phone = phone; 
+		this.reminder = reminder;
 	}
 	
 	public Key getKey() {
