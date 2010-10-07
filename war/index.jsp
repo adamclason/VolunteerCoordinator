@@ -11,16 +11,16 @@
 <body>
 <div class="inputs"> 
 <%
-    String first = request.getParameter("first");
-    String last = request.getParameter("last");
-    String name;
-    if (first != null) {
-        name = first + " " + last;
+
+    String name = request.getParameter("name"); 
+
+    if (name != null) {
+        String first = name.substring(0, name.indexOf(" "));
+        String last = name.substring(name.indexOf(" ") + 1, name.length());    	
     }
     else {
         name = "";
     }
-
 %>
 	<form action="/volunteercoordinator" method="post">	
 		I am: <input type="text" name="name" class="textfield" value="<%= name %>" size ="22"><br><br>

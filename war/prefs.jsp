@@ -11,12 +11,21 @@
 <body>
 
 <div class="inputs">
-<form action="" method="post">
+<%
+    String name = request.getParameter("name");
+    String email = request.getParameter("email");
+    String phone = request.getParameter("phone");
+    String reminder = request.getParameter("reminder");    
+%>
+<form action="/editprefs" method="post">
+    <input type="hidden" name="name" value="<%= name %>">
+	E-mail: <input type="text" class="textfield" id="email" name="email" value="<%= email %>" size="23" /><br /><br />
+	Phone: <input type="text" class="textfield" id="phone" name="phone" value="<%= phone %>" size="23" /><br /><br />
     Reminder:
     <select name="reminder" class="dropdown">
-	    <option value="oneDay">One day before events</option>
-	    <option value="twoDay">Two days before events</option>
-	    <option value="threeDay">Three days before events</option>
+	    <option value="oneDay" <% if (reminder.equals("oneDay")) { %>selected="selected"<% } %>>One day before events</option>
+	    <option value="twoDay" <% if (reminder.equals("twoDay")) { %>selected="selected"<% } %>>Two days before events</option>
+	    <option value="threeDay" <% if (reminder.equals("threeDay")) { %>selected="selected"<% } %>>Three days before events</option>
     </select>
 <br />
 	<div class="submit">

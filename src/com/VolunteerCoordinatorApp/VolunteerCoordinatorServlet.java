@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.servlet.http.*;
 import javax.jdo.Query; 
 import javax.jdo.PersistenceManager;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 @SuppressWarnings("serial")
 public class VolunteerCoordinatorServlet extends HttpServlet {
@@ -26,7 +28,12 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 		} else if(task.equals("dashboard")) {
 			resp.sendRedirect("/dashboard.html"); 
 		} else if(task.equals("preferences")) {
-			resp.sendRedirect("/prefs.jsp"); 
+			resp.sendRedirect("/prefs.jsp?name=" 
+				+ name.substring(0, name.indexOf(" ")) + "+"
+				+ name.substring(name.indexOf(" "), name.length()).trim()
+				+ "&email=" + getEmail(name)
+				+ "&phone=" + getPhone(name)
+				+ "&reminder=" + getReminder(name)); 
 		}
 
 	}
@@ -44,5 +51,32 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 		} else {
 			return true; 
 		}
+	}
+	
+	private String getEmail(String name) {
+		PersistenceManager pm = PMF.get().getPersistenceManager(); 
+
+	    Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+	    Volunteer v = pm.getObjectById(Volunteer.class, k);
+	    
+		return v.getEmail();
+	}
+	
+	private String getPhone(String name) {
+		PersistenceManager pm = PMF.get().getPersistenceManager(); 
+
+	    Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+	    Volunteer v = pm.getObjectById(Volunteer.class, k);
+	    
+		return v.getPhone();
+	}
+	
+	private String getReminder(String name) {
+		PersistenceManager pm = PMF.get().getPersistenceManager(); 
+
+	    Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+	    Volunteer v = pm.getObjectById(Volunteer.class, k);
+	    
+		return v.getReminder();
 	}
 }
