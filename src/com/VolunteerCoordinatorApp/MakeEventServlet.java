@@ -27,16 +27,34 @@ public class MakeEventServlet extends HttpServlet {
 		CalendarEventEntry entry = new CalendarEventEntry();
 
 		entry.setTitle(new PlainTextConstruct(req.getParameter("title")));
-		entry.setContent(new PlainTextConstruct(req.getParameter("what")));
+		entry.setContent(new PlainTextConstruct(req.getParameter("what") + " " +
+				req.getParameter("for") + " " + 
+				req.getParameter("who") + " " +
+				req.getParameter("why"))); // TODO format content correctly
+		
+		int day = Integer.parseInt(req.getParameter("day"));
+		int month = Integer.parseInt(req.getParameter("month"));
+		int year = Integer.parseInt(req.getParameter("year"));
+		int fromHrs = Integer.parseInt(req.getParameter("fromHrs"));
+		int fromMins = Integer.parseInt(req.getParameter("fromMins"));
+		int tillHrs = Integer.parseInt(req.getParameter("tillHrs"));
+		int tillMins = Integer.parseInt(req.getParameter("tillMins"));
 
-		DateTime startTime = DateTime.parseDateTime("2006-04-17T15:00:00-08:00");
-		DateTime endTime = DateTime.parseDateTime("2006-04-17T17:00:00-08:00");
+		String fromTime = year + "-" + month + "-" + day + "T" + fromHrs
+		            + ":" + fromMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone 
+		String tillTime = year + "-" + month + "-" + day + "T" + tillHrs
+		            + ":" + tillMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone 
+		
+		DateTime startTime = DateTime.parseDateTime(fromTime);
+		DateTime endTime = DateTime.parseDateTime(tillTime);
 		When eventTimes = new When();
 		eventTimes.setStartTime(startTime);
 		eventTimes.setEndTime(endTime);
 		entry.addTime(eventTimes);
 
-		cService.insert(postUrl, entry);		
+		cService.insert(postUrl, entry);	
+		
+		resp.sendRedirect("/index.jsp");
 	}	
 	
 }

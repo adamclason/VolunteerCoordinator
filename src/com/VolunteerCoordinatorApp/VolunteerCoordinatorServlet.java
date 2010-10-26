@@ -22,7 +22,7 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 		else if(task.equals("volunteer")) {
 			resp.sendRedirect("/volunteer.html");
 		} else if(task.equals("initiate")) {
-			resp.sendRedirect("/add.html"); 
+			resp.sendRedirect("/add.jsp"); 
 		} else if(task.equals("manage")) {
 			resp.sendRedirect("/manProj.html"); 
 		} else if(task.equals("dashboard")) {

@@ -14,40 +14,12 @@
         Job Name: <input type="text" name="title" class="textfield" /><br /><br />
         What: <input type="text" name="what" class="textfield" /><br /><br />
         When: <div class="dropdown">
-        <select name="whenDay">
-            <option value="01">01</option>
-            <option value="02">02</option>
-            <option value="03">03</option>
-            <option value="04">04</option>
-            <option value="05">05</option>
-            <option value="06">06</option>
-            <option value="07">07</option>
-            <option value="08">08</option>
-            <option value="09">09</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-            <option value="24">24</option>
-            <option value="25">25</option>
-            <option value="26">26</option>
-            <option value="27">27</option>
-            <option value="28">28</option>
-            <option value="29">29</option>
-            <option value="30">30</option>
-            <option value="31">31</option>
+        <select name="day">
+        <% for (int i = 1; i <= 31; i++) { %>
+            <option value="<% if (i<10) %>0<% ; %><%= i %>"><% if (i<10) %>0<% ; %><%= i %></option>
+        <% } %>
         </select> 
-        <select name="whenMonth">
+        <select name="month">
             <option value="01">January</option>
             <option value="02">February</option>
             <option value="03">March</option>
@@ -61,33 +33,45 @@
             <option value="11">November</option>
             <option value="12">December</option>
         </select>
-        <select name="whenYear">
+        <select name="year">
             <option value="2010">2010</option>
         </select>
         <br /><br /> from 
-        <select name="whenTimeFrom">
-            <option value="01:00">01:00</option>
-        </select>
-        <select name="whenAmpm">
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
+        <select name="fromHrs">
+            <% for (int i = 0; i < 24; i++) {%>
+                    <option value="<% if (i<10) %>0<% ; %><%= i %>">
+                    <% if (i<10) %>0<% ; %><%= i %></option>
+            <% } %>
+        </select> : 
+        <select name="fromMins">
+            <% for (int i = 0; i < 60; i += 5) {%>
+                    <option value="<% if (i<10) %>0<% ; %><%= i %>">
+                    <% if (i<10) %>0<% ; %><%= i %></option>
+            <% } %>
         </select>
         <br /><br /> until 
-        <select name="whenTimeTill">
-            <option value="01:00">01:00</option>
-        </select>
-        <select name="whenAmpm">
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
+        <select name="tillHrs">
+            <% for (int i = 0; i < 24; i++) {%>
+                    <option value="<% if (i<10) %>0<% ; %><%= i %>">
+                    <% if (i<10) %>0<% ; %><%= i %></option>
+            <% } %>
+        </select> : 
+        <select name="tillMins">
+            <% for (int i = 0; i < 60; i += 5) {%>
+                    <option value="<% if (i<10) %>0<% ; %><%= i %>">
+                    <% if (i<10) %>0<% ; %><%= i %></option>
+            <% } %>
         </select>
         </div><br /><br /><br /><br /><br /><br />
         For whom: <input type="text" name="for" class="textfield" /><br /><br />
         Who should do it: <input type="text" name="who" class="textfield" /><br /><br />
         Why: <input type="text" name="why" class="textfield" /><br /><br />
-        Recurring: <select name="task" class="dropdown"> <br /><br />
-            <option value="notrecur" selected="selected">No</option>
-            <option value="recur">Yes</option>
-        </select>
+        Recurring: <select name="recur" class="dropdown">
+            <option value="none" selected="selected">None</option>
+            <option value="week">Weekly</option>
+            <option value="biweek">Bi-weekly</option>
+            <option value="month">Monthly</option>
+        </select><br /><br />
         <div class="submit">
         <input type="submit" class="submitButton" value="Submit"/>
         </div>
