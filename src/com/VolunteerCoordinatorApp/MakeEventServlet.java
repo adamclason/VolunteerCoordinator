@@ -2,16 +2,10 @@ package com.VolunteerCoordinatorApp;
 
 import java.io.IOException;
 import javax.servlet.http.*;
-import javax.jdo.PersistenceManager;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.gdata.client.*;
 import com.google.gdata.client.calendar.*;
 import com.google.gdata.data.*;
-import com.google.gdata.data.acl.*;
 import com.google.gdata.data.calendar.*;
 import com.google.gdata.data.extensions.*;
-import com.google.gdata.util.*;
 import java.net.URL;
 
 @SuppressWarnings("serial")
@@ -19,18 +13,19 @@ public class MakeEventServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	        throws IOException {
 		
-		CalendarService cService = new CalendarService("exampleCo-exampleApp-1");
-		cService.setUserCredentials("jo@gmail.com", "mypassword"); // TODO change credentials and servicename
+		CalendarService cService = new CalendarService("Volunteer-Coordinator-Calendar");
+		cService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
 		
-		URL postUrl = // TODO change url:
-		  new URL("https://www.google.com/calendar/feeds/jo@gmail.com/private/full");
+		URL postUrl =
+		  new URL("https://www.google.com/calendar/feeds/default/private/full");
 		CalendarEventEntry entry = new CalendarEventEntry();
 
 		entry.setTitle(new PlainTextConstruct(req.getParameter("title")));
-		entry.setContent(new PlainTextConstruct(req.getParameter("what") + " " +
-				req.getParameter("for") + " " + 
-				req.getParameter("who") + " " +
-				req.getParameter("why"))); // TODO format content correctly
+		entry.setContent(new PlainTextConstruct("<description>"
+				+ req.getParameter("what") + " "
+				+ "\nFor: " + req.getParameter("for") + " " 
+				+ "\nWho should do it: " + req.getParameter("who") + " "
+				+ "\nWhy: " + req.getParameter("why") + "</description>")); // TODO format content better?
 		
 		int day = Integer.parseInt(req.getParameter("day"));
 		int month = Integer.parseInt(req.getParameter("month"));
@@ -52,6 +47,29 @@ public class MakeEventServlet extends HttpServlet {
 		eventTimes.setEndTime(endTime);
 		entry.addTime(eventTimes);
 
+		String recurStr = req.getParameter("recur");
+		if (!recurStr.equals("none")) {
+			String recurData = new String("");
+			if (recurStr.equals("week")) {
+				recurData = "DTSTART;VALUE=DATE:" + year + month + day + "\r\n"
+		            + "DTEND;VALUE=DATE:" + year + month + day + "\r\n"
+		            + "RRULE:FREQ=WEEKLY\r\n";
+			}
+			else if (recurStr.equals("biweek")) {
+				recurData = "DTSTART;VALUE=DATE:" + year + month + day + "\r\n"
+	                + "DTEND;VALUE=DATE:" + year + month + day + "\r\n"
+	                + "RRULE:FREQ=WEEKLY;INTERVAL=2\r\n";
+			}
+			else if (recurStr.equals("month")) {
+				recurData = "DTSTART;VALUE=DATE:" + year + month + day + "\r\n"
+	                + "DTEND;VALUE=DATE:" + year + month + day + "\r\n"
+	                + "RRULE:FREQ=MONTHLY\r\n";
+			}
+			Recurrence recur = new Recurrence();
+			recur.setValue(recurData);
+			entry.setRecurrence(recur);
+		}
+				
 		cService.insert(postUrl, entry);	
 		
 		resp.sendRedirect("/index.jsp");
