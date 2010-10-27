@@ -17,10 +17,11 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 		if(!userExists(name)) {
 			resp.sendRedirect("/newUser.jsp?name=" 
 					+ name.substring(0, name.indexOf(" ")) + "+"
-					+ name.substring(name.indexOf(" "), name.length()).trim());
+					+ name.substring(name.indexOf(" "), name.length()).trim()
+					+ "&task=" + task);
 		}
 		else if(task.equals("volunteer")) {
-			resp.sendRedirect("/volunteer.html");
+			resp.sendRedirect("/volunteer.jsp");
 		} else if(task.equals("initiate")) {
 			resp.sendRedirect("/add.jsp"); 
 		} else if(task.equals("manage")) {
@@ -78,5 +79,10 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 	    Volunteer v = pm.getObjectById(Volunteer.class, k);
 	    
 		return v.getReminder();
+	}
+	
+	public void doGet(HttpServletRequest req, HttpServletResponse resp)
+	        throws IOException {
+	    doPost(req, resp);
 	}
 }

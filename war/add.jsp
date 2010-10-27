@@ -35,8 +35,8 @@
         </select>
         <select name="year">
             <option value="2010">2010</option>
-        </select>
-        <br /><br /> from 
+        </select></div><div class="dropdown">
+        <br /> from 
         <select name="fromHrs">
             <% for (int i = 0; i < 24; i++) {%>
                     <option value="<% if (i<10) %>0<% ; %><%= i %>">

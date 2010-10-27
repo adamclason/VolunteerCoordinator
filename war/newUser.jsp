@@ -14,6 +14,7 @@
 	String name = request.getParameter("name");
 	String first = name.substring(0, name.indexOf(" "));
 	String last = name.substring(name.indexOf(" ") + 1, name.length()); 
+	String task = request.getParameter("task");
 %>
 <form action="/makeuser" method="post">
 	First Name: <input type="text" class="textfield" id="firstName" value="<%= first %>" name="firstName" size="23" /> <br /><br />
@@ -26,6 +27,7 @@
 	    <option value="twoDay">Two days before events</option>
 	    <option value="threeDay">Three days before events</option>
 	</select>
+	<input type="hidden" id="task" name="task" value="<%= task %>" />
 <br />
 	<div class="submit">
 		<input type="submit" class="submitButton" value="Submit"/>

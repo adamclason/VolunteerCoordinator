@@ -1,23 +1,38 @@
-
-.inputs { 
+body {
+  padding: 0;
+  margin: 0; 
+}
+h2 {
+  font-style: italic; 
+}
+.content { 
 	margin-right:auto; 
 	margin-left:auto; 
 	margin-top: 15%; 
 	border-style: solid;
-	border-width: 3px;
+	border-width: .25em;
 	border-color:#77cc00; 
-	padding: 3% 3% 3% 3%; 
-	width:300px; 
+	padding: 2em 2em 2em 2em; 
+	width: 20em; 
+}
+.inputs {
+     margin-right:auto;
+     margin-left:auto;
+     margin-top: 15%;
+     border-style: solid;
+     border-width: .25em;
+     border-color:#77cc00;
+     padding: 2em 2em 2em 2em;
+     width: 20em;
+}
+#myJobs {
+  width: 40em;
 }
 .textfield {
 	float:right; 
-	margin-right:900px;
-	margin: 0% 2% 2% 2%; 
 }
-
 .dropdown { 
 	float:right;
-    margin-right:1032px;
 }
 .submit {
 	text-align:center; 
@@ -26,4 +41,102 @@
 .submitButton {
 	width:10em; 
 	height: 2em; 	
+}
+.calendar {
+	margin-right:10%; 
+	margin-left:10%; 
+	margin-top: 10%; 
+	border-style: solid;
+	border-width: 3px;
+	border-color:#0077dd; 
+	text-align: center; 
+}
+.navigation {
+  padding: 0;
+  margin: 0;
+  height: 3em; 
+  margin-left: -2.20em; 
+  margin-top: -4.14em;
+  margin-bottom: 0;
+}
+.navigation ul {
+  list-style-type: none; 
+  padding:0;
+  margin:0; 
+}
+.events { 
+  border-style: solid;
+  border-width: .15em;
+  border-color:#774400;
+}
+.event a .description { 
+  float: right;
+  clear: right;
+  width: 28em;
+}
+.event a .date {
+  float: right;
+  padding-bottom: .5em;
+}
+.event a {
+  display: block; 
+  text-decoration: none;
+  color: black; 
+  background-color: #ffffff;
+  border-style: solid; 
+  border-width: .1em; 
+  border-color: #cccccc; 
+  overflow: auto;
+  font: 13px arial, sans-serif; 
+  padding: 1em;
+}
+.event a .title {
+  font: 15px arial, sans-serif; 
+  font-weight:bold;
+  float: left;
+  clear: right;
+}
+.event a .time {
+  float:left; 
+  clear: left;
+}
+.event a:hover {
+  background-color:#eeeeee;
+  border-color: #774400;
+}
+.navigation ul li  {
+  width: 7em;
+  display: inline;
+  float: left;
+  padding-right: .25em;
+  text-align:center;
+}
+.navigation ul li a {
+  padding: .35em;
+  text-decoration: none;
+  color:black;
+  display: block; 
+  background-color: #ddffcc; 
+}
+.navigation ul li a:hover {
+  background-color: #77CC00; 
+}
+#prevB {
+  float:left;
+}
+#nextB {
+  float:right;
+}
+#prev {
+  width: 8em;
+  height: 2em; 
+}
+#next {
+  width: 8em;
+  height: 2em; 
+}
+
+.footer {
+  margin-top: 2em;
+  display:block;
 }

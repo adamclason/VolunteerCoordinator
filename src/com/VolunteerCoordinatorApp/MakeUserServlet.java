@@ -1,6 +1,8 @@
 package com.VolunteerCoordinatorApp;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.*;
 import javax.jdo.PersistenceManager;
 import com.google.appengine.api.datastore.Key;
@@ -15,6 +17,7 @@ public class MakeUserServlet extends HttpServlet {
 		String email = req.getParameter("email");  
 		String phone = req.getParameter("phone");  
 		String reminder = req.getParameter("reminder");
+		String task = req.getParameter("task");  
 
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -29,9 +32,14 @@ public class MakeUserServlet extends HttpServlet {
             pm.close();
         }
 		
-        resp.sendRedirect("/index.jsp?name=" + firstName
+        resp.sendRedirect("/volunteercoordinator?task=" + task 
+        		+ "&name=" + firstName
         		+ "+" + lastName);
-		
+        
+        
+        //RequestDispatcher dispatch = getServletContext().getRequestDispatcher("/volunteercoordinator");
+        //dispatch.forward(req, resp);
+        
 	}	
 	
 }
