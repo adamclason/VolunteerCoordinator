@@ -20,9 +20,14 @@ h2 {
 }
 #textboxes {
 	float: right; 
+	display: none;
 }
 #range {
 	float: left; 
+}
+#category {
+	float: left;
+	clear: both;
 }
 .content { 
 	margin-right:auto; 
