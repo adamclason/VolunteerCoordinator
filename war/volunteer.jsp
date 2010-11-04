@@ -19,11 +19,19 @@
 
 <link rel="stylesheet" type="text/css" href="stylesheets/layout.css" />
 <link rel="stylesheet" type="text/css" href="stylesheets/colors.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/jquery-ui-1.8.6.custom.css" />
+
+
+
+<script src="javascript/jquery-1.4.2.min.js"> </script>
+<script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
+<script src="javascript/volunteer.js"> </script>	
 
 <title>Volunteer</title>
 
 </head>
 <body>
+
 <%
   
    // Determine which page of job results should be displayed  
@@ -60,15 +68,23 @@
   <ul class="navigation"> 
     <li><a href="/volunteer.jsp"> Jobs </a></li>
     <li><a href="/myUpComing.jsp"> My Jobs </a></li>
-    <li><a href="/myCalendar.jsp"> My Calendar </a></li>
+    <li><a href="/calendar.jsp"> My Calendar </a></li>
   </ul>
  
+  
 <div class="content" id ="myJobs">
-  
-  <div class ="text">
-    <h2> Jobs Needing Volunteers: </h2>
-  </div>
-  
+
+	<div id="head">
+      <h2> Jobs Needing Volunteers: </h2>
+      <div id="filter"><img src="stylesheets/images/filter_button.png"> </img></div>
+      <div id="filterSettings" width="300" height = "100"> 
+      <input id="range" type="checkbox"> By Date </input>
+      	<div id="textboxes"> Start: <input id="startRange" type="text" size="10"></input>
+      	End: <input id="endRange" type="text" size="10"></input> </div>
+      </div> 
+	</div>
+	
+
   <div class="events">
     <% 
     if(results.isEmpty()) {
@@ -86,8 +102,12 @@
            DateTime start = time.getStartTime(); 
            DateTime end = time.getEndTime();
            
-           Date startDate = new Date(start.getValue()); 
-           Date endDate = new Date(end.getValue()); 
+           start.setTzShift(-240); 
+           end.setTzShift(-240); 
+           
+           // Concert to milliseconds to get a date object, which can be formatted easier. 
+           Date startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
+           Date endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
 
            String startDay = dateFormat.format(startDate); 
            String startTime = timeFormat.format(startDate);
@@ -124,7 +144,7 @@
        </a>
       </div>
     <% } 
-    }%> 
+    } %> 
    </div>
    
    <div class="footer">
@@ -140,7 +160,8 @@
    </div>
    <% if (!(results.size() < 10 && Integer.parseInt(pageNumber) == 1)) { %>
       <div id="pageLabel"> <%=pageLabel%> </div>
-   <% } %>
+   <% }   %>
+ 
 </div>
 
 </body>

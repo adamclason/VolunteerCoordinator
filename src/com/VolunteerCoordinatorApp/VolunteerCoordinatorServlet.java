@@ -24,17 +24,29 @@ import java.net.URL;
 public class VolunteerCoordinatorServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		String name = req.getParameter("name"); 
-		String task = req.getParameter("task"); 
+		Object taskObj = req.getAttribute("task"); 
+		Object nameObj = req.getAttribute("name"); 
+		String task;
+		String name;
+		if (taskObj == null) {
+			name = req.getParameter("name"); 
+			task = req.getParameter("task"); 
+		}
+		else {
+			name = nameObj.toString(); 
+			task = taskObj.toString(); 
+		}
+		
 		if(!userExists(name)) {
 			resp.sendRedirect("/newUser.jsp?name=" 
 					+ name.substring(0, name.indexOf(" ")) + "+"
-					+ name.substring(name.indexOf(" "), name.length()).trim());
-		}
+					+ name.substring(name.indexOf(" "), name.length()).trim()
+					+ "&task=" + task); 
+		} 
 		else if(task.equals("volunteer")) {
 			resp.sendRedirect("/volunteer.jsp?pageNumber=1&resultIndex=1");
 		} else if(task.equals("initiate")) {
-			resp.sendRedirect("/add.html"); 
+			resp.sendRedirect("/add.jsp"); 
 		} else if(task.equals("manage")) {
 			resp.sendRedirect("/manProj.html"); 
 		} else if(task.equals("dashboard")) {
@@ -56,6 +68,7 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 		query.setFilter("name == nameParam"); 
 		query.declareParameters("String nameParam"); 
 		List<Volunteer> results = (List<Volunteer>)query.execute(name); 
+		
 		if(results.isEmpty()) {
 			return false; 
 		} else {
