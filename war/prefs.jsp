@@ -10,7 +10,7 @@
 
 <body>
 
-<div class="content">
+<div class="content" id="main">
 <%
     String name = request.getParameter("name");
     String email = request.getParameter("email");
