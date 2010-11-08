@@ -16,6 +16,7 @@ public class JobPageNavigationServlet extends HttpServlet {
 		}
 		
 		int resultIndex = pageNumber; 
+		
 		if(pageNumber > 1) {
 			resultIndex = (pageNumber - 1) * 10;
 		}

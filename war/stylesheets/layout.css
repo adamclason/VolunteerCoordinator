@@ -23,7 +23,7 @@ h2 {
 	display: none;
 }
 #range {
-	float: left; 
+	display: block; 
 }
 #category {
 	float: left;

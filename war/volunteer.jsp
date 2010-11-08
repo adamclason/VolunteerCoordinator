@@ -78,12 +78,14 @@
       <h2> Jobs Needing Volunteers: </h2>
       <div id="filter"><img src="stylesheets/images/filter_button.png"> </img></div>
       <div id="filterSettings" width="300" height = "100"> 
-      	<input id="range" type="checkbox"> By Date </input>
-      	<div id="textboxes"> 
-      		Start: <input id="startRange" type="text" size="10"></input>
-      		End: <input id="endRange" type="text" size="10"></input> 
-      	</div>
-      	<div id="category"> <input type="checkbox"> By Job Category </input></div>
+      	<div id="range">
+      		<input id="rangeCheckbox" type="checkbox" name="date"> By Date </input>
+      		<div id="textboxes"> 
+      			Start: <input id="startRange" type="text" size="10"></input>
+      			End: <input id="endRange" type="text" size="10"></input> 
+      		</div>
+      	</div>	
+      	<div id="category"> <input type="checkbox">By Job Category </input></div>
       </div> 
 	</div>
 	

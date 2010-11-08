@@ -3,13 +3,25 @@ $(document).ready(function() {
 		$('#filterSettings').slideToggle('slow', function() {
 			// Animation Complete
 		}); 
+		
+		if($('#rangeCheckbox').attr('checked')) { 
+			$('#textboxes').show(); 
+		}
+		else {
+			$('#textboxes').hide(); 
+		}
+			
+		
 	});
 	
-	$('#range').click(function() {
+	
+	$('#rangeCheckbox').click(function() { 
 		$('#textboxes').toggle(); 
-	}); 
+	});
 	
 	$('#startRange').datepicker(); 
 	
 	$('#endRange').datepicker(); 
+	
+	
 }); 		
