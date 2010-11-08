@@ -66,8 +66,8 @@
    SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern);  
 %> 
   <ul class="navigation"> 
-    <li><a href="/volunteer.jsp"> Jobs </a></li>
-    <li><a href="/myUpComing.jsp"> My Jobs </a></li>
+    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1"> Jobs </a></li>
+    <li><a href="/underConstruction.jsp"> My Jobs </a></li>
     <li><a href="/calendar.jsp"> My Calendar </a></li>
   </ul>
  
@@ -100,7 +100,7 @@
     else {
     for (CalendarEventEntry entry : results) { %>
       <div class ="event">
-       <a href = "/event.jsp"> 
+       <a href = "/underConstruction.jsp"> 
          <%
            // Get the start and end times for the event 
            When time = entry.getTimes().get(0); 
