@@ -7,14 +7,13 @@ h2 {
 }
 #filterSettings {
 	clear: right;
-	padding: 2em;
 	display: none;
 	background-color: #eeffee;
 	border-style: solid;
  	border-width: .15em .15em 0 .15em;
   	border-color:#774400;
 }
-#filter {
+#filterButton {
 	float: right; 
 	cursor: pointer; 
 }
@@ -22,13 +21,20 @@ h2 {
 	float: right; 
 	display: none;
 }
-#range {
+#categorySelect { 
+	float: right; 
+	display: none; 
+}
+.filterSetting {
 	display: block; 
+    width: 38em;
+    height: 2em;
+	padding: .5em;
 }
-#category {
-	float: left;
-	clear: both;
+#submitFilter { 
+	float: right; 
 }
+
 .content { 
 	margin-right:auto; 
 	margin-left:auto; 
@@ -71,7 +77,7 @@ h2 {
 	text-align:center; 
 	margin-top: 5%; 
 }
-.submitButton {
+#submitButton {
 	width:10em; 
 	height: 2em; 	
 }

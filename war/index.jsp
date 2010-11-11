@@ -32,7 +32,7 @@
 			<option value="preferences">View/Change Preferences</option>
 		</select>
 		<div class="submit">
-		<input type="submit" class="submitButton" value="Submit"/>
+		<input type="submit" id="submitButton" value="Submit"/>
 		</div>
 	</form>
 </div>

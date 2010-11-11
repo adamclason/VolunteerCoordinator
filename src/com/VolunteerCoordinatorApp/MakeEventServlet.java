@@ -29,6 +29,7 @@ throws IOException {
 	URL postUrl =
 		new URL("https://www.google.com/calendar/feeds/default/private/full");
 	CalendarEventEntry entry = new CalendarEventEntry();
+	//CalendarQuery q = new CalendarQuery(new URL("hello")); 
 	
 	entry.setTitle(new PlainTextConstruct(req.getParameter("title")));
 	entry.setContent(new PlainTextConstruct("<description> "
@@ -40,7 +41,7 @@ throws IOException {
 //	int day = Integer.parseInt(req.getParameter("day"));
 //	int month = Integer.parseInt(req.getParameter("month"));
 //	int year = Integer.parseInt(req.getParameter("year"));
-	
+
 	// TODO validate input
 	int fromHrs = Integer.parseInt(req.getParameter("fromHrs"));
 	int fromMins = Integer.parseInt(req.getParameter("fromMins"));

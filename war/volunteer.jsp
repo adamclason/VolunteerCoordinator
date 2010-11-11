@@ -33,6 +33,9 @@
 <body>
 
 <%
+   // See if the user has selected some of the filter settings 
+   String startRange = request.getParameter("startDate"); 
+   String endRange = request.getParameter("endDate");  
   
    // Determine which page of job results should be displayed  
    String pageNumber = request.getParameter("pageNumber");  
@@ -41,13 +44,32 @@
    String pageLabel = "Page " + request.getParameter("pageNumber"); 
 
    // The Date and time of an event are stored in Google Calendar 
-   // because of its ease of use. Each Google Calendar event has an
-   // Event key which corresponds to its event object in the datastore 
-   URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/" +
-        "private/full?futureevents=true&start-index=" + request.getParameter("resultIndex") + 
-        "&orderby=starttime&sortorder=ascending&max-results=10");
+   // because of its ease of use. 
+   URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full"); //&max-results=10");
   
    CalendarQuery myQuery = new CalendarQuery(feedUrl);
+   
+   if(request.getParameter("date") != null && startRange  != null  && endRange != null) {
+   	  System.out.println(request.getParameter("date"));
+   	  Calendar curCal = Calendar.getInstance(); 
+      SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+      Date start = format.parse(startRange);
+      Date end = format.parse(endRange);  
+      DateTime startDT = new DateTime(start); 
+      DateTime endDT = new DateTime(end); 
+      myQuery.setMinimumStartTime(startDT); 
+      myQuery.setMaximumStartTime(endDT); 
+   } else if (request.getParameter("date") != null) {
+   	  
+   } else {
+      myQuery.setStringCustomParameter("futureevents", "true"); 
+   }
+
+   myQuery.setMaxResults(10); 
+   myQuery.setStartIndex(Integer.parseInt(request.getParameter("resultIndex")));
+   myQuery.setStringCustomParameter("orderby", "starttime");
+   myQuery.setStringCustomParameter("sortorder", "ascending");  
+ 
    
    CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar"); 
    myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
@@ -76,18 +98,39 @@
 
 	<div id="head">
       <h2> Jobs Needing Volunteers: </h2>
-      <div id="filter"><img src="stylesheets/images/filter_button.png"> </img></div>
-      <div id="filterSettings" width="300" height = "100"> 
-      	<div id="range">
-      		<input id="rangeCheckbox" type="checkbox" name="date"> By Date </input>
-      		<div id="textboxes"> 
-      			Start: <input id="startRange" type="text" size="10"></input>
-      			End: <input id="endRange" type="text" size="10"></input> 
-      		</div>
-      	</div>	
-      	<div id="category"> <input type="checkbox">By Job Category </input></div>
-      </div> 
-	</div>
+      <div id="filterButton"><img src="stylesheets/images/filter_button.png"> </img></div>
+      <div id="filterSettings"> 
+      	
+      	<form action="/volunteer.jsp?pageNumber=1&resultIndex=1" method="post">
+      	
+	      	<div class="filterSetting">
+	      		<input id="rangeCheckbox" type="checkbox" name="date"> By Date </input>
+	      		<div id="textboxes"> 
+	      			Start: <input id="startRange" name="startDate" type="text" size="10"></input>
+	      			End: <input id="endRange" name = "endDate" type="text" size="10"></input> 
+	      		</div>
+	      	</div>	
+	      	
+	      	<div class="filterSetting"> 
+	      		<input id="categoryCheckbox" type="checkbox">By Job Category </input>
+	      		<div id="categorySelect">
+		      		<select name="category" class="dropdown"> 
+		      			<option value="Category 1">Category 1 </option> 
+		      			<option value="Category 2">Category 2 </option> 
+		      			<option value="Category 3">Category 3 </option> 
+		      		</select> 	
+	      		</div>
+	      	</div>
+	      	
+	      	<div class="filterSetting">
+		      	<div id="submitFilter">
+		      		<input id="submitButton" type="submit" value="Submit"> </input> 
+		      	</div>
+	      	</div>
+      	
+      	</form>
+    </div> 
+</div>
 	
 
   <div class="events">

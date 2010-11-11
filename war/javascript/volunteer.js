@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$('#filter').click(function() {
+	$('#filterButton').click(function() {
 		$('#filterSettings').slideToggle('slow', function() {
 			// Animation Complete
 		}); 
@@ -12,12 +12,24 @@ $(document).ready(function() {
 		}
 			
 		
+		if($('#categoryCheckbox').attr('checked')) { 
+			$('#categorySelect').show(); 
+		}
+		else {
+			$('#categorySelect').hide(); 
+		}
+			
+		
 	});
 	
 	
 	$('#rangeCheckbox').click(function() { 
 		$('#textboxes').toggle(); 
 	});
+	
+	$('#categoryCheckbox').click(function() { 
+		$('#categorySelect').toggle(); 
+	}); 	
 	
 	$('#startRange').datepicker(); 
 	
