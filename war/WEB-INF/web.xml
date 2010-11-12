@@ -44,6 +44,22 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>MakeEvent</servlet-name>
 		<url-pattern>/makeevent</url-pattern>
 	</servlet-mapping>
+		<servlet>
+		<servlet-name>MakeCategory</servlet-name>
+		<servlet-class>com.VolunteerCoordinatorApp.MakeCategoryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MakeCategory</servlet-name>
+		<url-pattern>/makecategory</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>EditCategory</servlet-name>
+		<servlet-class>com.VolunteerCoordinatorApp.EditCategoryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditCategory</servlet-name>
+		<url-pattern>/editcategory</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>

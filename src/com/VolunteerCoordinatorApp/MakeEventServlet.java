@@ -35,7 +35,9 @@ throws IOException {
 			+ req.getParameter("what") + " "
 			+ "\nFor: " + req.getParameter("for") + " "
 			+ "\nWho should do it: " + req.getParameter("who") + " "
-			+ "\nWhy: " + req.getParameter("why") + " </description>")); // TODO format content better?
+			+ "\nWhy: " + req.getParameter("why") + " </description>"
+			+ " <category> " + req.getParameter("cat")
+			+ " </category>")); // TODO format content better?
 	
 //	int day = Integer.parseInt(req.getParameter("day"));
 //	int month = Integer.parseInt(req.getParameter("month"));

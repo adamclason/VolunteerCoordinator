@@ -65,10 +65,10 @@
    String hourPattern = "hh:mma"; 
    SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern);  
 %> 
-  <ul class="navigation"> 
-    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1"> Jobs </a></li>
-    <li><a href="/underConstruction.jsp"> My Jobs </a></li>
-    <li><a href="/calendar.jsp"> My Calendar </a></li>
+  <ul class="navigation" id="catnav" style="width: 44.5em"> 
+    <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1"> Manage Jobs </a></li>
+    <li><a href="/newCat.jsp"> New Category </a></li>
+    <li><a href="/catMaint.jsp"> Category Maintennance </a></li>
   </ul>
  
   
@@ -123,30 +123,15 @@
            String content = entry.getPlainTextContent(); 
            Scanner sc = new Scanner(content); 
            String description = "";
-           String category = "";
            
            String cur = sc.next().trim(); 
            if(cur.equals("<description>")) {
               cur = sc.next(); 
               while(!cur.equals("</description>")) {
-                 description += cur + " ";
+                 description += cur + " "; 
                  cur = sc.next(); 
               }
-              if (sc.hasNext()) {
-                  cur = sc.next();
-              }
-           } 
-           if(cur.equals("<category>")) {
-               cur = sc.next();
-               while(!cur.equals("</category>")) {
-            	  category += cur + " "; 
-                  cur = sc.next(); 
-               }
-               if (sc.hasNext()) {
-                   cur = sc.next();
-               }
-           } 
-           if(cur.equals("<volunteers>")) {
+           } if(cur.equals("<volunteers>")) {
            }
          %>
        <div class="date"> 
@@ -154,10 +139,7 @@
        </div>  
        <div class="title"><%=entry.getTitle().getPlainText()%></div> 
        <div class="description">
-          <%=description%>
-       </div>
-       <div class="category">
-          <%=category%>
+          <%=description%> 
        </div>
        <div class="time">
           <%=startTime%><%=" - "%><%=endTime%>

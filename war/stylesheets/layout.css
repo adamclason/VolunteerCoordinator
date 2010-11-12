@@ -69,7 +69,7 @@ h2 {
 }
 .submit {
 	text-align:center; 
-	margin-top: 5%; 
+	margin-top: 5%;
 }
 .submitButton {
 	width:10em; 
@@ -130,6 +130,11 @@ h2 {
   float:left; 
   clear: left;
 }
+.event a .category {
+  float:left; 
+  clear: left;
+  font-style: italic;
+}
 .event a:hover {
   background-color:#eeeeee;
   border-color: #774400;
@@ -184,4 +189,19 @@ h2 {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+}
+.category#page {
+  margin-right:auto; 
+  margin-left:auto; 
+  margin-top: 0;
+  margin-bottom: 15%;
+  border-style: solid;
+  border-width: .25em;
+  border-color:#77cc00; 
+  padding: 2em 2em 2em 2em; 
+  width: 22em;
+}
+#catnav {
+  width: 26.5em;
+  margin-bottom: 1em;
 }

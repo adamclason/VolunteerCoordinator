@@ -48,7 +48,7 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 		} else if(task.equals("initiate")) {
 			resp.sendRedirect("/add.jsp"); 
 		} else if(task.equals("manage")) {
-			resp.sendRedirect("/underConstruction.jsp"); 
+			resp.sendRedirect("/manProj.jsp?pageNumber=1&resultIndex=1"); 
 		} else if(task.equals("dashboard")) {
 			resp.sendRedirect("/underConstruction.jsp"); 
 		} else if(task.equals("preferences")) {

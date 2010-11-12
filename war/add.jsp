@@ -1,4 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="javax.jdo.PersistenceManager" %>
+<%@ page import="com.google.appengine.api.users.User" %>
+<%@ page import="com.google.appengine.api.users.UserService" %>
+<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
+<%@ page import="com.VolunteerCoordinatorApp.PMF" %>
+<%@ page import="com.VolunteerCoordinatorApp.Category" %>
+
 <html>
 <head>
 
@@ -15,10 +24,27 @@
 </head>
 
 <body>
+<%
+    PersistenceManager pm = PMF.get().getPersistenceManager();
+    String query = "select from " + Category.class.getName();
+    List<Category> categories = (List<Category>) pm.newQuery(query).execute();
+%>
+
 <div class="content" id="addEvent">
     <form method="post" action="/makeevent">
     	<div class="inputItem"> 
         Job Name: <input type="text" name="title" class="textfield" />
+        </div> 
+        
+        <div class="inputItem">
+        	Category: 
+        	<div class="dropdown"> 
+        		<select name="cat" >
+        		    <% for (Category c : categories) { %>
+        			<option><%= c.getName() %></option>
+        			<% } %>
+        		</select>
+        	</div> 
         </div> 
         
         <div class="inputItem">
