@@ -38,10 +38,12 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 		}
 		
 		if(!userExists(name)) {
+			String splitName[] = name.split(" ");
+			//name = name.split(" ");
 			resp.sendRedirect("/newUser.jsp?name=" 
 					+ name.substring(0, name.indexOf(" ")) + "+"
 					+ name.substring(name.indexOf(" "), name.length()).trim()
-					+ "&task=" + task); 
+					+ "&task=" + task);
 		} 
 		else if(task.equals("volunteer")) {
 			resp.sendRedirect("/volunteer.jsp?pageNumber=1&resultIndex=1");

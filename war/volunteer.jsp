@@ -32,6 +32,8 @@
 </head>
 <body>
 
+<%@ include file="LinkHome.html" %>
+
 <%
   
    // Determine which page of job results should be displayed  
@@ -160,7 +162,7 @@
           <%=category%>
        </div>
        <div class="time">
-          <%=startTime%><%=" - "%><%=endTime%>
+          <%=startTime%> - <%=endTime%>
        </div>
        </a>
       </div>

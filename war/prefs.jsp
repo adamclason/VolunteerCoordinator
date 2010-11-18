@@ -10,6 +10,8 @@
 
 <body>
 
+<%@ include file="LinkHome.html" %>
+
 <div class="content" id="main">
 <%
     String name = request.getParameter("name");

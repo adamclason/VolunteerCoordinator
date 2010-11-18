@@ -9,6 +9,9 @@
 </head>
 
 <body>
+
+<%@ include file="LinkHome.html" %>
+
 <div class="content" id="main"> 
     <h1>Under Construction</h1>
 </div>

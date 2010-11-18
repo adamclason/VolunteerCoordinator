@@ -23,6 +23,9 @@
 </head>
 
 <body>
+
+<%@ include file="LinkHome.html" %>
+
 <%
     PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Category.class.getName();

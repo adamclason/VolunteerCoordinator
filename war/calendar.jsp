@@ -5,6 +5,8 @@
 </head> 
 
 <body>
+
+<%@ include file="LinkHome.html" %>
   
   <ul class="navigation"> 
     <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1"> Jobs </a></li>

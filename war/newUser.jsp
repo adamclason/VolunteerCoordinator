@@ -9,6 +9,8 @@
 </head>
 <body>
 
+<%@ include file="LinkHome.html" %>
+
 <div id="main"> 
 <% 
 	String name = request.getParameter("name");

@@ -32,6 +32,8 @@
 </head>
 <body>
 
+<%@ include file="LinkHome.html" %>
+
 <%
   
    // Determine which page of job results should be displayed  
