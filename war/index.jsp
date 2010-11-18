@@ -14,9 +14,13 @@
 
     String name = request.getParameter("name"); 
 
+    
     if (name != null) {
-        String first = name.substring(0, name.indexOf(" "));
-        String last = name.substring(name.indexOf(" ") + 1, name.length());    	
+        if( name.equals( "none" ) )
+        {
+            out.println( "<b>Please enter a name.</b>" );
+            name = "";
+        }
     }
     else {
         name = "";
