@@ -94,6 +94,13 @@ h2 {
   margin-top: 15%;
   margin-bottom: 0;
 }
+
+#home
+{
+	float: right;
+	padding-right: 50px;
+}
+
 .events { 
   clear:both;
   border-style: solid;

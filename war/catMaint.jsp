@@ -24,8 +24,6 @@
 
 <body>
 
-<%@ include file="LinkHome.html" %>
-
 <%
     PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Category.class.getName();
@@ -36,6 +34,7 @@
   <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1"> Manage Jobs </a></li>
   <li><a href="/newCat.jsp"> New Category </a></li>
   <li><a href="/catMaint.jsp"> Category Maintennance </a></li>
+  <%@ include file="LinkHome.html" %>
 </ul>
 
 <div class="category" id="page">

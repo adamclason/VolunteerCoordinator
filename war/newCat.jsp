@@ -18,12 +18,11 @@
 
 <body>
 
-<%@ include file="LinkHome.html" %>
-
   <ul class="navigation" id="catnav"> 
     <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1"> Manage Jobs </a></li>
     <li><a href="/newCat.jsp"> New Category </a></li>
     <li><a href="/catMaint.jsp"> Category Maintennance </a></li>
+    <%@ include file="LinkHome.html" %>
   </ul>
 
 <div class="category" id="page">

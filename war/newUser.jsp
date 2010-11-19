@@ -9,7 +9,9 @@
 </head>
 <body>
 
+<ul class="navigation">
 <%@ include file="LinkHome.html" %>
+</ul>
 
 <div id="main"> 
 <% 

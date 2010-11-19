@@ -5,13 +5,12 @@
 </head> 
 
 <body>
-
-<%@ include file="LinkHome.html" %>
   
   <ul class="navigation"> 
     <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1"> Jobs </a></li>
     <li><a href="/myUpComing.jsp"> My Jobs </a></li>
     <li><a href="/calendar.jsp"> My Calendar </a></li>
+    <%@ include file="LinkHome.html" %>
   </ul>
   
 	<div class="content" id="calendar"> 

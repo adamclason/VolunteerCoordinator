@@ -25,7 +25,9 @@
 
 <body>
 
+<ul class="navigation">
 <%@ include file="LinkHome.html" %>
+</ul>
 
 <%
     PersistenceManager pm = PMF.get().getPersistenceManager();

@@ -32,8 +32,6 @@
 </head>
 <body>
 
-<%@ include file="LinkHome.html" %>
-
 <%
   
    // Determine which page of job results should be displayed  
@@ -71,6 +69,7 @@
     <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1"> Manage Jobs </a></li>
     <li><a href="/newCat.jsp"> New Category </a></li>
     <li><a href="/catMaint.jsp"> Category Maintennance </a></li>
+    <%@ include file="LinkHome.html" %>
   </ul>
  
   

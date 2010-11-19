@@ -32,8 +32,6 @@
 </head>
 <body>
 
-<%@ include file="LinkHome.html" %>
-
 <%
    String name = request.getParameter("name");
   
@@ -72,6 +70,7 @@
     <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1"> Jobs </a></li>
     <li><a href="/underConstruction.jsp"> My Jobs </a></li>
     <li><a href="/calendar.jsp"> My Calendar </a></li>
+    <%@ include file="LinkHome.jsp" %>
   </ul>
  
   
