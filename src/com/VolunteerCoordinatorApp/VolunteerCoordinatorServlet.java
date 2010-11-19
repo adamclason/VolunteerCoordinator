@@ -35,7 +35,12 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 			task = taskObj.toString(); 
 		}
 		
-		if(!userExists(name)) {
+		if( name.equals( "" ) )
+		{
+		    String redirect = "/index.jsp?name=none";
+		    resp.sendRedirect( redirect );
+		}
+		else if(!userExists(name)) {
 			String splitName[] = name.split(" ");
 			String redirect = "/newUser.jsp?name=";
 			for( int i = 0; i < splitName.length; i++ )
