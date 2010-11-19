@@ -11,7 +11,7 @@
 <body>
 
 <ul class="navigation">
-<%@ include file="LinkHome.html" %>
+<%@ include file="LinkHome.jsp" %>
 </ul>
 
 <div class="content" id="main">

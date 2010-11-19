@@ -14,7 +14,7 @@ String name = request.getParameter("name");
     <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
     <li><a href="/underConstruction.jsp"> My Jobs </a></li>
     <li><a href="/calendar.jsp&name=<%=name%>"> My Calendar </a></li>
-    <%@ include file="LinkHome.html" %>
+    <%@ include file="LinkHome.jsp" %>
   </ul>
   
 	<div class="content" id="calendar"> 
