@@ -33,6 +33,7 @@
 <body>
 
 <%
+   String name = request.getParameter("name");
   
    // Determine which page of job results should be displayed  
    String pageNumber = request.getParameter("pageNumber");  
@@ -98,7 +99,6 @@
     else {
     for (CalendarEventEntry entry : results) { %>
       <div class ="event">
-       <a href = "/underConstruction.jsp"> 
          <%
            // Get the start and end times for the event 
            When time = entry.getTimes().get(0); 
@@ -117,6 +117,8 @@
            
            String endTime = timeFormat.format(endDate); 
            
+           String title = entry.getTitle().getPlainText();
+           
            // Access the description field of the calendar 
            // event, where the event description and a list 
            // of volunteers is stored. 
@@ -124,6 +126,7 @@
            Scanner sc = new Scanner(content); 
            String description = "";
            String category = "";
+           String volList = "";
            
            String cur = sc.next().trim(); 
            if(cur.equals("<description>")) {
@@ -147,12 +150,21 @@
                }
            } 
            if(cur.equals("<volunteers>")) {
-           }
+               cur = sc.next();
+               while(!cur.equals("</volunteers>")) {
+            	  volList += cur + " "; 
+                  cur = sc.next(); 
+               }
+               if (sc.hasNext()) {
+                   cur = sc.next();
+               }
+           } 
          %>
+       <a href = "/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>"> 
        <div class="date"> 
           <%=startDay%>   
        </div>  
-       <div class="title"><%=entry.getTitle().getPlainText()%></div> 
+       <div class="title"><%=title%></div> 
        <div class="description">
           <%=description%>
        </div>
