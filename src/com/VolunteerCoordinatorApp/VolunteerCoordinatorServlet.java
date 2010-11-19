@@ -14,8 +14,6 @@ import com.google.gdata.data.calendar.*;
 import com.google.gdata.data.extensions.*;
 import com.google.gdata.util.*;
 import com.google.common.collect.Maps;
-
-
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.net.URL;
@@ -55,20 +53,20 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 			resp.sendRedirect( redirect );
 		} 
 		else if(task.equals("volunteer")) {
-			resp.sendRedirect("/volunteer.jsp?pageNumber=1&resultIndex=1");
+			resp.sendRedirect("/volunteer.jsp?pageNumber=1&resultIndex=1"
+					+ "&name=" + name);
 		} else if(task.equals("initiate")) {
 			resp.sendRedirect("/add.jsp"); 
 		} else if(task.equals("manage")) {
-			resp.sendRedirect("/manProj.jsp?pageNumber=1&resultIndex=1"); 
+			resp.sendRedirect("/manProj.jsp?pageNumber=1&resultIndex=1"
+					+ "&name=" + name); 
 		} else if(task.equals("dashboard")) {
 			resp.sendRedirect("/underConstruction.jsp"); 
 		} else if(task.equals("preferences")) {
-			resp.sendRedirect("/prefs.jsp?name=" 
-				+ name.substring(0, name.indexOf(" ")) + "+"
-				+ name.substring(name.indexOf(" "), name.length()).trim()
-				+ "&email=" + getEmail(name)
-				+ "&phone=" + getPhone(name)
-				+ "&reminder=" + getReminder(name)); 
+			resp.sendRedirect("/prefs.jsp?name=" + name
+				    + "&email=" + getEmail(name)
+				    + "&phone=" + getPhone(name)
+				    + "&reminder=" + getReminder(name)); 
 		}
 
 	}
