@@ -69,9 +69,9 @@
    SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern);  
 %> 
   <ul class="navigation"> 
-    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1"> Jobs </a></li>
+    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
     <li><a href="/underConstruction.jsp"> My Jobs </a></li>
-    <li><a href="/calendar.jsp"> My Calendar </a></li>
+    <li><a href="/calendar.jsp&name=<%=name%>"> My Calendar </a></li>
   </ul>
  
   
@@ -191,6 +191,7 @@
          <div id="nextB"> <input type="submit" id="next" name="navsubmit" value="Next"></div> 
       <% } %>
       <input type="hidden" name="pageNum" value="<%=pageNumber%>">
+      <input type="hidden" name="name" value="<%=name%>">
    </form>
    </div>
    <% if (!(results.size() < 10 && Integer.parseInt(pageNumber) == 1)) { %>

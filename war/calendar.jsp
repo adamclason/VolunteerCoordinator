@@ -7,11 +7,15 @@
 <body>
 
 <%@ include file="LinkHome.html" %>
+
+<% 
+String name = request.getParameter("name");
+%>
   
   <ul class="navigation"> 
-    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1"> Jobs </a></li>
-    <li><a href="/myUpComing.jsp"> My Jobs </a></li>
-    <li><a href="/calendar.jsp"> My Calendar </a></li>
+    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
+    <li><a href="/underConstruction.jsp"> My Jobs </a></li>
+    <li><a href="/calendar.jsp&name=<%=name%>"> My Calendar </a></li>
   </ul>
   
 	<div class="content" id="calendar"> 
