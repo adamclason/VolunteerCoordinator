@@ -76,14 +76,13 @@ public class addVolunteerServlet extends HttpServlet {
 	            	//make sure the user isn't already in the list
 	            	if (!contentArray[1].contains(name.trim())) {
 		            	int end = volList.indexOf("</volunteers>");
-		            	volList.insert(end, name.trim() + " ");
+		            	volList.insert(end, name.trim() + " ; ");
 		            	content = contentArray[0] + volList;
 	            	}
 	            }
 	            else {
-	            	content += " <volunteers> " + name + " </volunteers>";
+	            	content += " <volunteers> " + name + " ; </volunteers>";
 	            }
-	            
 	            entry.setContent(new PlainTextConstruct(content));
 	            URL editUrl = new URL(entry.getEditLink().getHref());
 	            try {
