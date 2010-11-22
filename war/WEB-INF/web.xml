@@ -44,15 +44,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>MakeEvent</servlet-name>
 		<url-pattern>/makeevent</url-pattern>
 	</servlet-mapping>
-		<servlet>
-<<<<<<< HEAD
+	<servlet>
 		<servlet-name>ValidateFilter</servlet-name>
 		<servlet-class>com.VolunteerCoordinatorApp.ValidateFilterInput</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ValidateFilter</servlet-name>
 		<url-pattern>/validateFilter</url-pattern>
-=======
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>MakeCategory</servlet-name>
 		<servlet-class>com.VolunteerCoordinatorApp.MakeCategoryServlet</servlet-class>
 	</servlet>
@@ -83,7 +83,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>UpdateEvent</servlet-name>
 		<url-pattern>/updateevent</url-pattern>
->>>>>>> bf3357e906ee4644b567438d7ffa4d9c65b6b32a
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
