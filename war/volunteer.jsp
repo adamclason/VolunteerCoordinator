@@ -33,9 +33,13 @@
 <body>
 
 <%
+
    // See if the user has selected some of the filter settings 
    String startRange = request.getParameter("startDate"); 
    String endRange = request.getParameter("endDate");  
+
+   String name = request.getParameter("name");
+
   
    // Determine which page of job results should be displayed  
    String pageNumber = request.getParameter("pageNumber");  
@@ -88,9 +92,11 @@
    SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern);  
 %> 
   <ul class="navigation"> 
-    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1"> Jobs </a></li>
+    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
     <li><a href="/underConstruction.jsp"> My Jobs </a></li>
     <li><a href="/calendar.jsp"> My Calendar </a></li>
+    <%@ include file="LinkHome.jsp" %>
+    <li><a href="/calendar.jsp&name=<%=name%>"> My Calendar </a></li>
   </ul>
  
   
@@ -143,7 +149,6 @@
     else {
     for (CalendarEventEntry entry : results) { %>
       <div class ="event">
-       <a href = "/underConstruction.jsp"> 
          <%
            // Get the start and end times for the event 
            When time = entry.getTimes().get(0); 
@@ -162,32 +167,62 @@
            
            String endTime = timeFormat.format(endDate); 
            
+           String title = entry.getTitle().getPlainText();
+           
            // Access the description field of the calendar 
            // event, where the event description and a list 
            // of volunteers is stored. 
            String content = entry.getPlainTextContent(); 
            Scanner sc = new Scanner(content); 
            String description = "";
+           String category = "";
+           String volList = "";
            
            String cur = sc.next().trim(); 
            if(cur.equals("<description>")) {
               cur = sc.next(); 
               while(!cur.equals("</description>")) {
-                 description += cur + " "; 
+                 description += cur + " ";
                  cur = sc.next(); 
               }
-           } if(cur.equals("<volunteers>")) {
-           }
+              if (sc.hasNext()) {
+                  cur = sc.next();
+              }
+           } 
+           if(cur.equals("<category>")) {
+               cur = sc.next();
+               while(!cur.equals("</category>")) {
+            	  category += cur + " "; 
+                  cur = sc.next(); 
+               }
+               if (sc.hasNext()) {
+                   cur = sc.next();
+               }
+           } 
+           if(cur.equals("<volunteers>")) {
+               cur = sc.next();
+               while(!cur.equals("</volunteers>")) {
+            	  volList += cur + " "; 
+                  cur = sc.next(); 
+               }
+               if (sc.hasNext()) {
+                   cur = sc.next();
+               }
+           } 
          %>
+       <a href = "/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>"> 
        <div class="date"> 
           <%=startDay%>   
        </div>  
-       <div class="title"><%=entry.getTitle().getPlainText()%></div> 
+       <div class="title"><%=title%></div> 
        <div class="description">
-          <%=description%> 
+          <%=description%>
+       </div>
+       <div class="category">
+          <%=category%>
        </div>
        <div class="time">
-          <%=startTime%><%=" - "%><%=endTime%>
+          <%=startTime%> - <%=endTime%>
        </div>
        </a>
       </div>
@@ -204,6 +239,7 @@
          <div id="nextB"> <input type="submit" id="next" name="navsubmit" value="Next"></div> 
       <% } %>
       <input type="hidden" name="pageNum" value="<%=pageNumber%>">
+      <input type="hidden" name="name" value="<%=name%>">
    </form>
    </div>
    <% if (!(results.size() < 10 && Integer.parseInt(pageNumber) == 1)) { %>

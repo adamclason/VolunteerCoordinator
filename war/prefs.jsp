@@ -10,6 +10,10 @@
 
 <body>
 
+<ul class="navigation">
+<%@ include file="LinkHome.jsp" %>
+</ul>
+
 <div class="content" id="main">
 <%
     String name = request.getParameter("name");

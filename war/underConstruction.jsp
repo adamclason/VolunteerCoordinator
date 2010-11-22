@@ -9,6 +9,11 @@
 </head>
 
 <body>
+
+<ul class="navigation">
+<%@ include file="LinkHome.jsp" %>
+</ul>
+
 <div class="content" id="main"> 
     <h1>Under Construction</h1>
 </div>

@@ -9,11 +9,18 @@
 </head>
 <body>
 
+<ul class="navigation">
+<%@ include file="LinkHome.jsp" %>
+</ul>
+
 <div id="main"> 
 <% 
 	String name = request.getParameter("name");
-	String first = name.substring(0, name.indexOf(" "));
-	String last = name.substring(name.indexOf(" ") + 1, name.length()); 
+    String splitName[] = name.split( " " );
+    String first = splitName[0];
+    String last = "";
+    if( splitName.length > 1 )
+        last = splitName[splitName.length - 1];
 	String task = request.getParameter("task");
 %>
 <form action="/makeuser" method="post">

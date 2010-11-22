@@ -45,12 +45,45 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/makeevent</url-pattern>
 	</servlet-mapping>
 		<servlet>
+<<<<<<< HEAD
 		<servlet-name>ValidateFilter</servlet-name>
 		<servlet-class>com.VolunteerCoordinatorApp.ValidateFilterInput</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ValidateFilter</servlet-name>
 		<url-pattern>/validateFilter</url-pattern>
+=======
+		<servlet-name>MakeCategory</servlet-name>
+		<servlet-class>com.VolunteerCoordinatorApp.MakeCategoryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MakeCategory</servlet-name>
+		<url-pattern>/makecategory</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>EditCategory</servlet-name>
+		<servlet-class>com.VolunteerCoordinatorApp.EditCategoryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditCategory</servlet-name>
+		<url-pattern>/editcategory</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AddVolunteer</servlet-name>
+		<servlet-class>com.VolunteerCoordinatorApp.addVolunteerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddVolunteer</servlet-name>
+		<url-pattern>/addvolunteer</url-pattern>
+	</servlet-mapping>
+    <servlet>
+		<servlet-name>UpdateEvent</servlet-name>
+		<servlet-class>com.VolunteerCoordinatorApp.UpdateEventServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateEvent</servlet-name>
+		<url-pattern>/updateevent</url-pattern>
+>>>>>>> bf3357e906ee4644b567438d7ffa4d9c65b6b32a
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
