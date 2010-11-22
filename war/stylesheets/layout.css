@@ -46,7 +46,7 @@ h2 {
 
 #addEvent { 
 	width: 25em; 
-	margin-top: 15%; 
+	/*margin-top: 15%*/; 
 }
 #calendar {
 	width: 44em; 
