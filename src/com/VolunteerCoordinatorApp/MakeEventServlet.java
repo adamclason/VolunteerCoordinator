@@ -18,6 +18,8 @@ public class MakeEventServlet extends HttpServlet {
 public void doPost(HttpServletRequest req, HttpServletResponse resp)
 throws IOException {
 
+	String name = req.getParameter("name");
+	
 	CalendarService cService = new CalendarService("Volunteer-Coordinator-Calendar");
 	try {
 		cService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
@@ -111,7 +113,7 @@ throws IOException {
 		e.printStackTrace();
 	}
 	
-	resp.sendRedirect("/index.jsp");
+	resp.sendRedirect("/index.jsp?name=" + name);
 }
 
 }

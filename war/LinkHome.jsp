@@ -6,4 +6,4 @@
         url += "?name=" + userName;
     }
 %>
-<a id="home" href="<%=url%>"><img src="/stylesheets/images/Home.png" alt="Home" width="32" height="32" /></a>
+<a id="home" href="<%=url%>"><img src="/stylesheets/images/Home.png" alt="Home" width="32" height="32" border=0 /></a>

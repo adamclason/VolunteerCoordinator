@@ -25,6 +25,8 @@
 
 <body>
 
+<% String name = request.getParameter("name"); %>
+
 <ul class="navigation">
 <%@ include file="LinkHome.jsp" %>
 </ul>
@@ -45,6 +47,7 @@
         	Category: 
         	<div class="dropdown"> 
         		<select name="cat" >
+        		    <option>None</option>
         		    <% for (Category c : categories) { %>
         			<option><%= c.getName() %></option>
         			<% } %>
@@ -148,6 +151,8 @@
 		        </select>
 	        </div>
         </div> 
+        
+        <input type="hidden" name="name" value="<%=name%>">
        
         <div class="submit">
         	<input type="submit" class="submitButton" value="Submit"/>

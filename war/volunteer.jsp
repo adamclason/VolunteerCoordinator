@@ -13,7 +13,10 @@
 	com.google.gdata.util.*,
 	com.google.common.collect.Maps,
 	java.io.*,
-	java.text.SimpleDateFormat"
+	java.text.SimpleDateFormat,
+	javax.jdo.PersistenceManager,
+	com.VolunteerCoordinatorApp.PMF,
+	com.VolunteerCoordinatorApp.Category"
 	
 %>
 
@@ -34,12 +37,12 @@
 
 <%
 
-   // See if the user has selected some of the filter settings 
-   String startRange = request.getParameter("startDate"); 
-   String endRange = request.getParameter("endDate");  
-
    String name = request.getParameter("name");
 
+   // See if the user has selected some of the filter settings 
+   String startRange = request.getParameter("startDate"); 
+   String endRange = request.getParameter("endDate"); 
+   String cat = request.getParameter("category");
   
    // Determine which page of job results should be displayed  
    String pageNumber = request.getParameter("pageNumber");  
@@ -68,13 +71,16 @@
    } else {
       myQuery.setStringCustomParameter("futureevents", "true"); 
    }
+   
+   if (cat != null) {
+	   myQuery.setFullTextQuery("<category> " + cat);
+   }
 
    myQuery.setMaxResults(10); 
    myQuery.setStartIndex(Integer.parseInt(request.getParameter("resultIndex")));
    myQuery.setStringCustomParameter("orderby", "starttime");
    myQuery.setStringCustomParameter("sortorder", "ascending");  
  
-   
    CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar"); 
    myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
 
@@ -99,6 +105,11 @@
     <li><a href="/calendar.jsp&name=<%=name%>"> My Calendar </a></li>
   </ul>
  
+<%
+    PersistenceManager pm = PMF.get().getPersistenceManager();
+    String query = "select from " + Category.class.getName();
+    List<Category> categories = (List<Category>) pm.newQuery(query).execute();
+%>
   
 <div class="content" id ="myJobs">
 
@@ -107,7 +118,7 @@
       <div id="filterButton"><img src="stylesheets/images/filter_button.png"> </img></div>
       <div id="filterSettings"> 
       	
-      	<form action="/volunteer.jsp?pageNumber=1&resultIndex=1" method="post">
+      	<form action="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>" method="post">
       	
 	      	<div class="filterSetting">
 	      		<input id="rangeCheckbox" type="checkbox" name="date"> By Date </input>
@@ -121,9 +132,10 @@
 	      		<input id="categoryCheckbox" type="checkbox">By Job Category </input>
 	      		<div id="categorySelect">
 		      		<select name="category" class="dropdown"> 
-		      			<option value="Category 1">Category 1 </option> 
-		      			<option value="Category 2">Category 2 </option> 
-		      			<option value="Category 3">Category 3 </option> 
+        		        <option>None</option>
+        		        <% for (Category c : categories) { %>
+        			    <option><%= c.getName() %></option>
+        			    <% } %>
 		      		</select> 	
 	      		</div>
 	      	</div>
