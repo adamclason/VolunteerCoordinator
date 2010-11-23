@@ -44,14 +44,18 @@ public class UpdateEventServlet extends HttpServlet
                 CalendarEventEntry retrievedEntry = (CalendarEventEntry) myResultsFeed.getEntries().get(0);
                 
                 retrievedEntry.setTitle(new PlainTextConstruct( newTitle ));
-                retrievedEntry.setContent(new PlainTextConstruct( "<description> "
-                        + request.getParameter("what") + " " + "</description>" ) );
-                        //Start working again "For:" etc is sorted.
-                        /*+ "\nFor: " + request.getParameter("for") + " "
-                        + "\nWho should do it: " + request.getParameter("who") + " "
-                        + "\nWhy: " + request.getParameter("why") + " </description>"
-                        + " <category> " + request.getParameter("cat")
-                        + " </category>")); // TODO format content better?*/
+                String description = request.getParameter( "what" );
+                String forWho = request.getParameter( "for" );
+                String who = request.getParameter( "who" );
+                String why = request.getParameter( "why" );
+                String cat = request.getParameter( "cat" );
+                
+                retrievedEntry.setContent(new PlainTextConstruct("<description> "
+                        + description + " </description> "
+                        + "<for> " + forWho + " </for> "
+                        + "<who> " + who + " </who> "
+                        + "<why> " + why + " </why> "
+                        + "<category> " + cat + " </category>"));
                 int fromHrs = Integer.parseInt(request.getParameter("fromHrs"));
                 int fromMins = Integer.parseInt(request.getParameter("fromMins"));
                 int tillHrs = Integer.parseInt(request.getParameter("tillHrs"));

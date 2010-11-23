@@ -126,40 +126,92 @@
              String content = entry.getPlainTextContent(); 
              Scanner sc = new Scanner(content); 
              String description = "";
+             String forWho = "";
+             String who = "";
+             String why = "";
              String category = "";
              String volList = "";
              
              String cur = sc.next().trim(); 
-             if(cur.equals("<description>")) {
-                cur = sc.next(); 
-                while(!cur.equals("</description>")) {
+             if(cur.equals("<description>")) 
+             {
+                cur = sc.next();
+                while(!cur.equals("</description>")) 
+                {
                    description += cur + " ";
                    cur = sc.next(); 
                 }
-                if (sc.hasNext()) {
+                description = description.substring( 0, description.length() - 1 );
+                if (sc.hasNext()) 
+                {
                     cur = sc.next();
                 }
-             } 
-             if(cur.equals("<category>")) {
+             }
+             if( cur.equals( "<for>" ) )
+             {
                  cur = sc.next();
-                 while(!cur.equals("</category>")) {
+                 while( !cur.equals( "</for>" ) )
+                 {
+                     forWho += cur + " ";
+                     cur = sc.next(); 
+                  }
+                  if (sc.hasNext()) 
+                  {
+                      cur = sc.next();
+                  }
+             }
+             if( cur.equals( "<who>" ) )
+             {
+                 cur = sc.next();
+                 while( !cur.equals( "</who>" ) )
+                 {
+                     who += cur + " ";
+                     cur = sc.next();
+                 }
+                 if (sc.hasNext()) 
+                 {
+                     cur = sc.next();
+                 }
+             }
+             if( cur.equals( "<why>" ) )
+             {
+                 cur = sc.next();
+                 while( !cur.equals( "</why>" ) )
+                 {
+                     why += cur + " ";
+                     cur = sc.next();
+                 }
+                 if (sc.hasNext()) 
+                 {
+                     cur = sc.next();
+                 }
+             }
+             if(cur.equals("<category>")) 
+             {
+                 cur = sc.next();
+                 while(!cur.equals("</category>")) 
+                 {
                     category += cur + " "; 
                     cur = sc.next(); 
                  }
-                 if (sc.hasNext()) {
+                 if (sc.hasNext()) 
+                 {
                      cur = sc.next();
                  }
              } 
-             if(cur.equals("<volunteers>")) {
+             if(cur.equals("<volunteers>")) 
+             {
                  cur = sc.next();
-                 while(!cur.equals("</volunteers>")) {
+                 while(!cur.equals("</volunteers>")) 
+                 {
                     volList += cur + " "; 
                     cur = sc.next(); 
                  }
-                 if (sc.hasNext()) {
+                 if (sc.hasNext()) 
+                 {
                      cur = sc.next();
                  }
-             } 
+             }
            %>
          <a href = "/editjob.jsp?title=<%=title%>&name=<%=name%>"> 
          <div class="date"> 

@@ -34,13 +34,18 @@ throws IOException {
 	//CalendarQuery q = new CalendarQuery(new URL("hello")); 
 	
 	entry.setTitle(new PlainTextConstruct(req.getParameter("title")));
+	String description = req.getParameter( "what" );
+	String forWho = req.getParameter( "for" );
+	String who = req.getParameter( "who" );
+	String why = req.getParameter( "why" );
+	String cat = req.getParameter( "cat" );
+	
 	entry.setContent(new PlainTextConstruct("<description> "
-			+ req.getParameter("what") + " "
-			+ "\nFor: " + req.getParameter("for") + " "
-			+ "\nWho should do it: " + req.getParameter("who") + " "
-			+ "\nWhy: " + req.getParameter("why") + " </description>"
-			+ " <category> " + req.getParameter("cat")
-			+ " </category>")); // TODO format content better?
+			+ description + " </description> "
+			+ "<for> " + forWho + " </for> "
+			+ "<who> " + who + " </who> "
+			+ "<why> " + why + " </why> "
+			+ "<category> " + cat + " </category>")); // TODO format content better?
 	
 //	int day = Integer.parseInt(req.getParameter("day"));
 //	int month = Integer.parseInt(req.getParameter("month"));

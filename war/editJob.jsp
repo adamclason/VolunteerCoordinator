@@ -93,24 +93,66 @@
       
       Scanner sc = new Scanner(content); 
       String description = "";
+      String forWho = "";
+      String who = "";
+      String why = "";
       String category = "";
       String volList = "";
       
       String cur = sc.next().trim(); 
       if(cur.equals("<description>")) 
       {
-         cur = sc.next(); 
+         cur = sc.next();
          while(!cur.equals("</description>")) 
          {
-             //We need a better place to put the "For:" and "Why:" and so forth
             description += cur + " ";
             cur = sc.next(); 
          }
+         description = description.substring( 0, description.length() - 1 );
          if (sc.hasNext()) 
          {
              cur = sc.next();
          }
-      } 
+      }
+      if( cur.equals( "<for>" ) )
+      {
+          cur = sc.next();
+          while( !cur.equals( "</for>" ) )
+          {
+              forWho += cur + " ";
+              cur = sc.next(); 
+           }
+           if (sc.hasNext()) 
+           {
+               cur = sc.next();
+           }
+      }
+      if( cur.equals( "<who>" ) )
+      {
+          cur = sc.next();
+          while( !cur.equals( "</who>" ) )
+          {
+              who += cur + " ";
+              cur = sc.next();
+          }
+          if (sc.hasNext()) 
+          {
+              cur = sc.next();
+          }
+      }
+      if( cur.equals( "<why>" ) )
+      {
+          cur = sc.next();
+          while( !cur.equals( "</why>" ) )
+          {
+              why += cur + " ";
+              cur = sc.next();
+          }
+          if (sc.hasNext()) 
+          {
+              cur = sc.next();
+          }
+      }
       if(cur.equals("<category>")) 
       {
           cur = sc.next();
@@ -253,21 +295,21 @@
         <div class="inputItem">
             For whom:
             <div class="dropdown"> 
-                <input type="text" name="for" class="textfield" value="Placeholder" />
+                <input type="text" name="for" class="textfield" value="<%=forWho%>" />
             </div> 
         </div> 
         
         <div class="inputItem">
             Who should do it:
             <div class="dropdown">
-                <input type="text" name="who" class="textfield" value="Placeholder" />
+                <input type="text" name="who" class="textfield" value="<%=who%>" />
             </div> 
         </div>
         
         <div class="inputItem">
             Why: 
             <div class="dropdown"> 
-                <input type="text" name="why" class="textfield" value="Placeholder" />
+                <input type="text" name="why" class="textfield" value="<%=why%>" />
             </div> 
         </div>
         
