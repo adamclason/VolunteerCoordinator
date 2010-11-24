@@ -2,6 +2,7 @@
 
 <head> 
 	<link rel="stylesheet" href="stylesheets/layout.css" type="text/css"> 
+    <link rel="stylesheet" type="text/css" href="stylesheets/colors.css">
 </head> 
 
 <body>
@@ -13,7 +14,7 @@ String name = request.getParameter("name");
   <ul class="navigation"> 
     <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
     <li><a href="/underConstruction.jsp"> My Jobs </a></li>
-    <li><a href="/calendar.jsp&name=<%=name%>"> My Calendar </a></li>
+    <li><a href="/calendar.jsp?name=<%=name%>"> My Calendar </a></li>
     <%@ include file="LinkHome.jsp" %>
   </ul>
   

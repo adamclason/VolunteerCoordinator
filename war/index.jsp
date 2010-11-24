@@ -9,6 +9,7 @@
 </head>
 
 <body>
+<div class="navigation"></div>
 <div id="main"> 
 <%
 

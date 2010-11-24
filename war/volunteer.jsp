@@ -100,9 +100,8 @@
   <ul class="navigation"> 
     <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
     <li><a href="/underConstruction.jsp"> My Jobs </a></li>
-    <li><a href="/calendar.jsp"> My Calendar </a></li>
+    <li><a href="/calendar.jsp?name=<%=name%>"> My Calendar </a></li>
     <%@ include file="LinkHome.jsp" %>
-    <li><a href="/calendar.jsp&name=<%=name%>"> My Calendar </a></li>
   </ul>
  
 <%

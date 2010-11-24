@@ -27,7 +27,7 @@
 
 <% String name = request.getParameter("name"); %>
 
-<ul class="navigation">
+<ul class="navigation" style="width: 29.5em;">
 <%@ include file="LinkHome.jsp" %>
 </ul>
 

@@ -55,11 +55,11 @@ h2 {
 	/*margin-top: 15%*/; 
 }
 #calendar {
-	width: 44em; 
+	width: 46.5em; 
 }
 
 #main {
-  margin-top: 15%; 
+  /*margin-top: 15%;*/ 
   margin-right:auto; 
   margin-left:auto; 
   border-style: solid;
@@ -104,7 +104,7 @@ h2 {
 #home
 {
 	float: right;
-	padding-right: 50px;
+	padding-right: 3.125em;
 }
 
 .events { 
@@ -216,6 +216,6 @@ h2 {
   width: 22em;
 }
 #catnav {
-  width: 26.5em;
+  width: 28em;
   margin-bottom: 1em;
 }

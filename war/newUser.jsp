@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<ul class="navigation">
+<ul class="navigation" style="width: 24.5em;">
 <%@ include file="LinkHome.jsp" %>
 </ul>
 
