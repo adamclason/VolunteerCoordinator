@@ -56,26 +56,33 @@
   
    CalendarQuery myQuery = new CalendarQuery(feedUrl);
    
-   if(request.getParameter("date") != null && startRange  != null  && endRange != null) {
-   	  System.out.println(request.getParameter("date"));
-   	  Calendar curCal = Calendar.getInstance(); 
+   if(startRange != null && endRange != null && !startRange.equals("null") && !endRange.equals("null")) { //request.getParameter("date") != null && 
+   	  //Calendar curCal = Calendar.getInstance(); 
       SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
       Date start = format.parse(startRange);
       Date end = format.parse(endRange);  
       DateTime startDT = new DateTime(start); 
       DateTime endDT = new DateTime(end); 
+
+      // shift end date to midnight at end of day instead of beginning of day
+      long endL = endDT.getValue();
+      endL += 86399999;
+      endDT.setValue(endL);
+      
+      System.err.println(startDT + " " + endDT);
+      
       myQuery.setMinimumStartTime(startDT); 
       myQuery.setMaximumStartTime(endDT); 
    } else if (request.getParameter("date") != null) {
-   	  
+
    } else {
       myQuery.setStringCustomParameter("futureevents", "true"); 
    }
    
-   if (cat != null) {
+   if (cat != null && !cat.equals("null")) {
 	   myQuery.setFullTextQuery("<category> " + cat);
    }
-
+   
    myQuery.setMaxResults(10); 
    myQuery.setStartIndex(Integer.parseInt(request.getParameter("resultIndex")));
    myQuery.setStringCustomParameter("orderby", "starttime");
@@ -87,7 +94,7 @@
    // Send the request and receive the response:
    CalendarEventFeed resultFeed = myService.query(myQuery, CalendarEventFeed.class);
   
-   List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries(); 
+   List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
    
    // The date and time formats used to display the event 
    // dates and times 
@@ -117,7 +124,7 @@
       <div id="filterButton"><img src="stylesheets/images/filter_button.png"> </img></div>
       <div id="filterSettings"> 
       	
-      	<form action="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>" method="post">
+      	<form action="/navigate" method="post">
       	
 	      	<div class="filterSetting">
 	      		<input id="rangeCheckbox" type="checkbox" name="date"> By Date </input>
@@ -128,7 +135,7 @@
 	      	</div>	
 	      	
 	      	<div class="filterSetting"> 
-	      		<input id="categoryCheckbox" type="checkbox">By Job Category </input>
+	      		<input id="categoryCheckbox" type="checkbox" name="catCheck">By Job Category </input>
 	      		<div id="categorySelect">
 		      		<select name="category" class="dropdown"> 
         		        <option>None</option>
@@ -141,6 +148,9 @@
 	      	
 	      	<div class="filterSetting">
 		      	<div id="submitFilter">
+     	      		    <input type="hidden" name="pageNum" value="<%=pageNumber%>">
+     	      		    <input type="hidden" name="name" value="<%=name%>">
+     	      		    <input type="hidden" name="navsubmit" value="">
 		      		<input id="submitButton" type="submit" value="Submit"> </input> 
 		      	</div>
 	      	</div>
@@ -302,6 +312,9 @@
       <% } %>
       <input type="hidden" name="pageNum" value="<%=pageNumber%>">
       <input type="hidden" name="name" value="<%=name%>">
+      <input type="hidden" name="startDate" value="<%=startRange%>">
+      <input type="hidden" name="endDate" value="<%=endRange%>">
+      <input type="hidden" name="category" value="<%=cat%>">
    </form>
    </div>
    <% if (!(results.size() < 10 && Integer.parseInt(pageNumber) == 1)) { %>

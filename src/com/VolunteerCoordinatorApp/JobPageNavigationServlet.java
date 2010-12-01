@@ -7,9 +7,18 @@ public class JobPageNavigationServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {
 		String name = req.getParameter("name"); 
+		String startRange = req.getParameter("startDate"); 
+		String endRange = req.getParameter("endDate"); 
+		String cat = req.getParameter("category");
+		if (req.getParameter("catCheck") == null) {
+			cat = "null";
+		}
+		
 		String nav = req.getParameter("navsubmit"); 
 		int pageNumber = Integer.parseInt(req.getParameter("pageNum"));
 
+		System.err.println(name + " " + startRange + " " + endRange + " " + cat + " " + nav + " " + pageNumber);
+		
 		if (nav.equals("Next")){
 			pageNumber++; 
 		} else if (nav.equals("Prev") && pageNumber > 1) {
@@ -19,11 +28,11 @@ public class JobPageNavigationServlet extends HttpServlet {
 		int resultIndex = pageNumber; 
 		
 		if(pageNumber > 1) {
-			resultIndex = (pageNumber - 1) * 10;
+			resultIndex = (pageNumber - 1) * 10 + 1;
 		}
 		
 		resp.sendRedirect("volunteer.jsp?resultIndex=" + resultIndex + "&pageNumber=" + pageNumber
-				+ "&name=" + name); 
+				+ "&name=" + name + "&startDate=" + startRange + "&endDate=" + endRange + "&category=" + cat); 
 		
 	}
 }
