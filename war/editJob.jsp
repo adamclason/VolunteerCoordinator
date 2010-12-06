@@ -28,7 +28,6 @@
 
 <script src="javascript/jquery-1.4.2.min.js"> </script>
 <script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
-<script src="javascript/volunteer.js"> </script>
 <script src="javascript/addEvent.js"> </script>
 
 <title>Edit Job</title>
@@ -55,130 +54,142 @@
     
     if (myResultsFeed.getEntries().size() > 0) 
     {
-      CalendarEventEntry firstMatchEntry = (CalendarEventEntry) myResultsFeed.getEntries().get(0); 
-      title = firstMatchEntry.getTitle().getPlainText();
-      String content = firstMatchEntry.getPlainTextContent();
-      
-      String datePattern = "MM-dd-yyyy"; 
-      SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);   
-     
-      String hourPattern = "hh:mma"; 
-      SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern);  
-      
-      When time = firstMatchEntry.getTimes().get(0); 
-      DateTime start = time.getStartTime(); 
-      DateTime end = time.getEndTime();
-      
-      start.setTzShift(-240); 
-      end.setTzShift(-240); 
-      
-      // Concert to milliseconds to get a date object, which can be formatted easier. 
-      Date startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
-      Date endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
+        CalendarEventEntry entry = (CalendarEventEntry) myResultsFeed.getEntries().get(0); 
+        int count = 0;
+        while( !entry.getTitle().getPlainText().equals( title ) )
+        {
+            entry = (CalendarEventEntry) myResultsFeed.getEntries().get( count++ );
+        }
+        title = entry.getTitle().getPlainText();
+        String content = entry.getPlainTextContent();
 
-      String startDay = dateFormat.format(startDate); 
-      String startTime = timeFormat.format(startDate);
-      
-      String startHour = startTime.substring( 0, startTime.indexOf( ":" ) );
-      startTime = startTime.substring( startTime.indexOf( ":" ) + 1 );
-      String startMinute = startTime.substring( 0, 2 );
-      String startMeridiem = startTime.substring( 2 );
-      
-      String endTime = timeFormat.format(endDate);
-      
-      String endHour = endTime.substring( 0, endTime.indexOf( ":" ) );
-      endTime = endTime.substring( endTime.indexOf( ":" ) + 1 );
-      String endMinute = endTime.substring( 0, 2 );
-      String endMeridiem = endTime.substring( 2 );
-      
-      Scanner sc = new Scanner(content); 
-      String description = "";
-      String forWho = "";
-      String who = "";
-      String why = "";
-      String category = "";
-      String volList = "";
-      
-      String cur = sc.next().trim(); 
-      if(cur.equals("<description>")) 
-      {
-         cur = sc.next();
-         while(!cur.equals("</description>")) 
-         {
-            description += cur + " ";
-            cur = sc.next(); 
-         }
-         description = description.substring( 0, description.length() - 1 );
-         if (sc.hasNext()) 
-         {
-             cur = sc.next();
-         }
-      }
-      if( cur.equals( "<for>" ) )
-      {
-          cur = sc.next();
-          while( !cur.equals( "</for>" ) )
-          {
-              forWho += cur + " ";
-              cur = sc.next(); 
-           }
-           if (sc.hasNext()) 
-           {
-               cur = sc.next();
-           }
-      }
-      if( cur.equals( "<who>" ) )
-      {
-          cur = sc.next();
-          while( !cur.equals( "</who>" ) )
-          {
-              who += cur + " ";
-              cur = sc.next();
-          }
-          if (sc.hasNext()) 
-          {
-              cur = sc.next();
-          }
-      }
-      if( cur.equals( "<why>" ) )
-      {
-          cur = sc.next();
-          while( !cur.equals( "</why>" ) )
-          {
-              why += cur + " ";
-              cur = sc.next();
-          }
-          if (sc.hasNext()) 
-          {
-              cur = sc.next();
-          }
-      }
-      if(cur.equals("<category>")) 
-      {
-          cur = sc.next();
-          while(!cur.equals("</category>")) 
-          {
-             category += cur + " "; 
-             cur = sc.next(); 
-          }
-          if (sc.hasNext()) 
-          {
-              cur = sc.next();
-          }
-      } 
-      if(cur.equals("<volunteers>")) 
-      {
-          cur = sc.next();
-          while(!cur.equals("</volunteers>")) 
-          {
-             volList += cur + " "; 
-             cur = sc.next(); 
-          }
-          if (sc.hasNext()) 
-          {
-              cur = sc.next();
-          }
-      }
+        String datePattern = "MM/dd/yyyy"; 
+        SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);   
+
+        String hourPattern = "hh:mma"; 
+        SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern);  
+
+        When time = entry.getTimes().get(0); 
+        DateTime start = time.getStartTime(); 
+        DateTime end = time.getEndTime();
+
+        start.setTzShift(-240); 
+        end.setTzShift(-240); 
+
+        // Concert to milliseconds to get a date object, which can be formatted easier. 
+        Date startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
+        Date endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
+
+        String startDay = dateFormat.format(startDate); 
+        String startTime = timeFormat.format(startDate);
+
+        String startHour = startTime.substring( 0, startTime.indexOf( ":" ) );
+        startTime = startTime.substring( startTime.indexOf( ":" ) + 1 );
+        String startMinute = startTime.substring( 0, 2 );
+        String startMeridiem = startTime.substring( 2 );
+
+        String endTime = timeFormat.format(endDate);
+
+        String endHour = endTime.substring( 0, endTime.indexOf( ":" ) );
+        endTime = endTime.substring( endTime.indexOf( ":" ) + 1 );
+        String endMinute = endTime.substring( 0, 2 );
+        String endMeridiem = endTime.substring( 2 );
+
+        Scanner sc = new Scanner(content); 
+        String description = "";
+        String forWho = "";
+        String who = "";
+        String why = "";
+        String category = "";
+        String volList = "";
+
+        String cur = sc.next().trim(); 
+        if(cur.equals("<description>")) 
+        {
+            cur = sc.next();
+            while(!cur.equals("</description>")) 
+            {
+                description += cur + " ";
+                cur = sc.next(); 
+            }
+            if( description.length() > 1 )
+                description = description.substring( 0, description.length() - 1 );
+            if (sc.hasNext()) 
+            {
+                cur = sc.next();
+            }
+        }
+        if( cur.equals( "<for>" ) )
+        {
+            cur = sc.next();
+            while( !cur.equals( "</for>" ) )
+            {
+                forWho += cur + " ";
+                cur = sc.next(); 
+            }
+            if (sc.hasNext()) 
+            {
+                cur = sc.next();
+            }
+            if( forWho.length() > 1 )
+                forWho = forWho.substring( 0, forWho.length() - 1 );
+        }
+        if( cur.equals( "<who>" ) )
+        {
+            cur = sc.next();
+            while( !cur.equals( "</who>" ) )
+            {
+                who += cur + " ";
+                cur = sc.next();
+            }
+            if (sc.hasNext()) 
+            {
+                cur = sc.next();
+            }
+            if( who.length() > 1 )
+                who = who.substring( 0, who.length() - 1 );
+        }
+        if( cur.equals( "<why>" ) )
+        {
+            cur = sc.next();
+            while( !cur.equals( "</why>" ) )
+            {
+                why += cur + " ";
+                cur = sc.next();
+            }
+            if (sc.hasNext()) 
+            {
+                cur = sc.next();
+            }
+            if( why.length() > 1 )
+                why = why.substring( 0, why.length() - 1 );
+        }
+        if(cur.equals("<category>")) 
+        {
+            cur = sc.next();
+            while(!cur.equals("</category>")) 
+            {
+                category += cur + " "; 
+                cur = sc.next(); 
+            }
+            if (sc.hasNext()) 
+            {
+                cur = sc.next();
+            }
+        } 
+        if(cur.equals("<volunteers>")) 
+        {
+            cur = sc.next();
+            while(!cur.equals("</volunteers>")) 
+            {
+                volList += cur + " "; 
+                cur = sc.next(); 
+            }
+            if (sc.hasNext()) 
+            {
+                cur = sc.next();
+            }
+        }
     
 %>
     <div class="content" id="addEvent">
@@ -208,7 +219,7 @@
         <div class="inputItem">
             When: 
             <div class="dropdown">
-                <input id="date" type="text" name="when" size="10" class="textField hasDatepicker" value="<%=startDay%>" />
+                <input id="date" type="text" name="when" size="10" class="textField" value="<%=startDay%>" />
             </div>
         </div>
         

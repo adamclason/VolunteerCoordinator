@@ -141,7 +141,8 @@
                    description += cur + " ";
                    cur = sc.next(); 
                 }
-                description = description.substring( 0, description.length() - 1 );
+                if( description != null )
+                    description = description.substring( 0, description.length() - 1 );
                 if (sc.hasNext()) 
                 {
                     cur = sc.next();
