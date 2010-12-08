@@ -52,32 +52,42 @@ throws IOException {
 //	int year = Integer.parseInt(req.getParameter("year"));
 
 	// TODO validate input
-	int fromHrs = Integer.parseInt(req.getParameter("fromHrs"));
-	int fromMins = Integer.parseInt(req.getParameter("fromMins"));
-	int tillHrs = Integer.parseInt(req.getParameter("tillHrs"));
-	int tillMins = Integer.parseInt(req.getParameter("tillMins"));
-	
-	if(req.getParameter("fromAMPM").equals("PM")) { 
-		fromHrs += 12;
-	}
-	if(req.getParameter("toAMPM").equals("PM")) { 
-		tillHrs += 12;
-	}
-	
-	String date = req.getParameter("when");
-	String month = date.substring(0, date.indexOf("/")); 
-	String day = date.substring(date.indexOf("/") + 1, date.indexOf("/") + 3); 
-	String year = date.substring(date.indexOf("/") + 4, date.length()); 
-	String formattedDate = year + "-" + month + "-" + day; 
-	
-	String fromTime = formattedDate + "T" + req.getParameter("fromHrs")
-		+ ":" + req.getParameter("fromMins") + ":00";  // + "-05:00"; //-5:00 adjusts to correct time zone
-		String tillTime = formattedDate + "T" + req.getParameter("tillHrs")
-		+ ":" + req.getParameter("tillMins") + ":00"; // + "-05:00"; //-5:00 adjusts to correct time zone
-	
-	System.out.println(fromTime); 
-	System.out.println(tillTime); 
-		
+    int fromHrs = Integer.parseInt(req.getParameter("fromHrs"));
+    String fromMins = req.getParameter("fromMins");
+    int tillHrs = Integer.parseInt(req.getParameter("tillHrs"));
+    String tillMins = req.getParameter("tillMins");
+    
+    if(req.getParameter("fromAMPM").equals("PM")) 
+    { 
+        fromHrs += 12;
+    }
+    if(req.getParameter("toAMPM").equals("PM")) 
+    { 
+        tillHrs += 12;
+    }
+    String fromHrsStr = "";
+    if( fromHrs / 10 > 0 )
+        fromHrsStr = String.valueOf( fromHrs );
+    else
+        fromHrsStr = "0" + String.valueOf( fromHrs );
+    
+    String tillHrsStr = "";
+    if( tillHrs / 10 > 0 )
+        tillHrsStr = String.valueOf( tillHrs );
+    else
+        tillHrsStr = "0" + String.valueOf( tillHrs );
+    
+    String date = req.getParameter("when");
+    String month = date.substring(0, date.indexOf("/")); 
+    String day = date.substring(date.indexOf("/") + 1, date.indexOf("/") + 3); 
+    String year = date.substring(date.indexOf("/") + 4, date.length()); 
+    String formattedDate = year + "-" + month + "-" + day; 
+    
+    String fromTime = formattedDate + "T" + fromHrsStr
+    + ":" + fromMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
+    String tillTime = formattedDate + "T" + tillHrsStr
+    + ":" + tillMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
+			
 		
 	DateTime startTime = DateTime.parseDateTime(fromTime);
 	DateTime endTime = DateTime.parseDateTime(tillTime);
