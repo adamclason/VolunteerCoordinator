@@ -84,6 +84,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>UpdateEvent</servlet-name>
 		<url-pattern>/updateevent</url-pattern>
 	</servlet-mapping>
+    <servlet>
+		<servlet-name>delUsrCalendars</servlet-name>
+		<servlet-class>com.VolunteerCoordinatorApp.delUsrCalendarsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>delUsrCalendars</servlet-name>
+		<url-pattern>/delusrcalendars</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>

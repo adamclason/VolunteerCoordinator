@@ -94,7 +94,7 @@ public class addVolunteerServlet extends HttpServlet {
 	        }
 		}
         
-        resp.sendRedirect("/calendar.jsp");
+        resp.sendRedirect("/calendar.jsp?name=" + name);
 	}
 }
 	

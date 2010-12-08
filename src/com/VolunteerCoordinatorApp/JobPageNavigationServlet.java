@@ -13,11 +13,13 @@ public class JobPageNavigationServlet extends HttpServlet {
 		if (req.getParameter("catCheck") == null) {
 			cat = "null";
 		}
+		if (req.getParameter("date") == null && (startRange.equals("null") || startRange.equals("") || startRange == null) && (endRange.equals("null") || endRange.equals("") ||endRange == null)) {
+			startRange = "null";
+			endRange = "null";
+		}
 		
 		String nav = req.getParameter("navsubmit"); 
 		int pageNumber = Integer.parseInt(req.getParameter("pageNum"));
-
-		System.err.println(name + " " + startRange + " " + endRange + " " + cat + " " + nav + " " + pageNumber);
 		
 		if (nav.equals("Next")){
 			pageNumber++; 

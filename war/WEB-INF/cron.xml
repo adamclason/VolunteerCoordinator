@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/delusrcalendars</url>
+    <description>Delete the user-specific calendars every Sunday morning</description>
+    <schedule>every sunday 03:00</schedule>
+  </cron>
+</cronentries>

@@ -128,9 +128,9 @@
       	
 	      	<div class="filterSetting">
 	      		<input id="rangeCheckbox" type="checkbox" name="date"> By Date </input>
-	      		<div id="textboxes"> 
-	      			Start: <input id="startRange" name="startDate" type="text" size="10"></input>
-	      			End: <input id="endRange" name = "endDate" type="text" size="10"></input> 
+	      		<div id="textboxes">
+	      		    Start: <input id="startRange" name="startDate" type="text" size="10"></input>
+                    End: <input id="endRange" name = "endDate" type="text" size="10"></input> 
 	      		</div>
 	      	</div>	
 	      	
