@@ -7,6 +7,7 @@ public class JobPageNavigationServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {
 		String name = req.getParameter("name"); 
+		String src = req.getParameter("src"); 
 		String startRange = req.getParameter("startDate"); 
 		String endRange = req.getParameter("endDate"); 
 		String cat = req.getParameter("category");
@@ -33,7 +34,7 @@ public class JobPageNavigationServlet extends HttpServlet {
 			resultIndex = (pageNumber - 1) * 10 + 1;
 		}
 		
-		resp.sendRedirect("volunteer.jsp?resultIndex=" + resultIndex + "&pageNumber=" + pageNumber
+		resp.sendRedirect(src + ".jsp?resultIndex=" + resultIndex + "&pageNumber=" + pageNumber
 				+ "&name=" + name + "&startDate=" + startRange + "&endDate=" + endRange + "&category=" + cat); 
 		
 	}

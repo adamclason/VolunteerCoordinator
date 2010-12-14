@@ -17,13 +17,11 @@
 	javax.jdo.PersistenceManager,
 	com.VolunteerCoordinatorApp.PMF,
 	com.VolunteerCoordinatorApp.Category"
-	
 %>
 
 <link rel="stylesheet" type="text/css" href="stylesheets/layout.css" />
 <link rel="stylesheet" type="text/css" href="stylesheets/colors.css" />
 <link rel="stylesheet" type="text/css" href="stylesheets/jquery-ui-1.8.6.custom.css" />
-
 
 
 <script src="javascript/jquery-1.4.2.min.js"> </script>
@@ -69,8 +67,6 @@
       endL += 86399999;
       endDT.setValue(endL);
       
-      System.err.println(startDT + " " + endDT);
-      
       myQuery.setMinimumStartTime(startDT); 
       myQuery.setMaximumStartTime(endDT); 
    } else if (request.getParameter("date") != null) {
@@ -78,11 +74,11 @@
    } else {
       myQuery.setStringCustomParameter("futureevents", "true"); 
    }
-   
+
    if (cat != null && !cat.equals("null")) {
 	   myQuery.setFullTextQuery("<category> " + cat);
    }
-   
+
    myQuery.setMaxResults(10); 
    myQuery.setStartIndex(Integer.parseInt(request.getParameter("resultIndex")));
    myQuery.setStringCustomParameter("orderby", "starttime");
@@ -102,7 +98,7 @@
    SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);   
   
    String hourPattern = "hh:mma"; 
-   SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern);  
+   SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern); 
 %> 
   <ul class="navigation"> 
     <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
@@ -114,7 +110,7 @@
 <%
     PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Category.class.getName();
-    List<Category> categories = (List<Category>) pm.newQuery(query).execute();
+    List<Category> categories = (List<Category>) pm.newQuery(query).execute(); 
 %>
   
 <div class="content" id ="myJobs">
@@ -151,6 +147,7 @@
      	      		    <input type="hidden" name="pageNum" value="<%=pageNumber%>">
      	      		    <input type="hidden" name="name" value="<%=name%>">
      	      		    <input type="hidden" name="navsubmit" value="">
+     	      		    <input type="hidden" name="src" value="volunteer">
 		      		<input id="submitButton" type="submit" value="Submit"> </input> 
 		      	</div>
 	      	</div>
@@ -315,6 +312,7 @@
       <input type="hidden" name="startDate" value="<%=startRange%>">
       <input type="hidden" name="endDate" value="<%=endRange%>">
       <input type="hidden" name="category" value="<%=cat%>">
+      <input type="hidden" name="src" value="volunteer">
    </form>
    </div>
    <% if (!(results.size() < 10 && Integer.parseInt(pageNumber) == 1)) { %>

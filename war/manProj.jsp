@@ -13,8 +13,10 @@
     com.google.gdata.util.*,
     com.google.common.collect.Maps,
     java.io.*,
-    java.text.SimpleDateFormat"
-    
+    java.text.SimpleDateFormat,
+	javax.jdo.PersistenceManager,
+	com.VolunteerCoordinatorApp.PMF,
+	com.VolunteerCoordinatorApp.Category"
 %>
 
 <link rel="stylesheet" type="text/css" href="stylesheets/layout.css" />
@@ -22,18 +24,22 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/jquery-ui-1.8.6.custom.css" />
 
 
-
 <script src="javascript/jquery-1.4.2.min.js"> </script>
 <script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
 <script src="javascript/volunteer.js"> </script>    
 
-<title>Volunteer</title>
+<title>Manage Jobs</title>
 
 </head>
 <body>
 
 <%
    String name = request.getParameter("name");
+
+   // See if the user has selected some of the filter settings 
+   String startRange = request.getParameter("startDate"); 
+   String endRange = request.getParameter("endDate"); 
+   String cat = request.getParameter("category");
   
    // Determine which page of job results should be displayed  
    String pageNumber = request.getParameter("pageNumber");  
@@ -42,13 +48,42 @@
    String pageLabel = "Page " + request.getParameter("pageNumber"); 
 
    // The Date and time of an event are stored in Google Calendar 
-   // because of its ease of use. Each Google Calendar event has an
-   // Event key which corresponds to its event object in the datastore 
-   URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/" +
-        "private/full?futureevents=true&start-index=" + request.getParameter("resultIndex") + 
-        "&orderby=starttime&sortorder=ascending&max-results=10");
+   // because of its ease of use. 
+   URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
   
    CalendarQuery myQuery = new CalendarQuery(feedUrl);
+   
+   if(startRange != null && endRange != null && !startRange.equals("null") && !endRange.equals("null")) { //request.getParameter("date") != null && 
+	  	//Calendar curCal = Calendar.getInstance(); 
+	    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+	    Date start = format.parse(startRange);
+	    Date end = format.parse(endRange);  
+	    DateTime startDT = new DateTime(start); 
+	    DateTime endDT = new DateTime(end); 
+
+	    // shift end date to midnight at end of day instead of beginning of day
+	    long endL = endDT.getValue();
+	    endL += 86399999;
+	    endDT.setValue(endL);
+	      
+	    System.err.println(startDT + " " + endDT);
+	      
+	    myQuery.setMinimumStartTime(startDT); 
+	    myQuery.setMaximumStartTime(endDT); 
+	 } else if (request.getParameter("date") != null) {
+
+	 } else {
+	    myQuery.setStringCustomParameter("futureevents", "true"); 
+	 }
+	   
+	 if (cat != null && !cat.equals("null")) {
+		 myQuery.setFullTextQuery("<category> " + cat);
+	 }
+	   
+	myQuery.setMaxResults(10); 
+	myQuery.setStartIndex(Integer.parseInt(request.getParameter("resultIndex")));
+	myQuery.setStringCustomParameter("orderby", "starttime");
+	myQuery.setStringCustomParameter("sortorder", "ascending");  
    
    CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar"); 
    myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
@@ -67,28 +102,61 @@
    SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern);  
 %> 
   <ul class="navigation" id="catnav" style="width: 44.5em"> 
-    <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1"> Manage Jobs </a></li>
-    <li><a href="/newCat.jsp"> New Category </a></li>
-    <li><a href="/catMaint.jsp"> Category Maintennance </a></li>
+    <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Manage Jobs </a></li>
+    <li><a href="/newCat.jsp?name=<%=name%>"> New Category </a></li>
+    <li><a href="/catMaint.jsp?name=<%=name%>"> Category Maintennance </a></li>
     <%@ include file="LinkHome.jsp" %>
   </ul>
-  
+ 
+<%
+    PersistenceManager pm = PMF.get().getPersistenceManager();
+    String query = "select from " + Category.class.getName();
+    List<Category> categories = (List<Category>) pm.newQuery(query).execute();
+%>
   
   <div class="content" id ="myJobs">
 
-      <div id="head">
-        <h2> Jobs To Manage: </h2>
-        <div id="filter"><img src="stylesheets/images/filter_button.png"> </img></div>
-        <div id="filterSettings" width="300" height = "100"> 
-          <input id="range" type="checkbox"> By Date </input>
-          <div id="textboxes"> 
-              Start: <input id="startRange" type="text" size="10"></input>
-              End: <input id="endRange" type="text" size="10"></input> 
-          </div>
-          <div id="category"> <input type="checkbox"> By Job Category </input></div>
-        </div> 
-      </div>
-      
+	<div id="head">
+      <h2> Jobs To Manage: </h2>
+      <div id="filterButton"><img src="stylesheets/images/filter_button.png"> </img></div>
+      <div id="filterSettings"> 
+      	
+      	<form action="/navigate" method="post">
+      	
+	      	<div class="filterSetting">
+	      		<input id="rangeCheckbox" type="checkbox" name="date"> By Date </input>
+	      		<div id="textboxes">
+	      		    Start: <input id="startRange" name="startDate" type="text" size="10"></input>
+                    End: <input id="endRange" name = "endDate" type="text" size="10"></input> 
+	      		</div>
+	      	</div>	
+	      	
+	      	<div class="filterSetting"> 
+	      		<input id="categoryCheckbox" type="checkbox" name="catCheck">By Job Category </input>
+	      		<div id="categorySelect">
+		      		<select name="category" class="dropdown"> 
+        		        <option>None</option>
+        		        <% for (Category c : categories) { %>
+        			    <option><%= c.getName() %></option>
+        			    <% } %>
+		      		</select> 	
+	      		</div>
+	      	</div>
+	      	
+	      	<div class="filterSetting">
+		      	<div id="submitFilter">
+     	      		    <input type="hidden" name="pageNum" value="<%=pageNumber%>">
+     	      		    <input type="hidden" name="name" value="<%=name%>">
+     	      		    <input type="hidden" name="navsubmit" value="">
+     	      		    <input type="hidden" name="src" value="manProj">
+		      		<input id="submitButton" type="submit" value="Submit"> </input> 
+		      	</div>
+	      	</div>
+      	
+      	</form>
+    </div> 
+</div>
+	
 
     <div class="events">
       <% 
@@ -141,8 +209,6 @@
                    description += cur + " ";
                    cur = sc.next(); 
                 }
-                if( description != null )
-                    description = description.substring( 0, description.length() - 1 );
                 if (sc.hasNext()) 
                 {
                     cur = sc.next();
@@ -244,6 +310,10 @@
         <% } %>
         <input type="hidden" name="pageNum" value="<%=pageNumber%>">
         <input type="hidden" name="name" value="<%=name%>">
+        <input type="hidden" name="startDate" value="<%=startRange%>">
+        <input type="hidden" name="endDate" value="<%=endRange%>">
+        <input type="hidden" name="category" value="<%=cat%>">
+     	<input type="hidden" name="src" value="manProj">
      </form>
      </div>
      <% if (!(results.size() < 10 && Integer.parseInt(pageNumber) == 1)) { %>
@@ -254,3 +324,6 @@
 
   </body>
   </html>
+  
+  
+  
