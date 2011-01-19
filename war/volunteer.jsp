@@ -173,8 +173,14 @@
            DateTime start = time.getStartTime(); 
            DateTime end = time.getEndTime();
            
-           start.setTzShift(-240); 
-           end.setTzShift(-240); 
+           // TODO Automate this switch.
+           //(Offset is in minutes)
+           //start.setTzShift(-240); 
+           //end.setTzShift(-240); 
+           
+           //Set offset to -300 for non-Daylight Savings time.
+           start.setTzShift(-300); 
+           end.setTzShift(-300); 
            
            // Concert to milliseconds to get a date object, which can be formatted easier. 
            Date startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 

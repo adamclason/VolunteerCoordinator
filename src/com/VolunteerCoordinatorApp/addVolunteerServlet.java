@@ -56,7 +56,13 @@ public class addVolunteerServlet extends HttpServlet {
 	        // Get the start time for the event 
 	        When time = entry.getTimes().get(0); 
 	        DateTime start = time.getStartTime(); 
-	        start.setTzShift(-240); 
+	        
+	        // TODO Find a way to automate this switching.
+	        //(Offset is done in minutes)
+	        //start.setTzShift(-240);
+	        
+	        //Use an offset of -300 for non-Daylight Savings time.
+	        start.setTzShift(-300);
 	        
 	        // Concert to milliseconds to get a date object, which can be formatted easier. 
 	        Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
@@ -86,6 +92,7 @@ public class addVolunteerServlet extends HttpServlet {
 	            entry.setContent(new PlainTextConstruct(content));
 	            URL editUrl = new URL(entry.getEditLink().getHref());
 	            try {
+	                System.out.println("Just making sure.");
 					myService.update(editUrl, entry);
 				} catch (ServiceException e) {
 					// TODO Auto-generated catch block
