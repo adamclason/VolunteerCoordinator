@@ -59,7 +59,11 @@ public class UpdateEventServlet extends HttpServlet
                 String forWho = request.getParameter( "for" );
                 String who = request.getParameter( "who" );
                 String why = request.getParameter( "why" );
-                String cat = request.getParameter( "cat" );
+                String cat = request.getParameter( "category" );
+                if( cat.equals( "--" ) )
+                {
+                    cat = "None";
+                }
                 
                 newEntry.setContent(new PlainTextConstruct("<description> "
                         + description + " </description> "

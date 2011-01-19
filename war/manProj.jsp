@@ -198,6 +198,7 @@
              // event, where the event description and a list 
              // of volunteers is stored. 
              String content = entry.getPlainTextContent(); 
+             
              Scanner sc = new Scanner(content); 
              String description = "";
              String forWho = "";
@@ -286,7 +287,7 @@
                  }
              }
            %>
-         <a href = "/editjob.jsp?title=<%=title%>&name=<%=name%>"> 
+         <a href = "/editjob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> 
          <div class="date"> 
             <%=startDay%>   
          </div>  

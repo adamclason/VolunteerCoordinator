@@ -34,10 +34,6 @@
 </head>
 <body>
 
-<ul class="navigation">
-<%@ include file="LinkHome.jsp" %>
-</ul>
-
 <%
     PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Category.class.getName();
@@ -45,6 +41,15 @@
     
     String title = request.getParameter( "title" );
     String name = request.getParameter( "name" );
+    String id = request.getParameter( "id" );
+    
+    %>
+    <ul class="navigation" id="catnav" style="width: 25em">
+        <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Manage Jobs </a></li>
+        <%@ include file="LinkHome.jsp" %>
+    </ul>
+
+    <%
     
     URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
 
@@ -56,7 +61,7 @@
     {
         CalendarEventEntry entry = (CalendarEventEntry) myResultsFeed.getEntries().get(0); 
         int count = 0;
-        while( !entry.getTitle().getPlainText().equals( title ) )
+        while( !entry.getId().equals( id ) )
         {
             entry = (CalendarEventEntry) myResultsFeed.getEntries().get( count++ );
         }
@@ -100,7 +105,8 @@
         endTime = endTime.substring( endTime.indexOf( ":" ) + 1 );
         String endMinute = endTime.substring( 0, 2 );
         String endMeridiem = endTime.substring( 2 );
-
+        
+        
         Scanner sc = new Scanner(content); 
         String description = "";
         String forWho = "";
@@ -125,6 +131,7 @@
                 cur = sc.next();
             }
         }
+        description = description.trim();
         if( cur.equals( "<for>" ) )
         {
             cur = sc.next();
@@ -140,6 +147,7 @@
             if( forWho.length() > 1 )
                 forWho = forWho.substring( 0, forWho.length() - 1 );
         }
+        forWho = forWho.trim();
         if( cur.equals( "<who>" ) )
         {
             cur = sc.next();
@@ -155,6 +163,7 @@
             if( who.length() > 1 )
                 who = who.substring( 0, who.length() - 1 );
         }
+        who = who.trim();
         if( cur.equals( "<why>" ) )
         {
             cur = sc.next();
@@ -170,6 +179,7 @@
             if( why.length() > 1 )
                 why = why.substring( 0, why.length() - 1 );
         }
+        why = why.trim();
         if(cur.equals("<category>")) 
         {
             cur = sc.next();
@@ -183,6 +193,7 @@
                 cur = sc.next();
             }
         } 
+        category = category.trim();
         if(cur.equals("<volunteers>")) 
         {
             cur = sc.next();
@@ -207,9 +218,20 @@
         <div class="inputItem">
             Category: 
             <div class="dropdown"> 
-                <select name="<%=category%>" >
-                    <% for (Category c : categories) { %>
-                    <option><%= c.getName() %></option>
+                <select name="category">
+                    <%
+                    if( category.equals( "None" ) )
+                    {
+                        %>
+                        <option selected>--</option>
+                        <%
+                    }
+                    %>
+                    <% for (Category c : categories) 
+                    { %>
+                    <option <% if( c.getName().equals( category ) ) { %>selected<% }%>>
+                    <%= c.getName() %>
+                    </option>
                     <% } %>
                 </select>
             </div> 
