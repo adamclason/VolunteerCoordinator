@@ -15,7 +15,7 @@
 
     //Create the calendar
     if (name == null || name.equalsIgnoreCase("null") || name.equals("")) {
-        System.err.println("here "+name);
+        System.err.println("there "+name);
     	usrCalUrl = "rockcreekvolunteercoordinator%40gmail.com";
     } else {
         CalendarEntry calendar = new CalendarEntry();
