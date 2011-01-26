@@ -5,6 +5,10 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/colors.css">
     
 <%@ page import="java.util.*"%>
+<%@ page import="java.text.SimpleDateFormat"%>
+	
+
+
 </head> 
 
 <%@ include file="getCalendarService.jsp" %>
@@ -13,11 +17,7 @@
     String usrCalUrl;
     System.err.println("here "+name);
 
-    //Create the calendar
-    if (name == null || name.equalsIgnoreCase("null") || name.equals("")) {
-        System.err.println("there "+name);
-    	usrCalUrl = "rockcreekvolunteercoordinator%40gmail.com";
-    } else {
+
         CalendarEntry calendar = new CalendarEntry();
         calendar.setTitle(new PlainTextConstruct(name + "'s Jobs"));
         calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered for."));
@@ -37,6 +37,8 @@
         URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
         CalendarQuery myQuery = new CalendarQuery(feedUrl);
         myQuery.setFullTextQuery(name);
+        myQuery.setStringCustomParameter("orderby", "starttime");
+        myQuery.setStringCustomParameter("sortorder", "ascending"); 
         CalendarEventFeed resultFeed = myService.query(myQuery, CalendarEventFeed.class);
         List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
         
@@ -64,7 +66,17 @@
                 CalendarEventEntry insertedEntry = myService.insert(newUrl, myEntry);
         	}
         }
-    }
+    
+    
+
+    // The date and time formats used to display the event 
+    // dates and times 
+    String datePattern = "MM-dd-yyyy"; 
+    SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);   
+      
+    String hourPattern = "hh:mma"; 
+    SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern); 
+    
 %>
 
 <body>
@@ -76,9 +88,160 @@
     <%@ include file="LinkHome.jsp" %>
   </ul>
   
-	<div class="content" id="calendar"> 
-		<iframe src="http://www.google.com/calendar/embed?height=500&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=<%=usrCalUrl%>&amp;color=%23691426&amp;ctz=America%2FNew_York" style=" border-width:0 " width="700" height="500" frameborder="0" scrolling="no"></iframe>
-	</div> 	
+  
+  
+<div class="content" id ="myJobs">  
+  <div class="events">
+    <% 
+    if(results.isEmpty()) {
+       %>
+       <div class="event"> There are no jobs to display. </div>
+       <%
+    }  
+    else {
+    for (CalendarEventEntry entry : results) { %>
+      <div class ="event">
+         <%
+           // Get the start and end times for the event 
+           When time = entry.getTimes().get(0); 
+           DateTime start = time.getStartTime(); 
+           DateTime end = time.getEndTime();
+           
+           // TODO Automate this switch.
+           //(Offset is in minutes)
+           //start.setTzShift(-240); 
+           //end.setTzShift(-240); 
+           
+           //Set offset to -300 for non-Daylight Savings time.
+           start.setTzShift(-300); 
+           end.setTzShift(-300); 
+           
+           // Concert to milliseconds to get a date object, which can be formatted easier. 
+           Date startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
+           Date endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
+
+           String startDay = dateFormat.format(startDate); 
+           String startTime = timeFormat.format(startDate);
+           
+           String endTime = timeFormat.format(endDate); 
+           
+           String title = entry.getTitle().getPlainText();
+           
+           // Access the description field of the calendar 
+           // event, where the event description and a list 
+           // of volunteers is stored. 
+           String content = entry.getPlainTextContent(); 
+           Scanner sc = new Scanner(content); 
+           String description = "";
+           String forWho = "";
+           String who = "";
+           String why = "";
+           String category = "";
+           String volList = "";
+           
+           String cur = sc.next().trim();
+           if(cur.equals("<description>")) 
+           {
+              cur = sc.next(); 
+              while(!cur.equals("</description>")) 
+              {
+                 description += cur + " ";
+                 cur = sc.next(); 
+              }
+              if (sc.hasNext()) 
+              {
+                  cur = sc.next();
+              }
+           }
+           if( cur.equals( "<for>" ) )
+           {
+               cur = sc.next();
+               while( !cur.equals( "</for>" ) )
+               {
+                   forWho += cur + " ";
+                   cur = sc.next(); 
+                }
+                if (sc.hasNext()) 
+                {
+                    cur = sc.next();
+                }
+           }
+           if( cur.equals( "<who>" ) )
+           {
+               cur = sc.next();
+               while( !cur.equals( "</who>" ) )
+               {
+                   who += cur + " ";
+                   cur = sc.next(); 
+                }
+                if (sc.hasNext()) 
+                {
+                    cur = sc.next();
+                }
+           }
+           if( cur.equals( "<why>" ) )
+           {
+               cur = sc.next();
+               while( !cur.equals( "</why>" ) )
+               {
+                   why += cur + " ";
+                   cur = sc.next(); 
+                }
+                if (sc.hasNext()) 
+                {
+                    cur = sc.next();
+                }
+           }
+           if(cur.equals("<category>")) 
+           {
+               cur = sc.next();
+               while(!cur.equals("</category>")) 
+               {
+                  category += cur + " "; 
+                  cur = sc.next(); 
+               }
+               if (sc.hasNext()) 
+               {
+                   cur = sc.next();
+               }
+           } 
+           if(cur.equals("<volunteers>")) 
+           {
+               cur = sc.next();
+               while(!cur.equals("</volunteers>")) 
+               {
+                  volList += cur + " "; 
+                  cur = sc.next(); 
+               }
+               if (sc.hasNext()) 
+               {
+                   cur = sc.next();
+               }
+           }
+         %>
+       <a> 
+       <div class="date"> 
+          <%=startDay%>   
+       </div>  
+       <div class="title"><%=title%></div> 
+       <div class="description">
+          <%=description%>
+       </div>
+       <div class="category">
+          <%=category%>
+       </div>
+       <div class="time">
+          <%=startTime%> - <%=endTime%>
+       </div>
+       </a>
+      </div>
+    <% } 
+    } %> 
+   </div>
+</div>   
+   
+   
+   	
 
 </body> 
 
