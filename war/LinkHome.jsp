@@ -1,7 +1,7 @@
 <%
     String userName = request.getParameter("name"); 
     String url = "/index.jsp";
-    if( userName != null )
+    if( userName != null && !userName.equals("null"))
     {
         url += "?name=" + userName;
     }

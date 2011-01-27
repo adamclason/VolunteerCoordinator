@@ -14,7 +14,7 @@ public class JobPageNavigationServlet extends HttpServlet {
 		if (req.getParameter("catCheck") == null) {
 			cat = "null";
 		}
-		if ( (startRange.equals("null") || startRange.equals("") || startRange == null) && (endRange.equals("null") || endRange.equals("") ||endRange == null)) {
+		if ( (startRange.equals("null") || startRange.equals("") || startRange == null) || (endRange.equals("null") || endRange.equals("") ||endRange == null)) {
 			startRange = "null";
 			endRange = "null";
 		}
