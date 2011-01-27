@@ -21,6 +21,8 @@
         {
             out.println( "<b>Please enter a name.</b>" );
             name = "";
+        } else if ( name.equals( "null" ) ) {
+        	name = "";
         }
     }
     else {
