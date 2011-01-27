@@ -92,7 +92,6 @@ public class addVolunteerServlet extends HttpServlet {
 	            entry.setContent(new PlainTextConstruct(content));
 	            URL editUrl = new URL(entry.getEditLink().getHref());
 	            try {
-	                System.out.println("Just making sure.");
 					myService.update(editUrl, entry);
 				} catch (ServiceException e) {
 					// TODO Auto-generated catch block

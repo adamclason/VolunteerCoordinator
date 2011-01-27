@@ -39,6 +39,10 @@ throws IOException {
 	String who = req.getParameter( "who" );
 	String why = req.getParameter( "why" );
 	String cat = req.getParameter( "cat" );
+	if( cat == null )
+	{
+	    cat = "None";
+	}
 	
 	entry.setContent(new PlainTextConstruct("<description> "
 			+ description + " </description> "

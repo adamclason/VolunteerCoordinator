@@ -11,13 +11,16 @@
 
 <%  String name = request.getParameter("name");
     String usrCalUrl;
-    System.err.println("here "+name);
 
-    //Create the calendar
-    if (name == null || name.equalsIgnoreCase("null") || name.equals("")) {
-        System.err.println("here "+name);
-    	usrCalUrl = "rockcreekvolunteercoordinator%40gmail.com";
-    } else {
+    //If no user in query string, prompt to log in.
+    if (name == null || name.equalsIgnoreCase("null") || name.equals("")) 
+    {
+        String newURL = "/index.jsp?name=none";
+        response.sendRedirect( newURL );
+    } 
+    //Otherwise proceed normally.
+    else 
+    {
         CalendarEntry calendar = new CalendarEntry();
         calendar.setTitle(new PlainTextConstruct(name + "'s Jobs"));
         calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered for."));
@@ -63,8 +66,7 @@
                 // Send the request and receive the response:
                 CalendarEventEntry insertedEntry = myService.insert(newUrl, myEntry);
         	}
-        }
-    }
+        }    
 %>
 
 <body>
@@ -77,9 +79,11 @@
   </ul>
   
 	<div class="content" id="calendar"> 
-		<iframe src="http://www.google.com/calendar/embed?height=500&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=<%=usrCalUrl%>&amp;color=%23691426&amp;ctz=America%2FNew_York" style=" border-width:0 " width="700" height="500" frameborder="0" scrolling="no"></iframe>
+		<iframe src="https://www.google.com/accounts/Logout?continue=https%3a%2f%2fwww.google.com%2faccounts%2fServiceLoginAuth%3fcontinue%3dhttp%3a%2f%2fmail.google.com%2fgmail%26service%3dmail%26Email%3drockcreekvolunteercoordinator%26Passwd%3dG0covenant%26null%3dSign%2bin" style=" border-width:0 " width="700" height="500" frameborder="0" scrolling="no"></iframe>
 	</div> 	
 
 </body> 
-
+<%
+    }
+%>
 </html>

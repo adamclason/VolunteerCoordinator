@@ -78,6 +78,24 @@
         DateTime start = time.getStartTime(); 
         DateTime end = time.getEndTime();
 
+        //TimeZone tz = TimeZone.getTimeZone("America/New_York");
+        
+        //tz.setDefault(null);
+        
+        //tz = TimeZone.getDefault();
+                
+        Date date = new Date( start.getValue() );
+
+        /*if( tz.inDaylightTime( date ) )
+        {
+            start.setTzShift(-240); 
+            end.setTzShift(-240); 
+        }
+        else
+        {
+            start.setTzShift(-300); 
+            end.setTzShift(-300); 
+        }*/
         // TODO Automate this switch.
         //(Offset is in minutes)
         //start.setTzShift(-240); 
@@ -219,20 +237,15 @@
             Category: 
             <div class="dropdown"> 
                 <select name="category">
-                    <%
-                    if( category.equals( "None" ) )
-                    {
-                        %>
-                        <option selected>--</option>
-                        <%
-                    }
-                    %>
+                    <option selected>None</option>
                     <% for (Category c : categories) 
                     { %>
                     <option <% if( c.getName().equals( category ) ) { %>selected<% }%>>
                     <%= c.getName() %>
                     </option>
-                    <% } %>
+                    <% 
+                    } 
+                    %>
                 </select>
             </div> 
         </div> 

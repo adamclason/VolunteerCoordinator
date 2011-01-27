@@ -60,7 +60,7 @@ public class UpdateEventServlet extends HttpServlet
                 String who = request.getParameter( "who" );
                 String why = request.getParameter( "why" );
                 String cat = request.getParameter( "category" );
-                if( cat.equals( "--" ) )
+                if( cat.equals( "None" ) || cat == null )
                 {
                     cat = "None";
                 }

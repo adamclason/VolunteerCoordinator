@@ -169,11 +169,29 @@
       for (CalendarEventEntry entry : results) { %>
         <div class ="event">
            <%
+             //TimeZone tz = TimeZone.getTimeZone("America/New_York");
+                      
+             //tz.setDefault(null);
+           
+             //tz = TimeZone.getDefault();
+           
              // Get the start and end times for the event 
              When time = entry.getTimes().get(0); 
              DateTime start = time.getStartTime(); 
              DateTime end = time.getEndTime();
+                          
+             Date date = new Date( start.getValue() );
              
+             /*if( tz.inDaylightTime( date ) )
+             {
+                 start.setTzShift(-240); 
+                 end.setTzShift(-240); 
+             }
+             else
+             {
+                 start.setTzShift(-300); 
+                 end.setTzShift(-300); 
+             }*/
              // TODO Find a way to automate this.
              //start.setTzShift(-240); 
              //end.setTzShift(-240); 
