@@ -305,7 +305,7 @@
                  }
              }
            %>
-         <a href = "/editjob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> 
+         <a href = "/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> 
          <div class="date"> 
             <%=startDay%>   
          </div>  
