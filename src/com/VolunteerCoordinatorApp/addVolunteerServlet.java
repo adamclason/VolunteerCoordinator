@@ -27,6 +27,13 @@ public class addVolunteerServlet extends HttpServlet {
 		String date = req.getParameter("date");
 		String title = req.getParameter("title");
 		String name = req.getParameter("name"); 
+
+	    //If no user in query string, prompt to log in.
+	    if (name == null || name.equalsIgnoreCase("null") || name.equals(""))
+	    {
+	        String newURL = "/index.jsp?name=none";
+	        resp.sendRedirect( newURL );
+	    }
 		
 		URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/" +
 		        "private/full");

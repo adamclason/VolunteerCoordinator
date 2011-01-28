@@ -15,14 +15,15 @@ public class MakeCategoryServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 	        throws IOException {
-		String name = req.getParameter("title"); 
+		String name = req.getParameter("name"); 
+		String title = req.getParameter("title"); 
 		
 
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        Category c = new Category(name);
+        Category c = new Category(title);
         
-        Key key = KeyFactory.createKey(Category.class.getSimpleName(), name);
+        Key key = KeyFactory.createKey(Category.class.getSimpleName(), title);
         c.setKey(key);
        
         try {
@@ -31,7 +32,7 @@ public class MakeCategoryServlet extends HttpServlet {
             pm.close();
         }
         
-        resp.sendRedirect("/newCat.jsp");
+        resp.sendRedirect("/newCat.jsp?name=" + name);
 		
 	}	
 	

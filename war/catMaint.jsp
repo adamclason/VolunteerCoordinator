@@ -28,12 +28,14 @@
     PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Category.class.getName();
     List<Category> categories = (List<Category>) pm.newQuery(query).execute();
+    
+    String name = request.getParameter("name");
 %>
 
 <ul class="navigation" id="catnav"> 
-  <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1"> Manage Jobs </a></li>
-  <li><a href="/newCat.jsp"> New Category </a></li>
-  <li><a href="/catMaint.jsp"> Category Maintennance </a></li>
+  <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Manage Jobs </a></li>
+  <li><a href="/newCat.jsp?name=<%=name%>"> New Category </a></li>
+  <li><a href="/catMaint.jsp?name=<%=name%>"> Category Maintennance </a></li>
   <%@ include file="LinkHome.jsp" %>
 </ul>
 
@@ -54,6 +56,7 @@
         Category Title: <input type="text" name="title" class="textfield" size="30" maxlength="30" />
         </div> 
        
+      <input type="hidden" name="name" value="<%=name%>">
         <div class="submit">
         	<input type="submit" name="submit" class="submitButton" value="Rename Category"/>
         	<input type="submit" name="submit" class="submitButton" value="Delete Category"/>

@@ -9,6 +9,7 @@ import java.util.List;
 public class EditCategoryServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	        throws IOException {
+		String name = req.getParameter("name");
 		String cat = req.getParameter("cat");
 		String title = req.getParameter("title");
 		String action = req.getParameter("submit");
@@ -30,7 +31,7 @@ public class EditCategoryServlet extends HttpServlet {
 	    
 	    pm.close();
 		
-		resp.sendRedirect("/catMaint.jsp");
+		resp.sendRedirect("/catMaint.jsp?name=" + name);
 		
 	}	
 	
