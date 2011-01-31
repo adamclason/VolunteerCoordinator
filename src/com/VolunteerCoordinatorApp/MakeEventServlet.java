@@ -95,6 +95,14 @@ throws IOException {
 		
 	DateTime startTime = DateTime.parseDateTime(fromTime);
 	DateTime endTime = DateTime.parseDateTime(tillTime);
+	if (startTime.compareTo(endTime) > 0) { // handle bug where endtime is before the starttime
+		resp.sendRedirect("/add.jsp?name=" + name + "&errordate=true&desc=" +
+		        description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
+		        cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
+		        "&tillMins=" + tillMins + "&fromAMPM=" + req.getParameter("fromAMPM") +
+		        "&toAMPM=" + req.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
+		        req.getParameter("recur"));
+	}
 	When eventTimes = new When();
 	eventTimes.setStartTime(startTime);
 	eventTimes.setEndTime(endTime);
