@@ -285,7 +285,7 @@
                }
            }
          %>
-       <a href = "/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>"> 
+       <a href = "/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>""> 
        <div class="date"> 
           <%=startDay%>   
        </div>  
