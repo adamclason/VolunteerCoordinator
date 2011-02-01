@@ -53,6 +53,9 @@
    URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full"); //&max-results=10");
   
    CalendarQuery myQuery = new CalendarQuery(feedUrl);
+ 
+   CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar"); 
+   myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
    
    if(startRange != null && endRange != null && !startRange.equals("null") && !endRange.equals("null")) { //request.getParameter("date") != null && 
    	  //Calendar curCal = Calendar.getInstance(); 
@@ -76,16 +79,13 @@
    }
 
    if (cat != null && !cat.equals("null")) {
-	   myQuery.setFullTextQuery("<category> " + cat);
+	   myQuery.setExtendedPropertyQuery(new CalendarQuery.ExtendedPropertyMatch("category", cat) );
    }
 
    myQuery.setMaxResults(10); 
    myQuery.setStartIndex(Integer.parseInt(request.getParameter("resultIndex")));
    myQuery.setStringCustomParameter("orderby", "starttime");
    myQuery.setStringCustomParameter("sortorder", "ascending");  
- 
-   CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar"); 
-   myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
 
    // Send the request and receive the response:
    CalendarEventFeed resultFeed = myService.query(myQuery, CalendarEventFeed.class);
@@ -182,7 +182,7 @@
            start.setTzShift(-300); 
            end.setTzShift(-300); 
            
-           // Concert to milliseconds to get a date object, which can be formatted easier. 
+           // Convert to milliseconds to get a date object, which can be formatted easier. 
            Date startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
            Date endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
 
@@ -284,6 +284,13 @@
                    cur = sc.next();
                }
            }
+           
+      		List<ExtendedProperty> propList = entry.getExtendedProperty();
+      		for (ExtendedProperty prop : propList) {
+      			if (prop.getName().equals("category")) {
+      				category = prop.getValue();
+      			}
+      		}
          %>
        <a href = "/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>"> 
        <div class="date"> 

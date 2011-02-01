@@ -77,7 +77,7 @@
 	 }
 	   
 	 if (cat != null && !cat.equals("null")) {
-		 myQuery.setFullTextQuery("<category> " + cat);
+		 myQuery.setExtendedPropertyQuery(new CalendarQuery.ExtendedPropertyMatch("category", cat) );
 	 }
 	   
 	myQuery.setMaxResults(10); 
@@ -304,6 +304,13 @@
                      cur = sc.next();
                  }
              }
+             
+        		List<ExtendedProperty> propList = entry.getExtendedProperty();
+        		for (ExtendedProperty prop : propList) {
+        			if (prop.getName().equals("category")) {
+        				category = prop.getValue();
+        			}
+        		}
            %>
          <a href = "/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> 
          <div class="date"> 

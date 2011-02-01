@@ -33,7 +33,9 @@ throws IOException {
 	CalendarEventEntry entry = new CalendarEventEntry();
 	//CalendarQuery q = new CalendarQuery(new URL("hello")); 
 	
-	entry.setTitle(new PlainTextConstruct(req.getParameter("title")));
+	String title = req.getParameter( "title" );
+	entry.setTitle(new PlainTextConstruct(title));
+	
 	String description = req.getParameter( "what" );
 	String forWho = req.getParameter( "for" );
 	String who = req.getParameter( "who" );
@@ -48,8 +50,13 @@ throws IOException {
 			+ description + " </description> "
 			+ "<for> " + forWho + " </for> "
 			+ "<who> " + who + " </who> "
-			+ "<why> " + why + " </why> "
-			+ "<category> " + cat + " </category>")); // TODO format content better?
+			+ "<why> " + why + " </why> "));
+
+	// set category property
+	ExtendedProperty category = new ExtendedProperty();
+	category.setName("category");
+	category.setValue(cat);
+	entry.addExtendedProperty(category);
 	
 //	int day = Integer.parseInt(req.getParameter("day"));
 //	int month = Integer.parseInt(req.getParameter("month"));
@@ -96,7 +103,7 @@ throws IOException {
 	DateTime startTime = DateTime.parseDateTime(fromTime);
 	DateTime endTime = DateTime.parseDateTime(tillTime);
 	if (startTime.compareTo(endTime) > 0) { // handle bug where endtime is before the starttime
-		resp.sendRedirect("/add.jsp?name=" + name + "&errordate=true&desc=" +
+		resp.sendRedirect("/add.jsp?name=" + name + "&title=" + title + "&errordate=true&desc=" +
 		        description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
 		        cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
 		        "&tillMins=" + tillMins + "&fromAMPM=" + req.getParameter("fromAMPM") +

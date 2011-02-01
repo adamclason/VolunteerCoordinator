@@ -26,6 +26,7 @@
 <body>
 
 <% String name = request.getParameter("name"); 
+String title = request.getParameter("title"); 
 String desc = request.getParameter("desc"); 
 String forWho = request.getParameter("for"); 
 String who = request.getParameter("who"); 
@@ -69,14 +70,17 @@ if (desc == null) {
 	recur = "";
 }
 
+if (title == null || title.equals("null")) {
+	title = "";
+}
+
 if(fromAMPM.equals("PM")) { 
         fromHrs = Integer.toString(Integer.parseInt(fromHrs) - 12);
 }
 if(toAMPM.equals("PM")) { 
         tillHrs = Integer.toString(Integer.parseInt(tillHrs) - 12);
 }
-
-System.err.println(fromHrs + " " + tillHrs); %>
+ %>
 
 <ul class="navigation" style="width: 29.5em;">
 <%@ include file="LinkHome.jsp" %>
@@ -91,7 +95,7 @@ System.err.println(fromHrs + " " + tillHrs); %>
 <div class="content" id="addEvent">
     <form method="post" action="/makeevent">
     	<div class="inputItem"> 
-        Job Name: <input type="text" name="title" class="textfield" value="<%= name %>" />
+        Job Name: <input type="text" name="title" class="textfield" value="<%= title %>" />
         </div> 
         
         <div class="inputItem">

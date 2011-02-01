@@ -60,6 +60,7 @@ public class UpdateEventServlet extends HttpServlet
                 String who = request.getParameter( "who" );
                 String why = request.getParameter( "why" );
                 String cat = request.getParameter( "category" );
+                System.err.println(cat);
                 if( cat.equals( "None" ) || cat == null )
                 {
                     cat = "None";
@@ -69,8 +70,14 @@ public class UpdateEventServlet extends HttpServlet
                         + description + " </description> "
                         + "<for> " + forWho + " </for> "
                         + "<who> " + who + " </who> "
-                        + "<why> " + why + " </why> "
-                        + "<category> " + cat + " </category>"));
+                        + "<why> " + why + " </why> "));
+
+	            // set category property
+	            ExtendedProperty category = new ExtendedProperty();
+	            category.setName("category");
+                category.setValue(cat);
+	            newEntry.addExtendedProperty(category);
+	            
                 int fromHrs = Integer.parseInt(request.getParameter("fromHrs"));
                 String fromMins = request.getParameter("fromMins");
                 int tillHrs = Integer.parseInt(request.getParameter("tillHrs"));
