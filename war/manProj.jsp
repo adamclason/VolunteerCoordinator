@@ -40,6 +40,7 @@
    String startRange = request.getParameter("startDate"); 
    String endRange = request.getParameter("endDate"); 
    String cat = request.getParameter("category");
+   String resultIndex = request.getParameter("resultIndex");
   
    // Determine which page of job results should be displayed  
    String pageNumber = request.getParameter("pageNumber");  
@@ -81,7 +82,7 @@
 	 }
 	   
 	myQuery.setMaxResults(10); 
-	myQuery.setStartIndex(Integer.parseInt(request.getParameter("resultIndex")));
+	myQuery.setStartIndex(Integer.parseInt(resultIndex));
 	myQuery.setStringCustomParameter("orderby", "starttime");
 	myQuery.setStringCustomParameter("sortorder", "ascending");  
    
@@ -166,9 +167,7 @@
          <%
       }  
       else {
-      for (CalendarEventEntry entry : results) { %>
-        <div class ="event">
-           <%
+      for (CalendarEventEntry entry : results) { 
              //TimeZone tz = TimeZone.getTimeZone("America/New_York");
                       
              //tz.setDefault(null);
@@ -312,22 +311,26 @@
         			}
         		}
            %>
-         <a href = "/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> 
-         <div class="date"> 
+        <div class ="event">
+         <a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> 
+         <span class="date"> 
             <%=startDay%>   
-         </div>  
-         <div class="title"><%=title%></div> 
-         <div class="description">
+         </span>  
+         <span class="title"><%=title%></span> 
+         <span class="description">
             <%=description%>
-         </div>
-         <div class="category">
+         </span>
+         <span class="category">
             <%=category%>
-         </div>
-         <div class="time">
+         </span>
+         <span class="time">
             <%=startTime%> - <%=endTime%>
-         </div>
+         </span>
          </a>
         </div>
+        <span class="delete">
+           <a href="/delevent?name=<%=name%>&date=<%=startDay%>&title=<%=title%>&category=<%=cat%>&pageNum=<%=pageNumber%>&startDate=<%=startRange%>&endDate=<%=endRange%>&resultIndex=<%=resultIndex%>">Delete</a>
+        </span>
       <% } 
       } %> 
      </div>

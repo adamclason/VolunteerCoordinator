@@ -1,10 +1,7 @@
 package com.VolunteerCoordinatorApp;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.jdo.PersistenceManager;

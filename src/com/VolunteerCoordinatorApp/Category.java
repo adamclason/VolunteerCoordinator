@@ -1,9 +1,6 @@
 package com.VolunteerCoordinatorApp;
 
-import java.util.Date;
-
 import com.google.appengine.api.datastore.Key;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;

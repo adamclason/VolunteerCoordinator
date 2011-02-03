@@ -133,6 +133,7 @@ h2 {
   overflow: auto;
   font: 13px arial, sans-serif; 
   padding: 1em;
+  padding-bottom: 1.75em;
 }
 .event a .title {
   font: 15px arial, sans-serif; 
@@ -152,6 +153,25 @@ h2 {
 .event a:hover {
   background-color:#eeeeee;
   border-color: #774400;
+}
+.delete a {
+  border: 0em none #CCCCCC;
+  display: inline;
+  overflow: hidden;
+  padding: .2em;
+  float: right;
+  color: #ffffff;
+  background-color: #774400;
+  text-decoration: none;
+  margin-right: -4em;
+  position:relative;
+  bottom: 1.6em;
+  right: 4em;
+  
+}
+.delete a:hover {
+  color: #ffffff;
+  background-color:#77CC00;
 }
 .navigation li  {
   width: 7em;

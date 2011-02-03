@@ -2,7 +2,6 @@ package com.VolunteerCoordinatorApp;
 
 import java.io.IOException;
 import javax.servlet.http.*;
-
 import com.google.gdata.client.Query;
 import com.google.gdata.client.calendar.*;
 import com.google.gdata.data.*;
@@ -10,10 +9,7 @@ import com.google.gdata.data.calendar.*;
 import com.google.gdata.data.extensions.*;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
-
 import java.net.URL;
-import java.util.List;
-import java.util.ListIterator;
 
 @SuppressWarnings("serial")
 public class UpdateEventServlet extends HttpServlet
