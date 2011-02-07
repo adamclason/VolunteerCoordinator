@@ -90,7 +90,7 @@ public class addVolunteerServlet extends HttpServlet {
 	            	if (!contentArray[1].contains(name.trim())) {
 		            	int end = volList.indexOf("</volunteers>");
 		            	volList.insert(end, name.trim() + " ; ");
-		            	content = contentArray[0] + volList;
+		            	content = contentArray[0] + "<volunteers>" + volList;
 	            	}
 	            }
 	            else {
