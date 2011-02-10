@@ -76,13 +76,16 @@ public class delEventServlet extends HttpServlet {
 	        // Get the start time for the event 
 	        When time = entry.getTimes().get(0); 
 	        DateTime start = time.getStartTime(); 
-	        
-	        // TODO Find a way to automate this switching.
-	        //(Offset is done in minutes)
-	        //start.setTzShift(-240);
-	        
-	        //Use an offset of -300 for non-Daylight Savings time.
-	        start.setTzShift(-300);
+
+	        TimeZone estTZ =  TimeZone.getTimeZone("GMT-5");
+	        Date startDate = new Date(start.getValue());
+	        //Determine timezone offset in minutes, depending on whether or not
+	        //Daylight Savings Time is in effect
+	        if (estTZ.inDaylightTime(startDate)) { 
+	            start.setTzShift(-240); 
+	        } else {
+	            start.setTzShift(-300); 
+	        }
 	        
 	        // Concert to milliseconds to get a date object, which can be formatted easier. 
 	        Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 

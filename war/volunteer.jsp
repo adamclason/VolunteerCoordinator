@@ -172,19 +172,26 @@
            When time = entry.getTimes().get(0); 
            DateTime start = time.getStartTime(); 
            DateTime end = time.getEndTime();
-           
-           // TODO Automate this switch.
-           //(Offset is in minutes)
-           //start.setTzShift(-240); 
-           //end.setTzShift(-240); 
-           
-           //Set offset to -300 for non-Daylight Savings time.
-           start.setTzShift(-300); 
-           end.setTzShift(-300); 
-           
+
+           TimeZone estTZ =  TimeZone.getTimeZone("GMT-5");
+           Date startDate = new Date(start.getValue());
+           Date endDate = new Date(end.getValue());
+           //Determine timezone offset in minutes, depending on whether or not
+           //Daylight Savings Time is in effect
+           if (estTZ.inDaylightTime(startDate)) { 
+               start.setTzShift(-240); 
+           } else {
+        	   start.setTzShift(-300); 
+           }
+           if (estTZ.inDaylightTime(endDate)) { 
+               end.setTzShift(-240);
+           } else {
+               end.setTzShift(-300);
+           }
+                      
            // Convert to milliseconds to get a date object, which can be formatted easier. 
-           Date startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
-           Date endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
+           startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
+           endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
 
            String startDay = dateFormat.format(startDate); 
            String startTime = timeFormat.format(startDate);
