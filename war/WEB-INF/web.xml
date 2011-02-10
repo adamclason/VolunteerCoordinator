@@ -100,6 +100,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>delEvent</servlet-name>
 		<url-pattern>/delevent</url-pattern>
 	</servlet-mapping>
+    <servlet>
+		<servlet-name>mailer</servlet-name>
+		<servlet-class>com.VolunteerCoordinatorApp.MailerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>mailer</servlet-name>
+		<url-pattern>/mailer</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
