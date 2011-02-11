@@ -34,13 +34,18 @@ public class Volunteer {
 	@Persistent
 	private String reminder; 
 	
-	public Volunteer(String firstname, String lastname, String email, String phone, String reminder) {
+	@Persistent
+	private String calendarId;
+	
+	public Volunteer(String firstname, String lastname, String email, String phone, 
+	        String reminder, String calendarId) {
 		this.name = firstname.trim() + " " + lastname.trim();
 		this.firstName = firstname; 
 		this.lastName = lastname;
 		this.email = email; 
 		this.phone = phone; 
 		this.reminder = reminder;
+		this.calendarId = calendarId;
 	}
 	
 	public Key getKey() {
@@ -89,5 +94,15 @@ public class Volunteer {
     
     public void setReminder(String reminder) {
     	this.reminder = reminder;
+    }
+    
+    public String getCalendarId() 
+    {
+        return calendarId;
+    }
+    
+    public void setCalendarId(String calendarId) 
+    {
+        this.calendarId = calendarId;
     }
 }

@@ -165,7 +165,8 @@
        <%
     }  
     else {
-    for (CalendarEventEntry entry : results) { %>
+    for (CalendarEventEntry entry : results) { 
+        %>
       <div class ="event">
          <%
            // Get the start and end times for the event 
@@ -299,7 +300,7 @@
       			}
       		}
          %>
-       <a href = "/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>"> 
+       <a href = "/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>""> 
        <div class="date"> 
           <%=startDay%>   
        </div>  

@@ -2,7 +2,9 @@ package com.VolunteerCoordinatorApp;
 
 import java.util.*;
 import java.io.*;
+
 import javax.servlet.http.*;
+
 import java.text.SimpleDateFormat;
 import javax.jdo.Query; 
 import javax.jdo.PersistenceManager;
@@ -20,6 +22,11 @@ import java.net.URL;
 
 @SuppressWarnings("serial")
 public class VolunteerCoordinatorServlet extends HttpServlet {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+    throws IOException {
+        doPost(req, resp); 
+    }
+    
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		Object taskObj = req.getAttribute("task"); 
@@ -114,4 +121,14 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 	    
 		return v.getReminder();
 	}
+	
+	private String getCalendarId(String name) {
+
+        PersistenceManager pm = PMF.get().getPersistenceManager(); 
+
+        Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+        Volunteer v = pm.getObjectById(Volunteer.class, k);
+        
+        return v.getReminder();
+    }
 }

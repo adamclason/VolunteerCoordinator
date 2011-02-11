@@ -4,13 +4,19 @@
 <link rel="stylesheet" href="stylesheets/layout.css" type="text/css">
     <link rel="stylesheet" type="text/css" href="stylesheets/colors.css">
     
-<%@ page import="java.util.*"%>
+<%@ page import="java.util.*,
+    java.net.URL, javax.jdo.PersistenceManager, 
+    com.VolunteerCoordinatorApp.PMF,
+    com.VolunteerCoordinatorApp.Volunteer,
+    com.google.appengine.api.datastore.Key,
+    com.google.appengine.api.datastore.KeyFactory"
+%>
 </head>
 
 <%@ include file="getCalendarService.jsp" %>
 
 <% String name = request.getParameter("name");
-    String usrCalUrl;
+    String usrCalUrl = null;
 
     //If no user in query string, prompt to log in.
     if (name == null || name.equalsIgnoreCase("null") || name.equals(""))
@@ -22,67 +28,23 @@
     //Otherwise proceed normally.
     else
     {
-        CalendarEntry calendar = new CalendarEntry();
-        calendar.setTitle(new PlainTextConstruct(name + "'s Jobs"));
-        calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered for."));
-        calendar.setTimeZone(new TimeZoneProperty("America/New_York"));
-        calendar.setHidden(HiddenProperty.FALSE);
+        //Checks the datastore for the calendar ID associated with this user.
+        PersistenceManager pm = PMF.get().getPersistenceManager(); 
 
-        // Insert the calendar
-        URL postUrl = new URL("https://www.google.com/calendar/feeds/default/owncalendars/full");
-        CalendarEntry returnedCalendar = myService.insert(postUrl, calendar);
+        Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+        Volunteer v = pm.getObjectById(Volunteer.class, k);
         
-        // Get the calender's url
-        usrCalUrl = returnedCalendar.getId();
-        int splitHere = usrCalUrl.lastIndexOf("/") + 1;
-        usrCalUrl = usrCalUrl.substring(splitHere);
+        usrCalUrl = v.getCalendarId();
         
-        //Get feed of results
-        URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
-        CalendarQuery myQuery = new CalendarQuery(feedUrl);
-        myQuery.setFullTextQuery(name);
-        CalendarEventFeed resultFeed = myService.query(myQuery, CalendarEventFeed.class);
-        List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
-        
-        if (!results.isEmpty()) {
-         for (CalendarEventEntry entry : results) {
-                //Get the event's details
-                TextConstruct title = entry.getTitle();
-                String content = entry.getPlainTextContent();
-                When time = entry.getTimes().get(0);
-                DateTime start = time.getStartTime();
-                DateTime end = time.getEndTime();
-
-                //Create a new entry and add it
-                URL newUrl = new URL(
-                 "http://www.google.com/calendar/feeds/" + usrCalUrl + "/private/full");
-                CalendarEventEntry myEntry = new CalendarEventEntry();
-                myEntry.setTitle(title);
-                myEntry.setContent(new PlainTextConstruct(content));
-                When eventTimes = new When();
-                eventTimes.setStartTime(start);
-                eventTimes.setEndTime(end);
-                myEntry.addTime(eventTimes);
-                
-                // Send the request and receive the response:
-                CalendarEventEntry insertedEntry = myService.insert(newUrl, myEntry);
-         }
+        //If there was no Url stored in the Volunteer, it calls calendarIdSetter
+        //to get one and add it to the volunteer object in the datastore.
+        if( usrCalUrl == null )
+        {
+        %>
+            <%@include file="calendarIdSetter.jsp"%>
+      <%
+            usrCalUrl = volunteer.getCalendarId();
         }
-        
-        // Access the Access Control List (ACL) for the calendar
-        Link link = returnedCalendar.getLink(AclNamespace.LINK_REL_ACCESS_CONTROL_LIST,
-        	      Link.Type.ATOM);
-        URL aclUrl = new URL(link.getHref());
-        AclFeed aclFeed = myService.getFeed(aclUrl, AclFeed.class);
-        
-        // Set the default to "read-only" for all users
-        AclEntry aclEntry = aclFeed.createEntry();
-        aclEntry.setScope(new AclScope(AclScope.Type.DEFAULT, null));
-        aclEntry.setRole(CalendarAclRole.READ);
-        
-        // Add it to the ACL
-        AclEntry insertedEntry = myService.insert(aclUrl, aclEntry);
-        
     }
 %>
 
