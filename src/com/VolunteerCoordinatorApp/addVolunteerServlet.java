@@ -4,15 +4,17 @@ import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.jdo.PersistenceManager;
 import javax.servlet.http.*;
+
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gdata.client.calendar.CalendarQuery;
 import com.google.gdata.client.calendar.CalendarService;
 import com.google.gdata.data.DateTime;
 import com.google.gdata.data.PlainTextConstruct;
-import com.google.gdata.data.calendar.CalendarEntry;
-import com.google.gdata.data.calendar.CalendarEventEntry;
-import com.google.gdata.data.calendar.CalendarEventFeed;
-import com.google.gdata.data.calendar.CalendarFeed;
+import com.google.gdata.data.calendar.*;
 import com.google.gdata.data.extensions.*;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
@@ -30,8 +32,6 @@ public class addVolunteerServlet extends HttpServlet {
         String title = req.getParameter("title");
         String name = req.getParameter("name"); 
         
-        System.out.println( "We do get *this* far, right?" );
-
         //If no user in query string, prompt to log in.
         if (name == null || name.equalsIgnoreCase("null") || name.equals(""))
         {
@@ -39,20 +39,19 @@ public class addVolunteerServlet extends HttpServlet {
             resp.sendRedirect( newURL );
         }
         
-        URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/" +
-                "private/full");
+        URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full"); //&max-results=10");
+
           
         CalendarQuery myQuery = new CalendarQuery(feedUrl);
+        myQuery.setStringCustomParameter("futureevents", "true"); 
            
         CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar");
-        System.out.println( "No?" );
         try {
             myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
         } catch (AuthenticationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println( "Yes?" );
 
         // Send the request and receive the response:
         CalendarEventFeed resultFeed = null;
@@ -63,8 +62,7 @@ public class addVolunteerServlet extends HttpServlet {
             e.printStackTrace();
         }
           
-        List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries(); 
-                
+        List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
         for (CalendarEventEntry entry : results) {
             // Get the start time for the event 
             When time = entry.getTimes().get(0); 
@@ -88,12 +86,13 @@ public class addVolunteerServlet extends HttpServlet {
             
             if (startDay.equals(date) && eventTitle.equals(title)) {
                 String content = entry.getPlainTextContent(); 
-                
                 if (content.contains("<volunteers>")) {
                     String contentArray[] = content.split("<volunteers>");
                     StringBuffer volList = new StringBuffer(contentArray[1]);
                     //make sure the user isn't already in the list
                     if (!contentArray[1].contains(name.trim())) {
+                        
+                        System.out.println( contentArray[1] );
                         int end = volList.indexOf("</volunteers>");
                         volList.insert(end, name.trim() + " ; ");
                         content = contentArray[0] + volList;
@@ -110,10 +109,26 @@ public class addVolunteerServlet extends HttpServlet {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                System.out.println( "Yes, we do run this." );
                 
                 //Search for existing calendars under this user's name
-                URL newFeedUrl = new URL("https://www.google.com/calendar/feeds/default/owncalendars/full");
+                PersistenceManager pm = PMF.get().getPersistenceManager(); 
+
+                Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+                Volunteer v = pm.getObjectById(Volunteer.class, k);
+                
+                String usrCalUrl = v.getCalendarId();
+                URL newUrl = new URL("http://www.google.com/calendar/feeds/" 
+                        + usrCalUrl + "/private/full");
+                try
+                {
+                    myService.insert(newUrl, entry);
+                }
+                catch ( ServiceException e )
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                /*URL newFeedUrl = new URL("https://www.google.com/calendar/feeds/default/owncalendars/full");
                 CalendarFeed newResultFeed;
                 try
                 {
@@ -122,7 +137,6 @@ public class addVolunteerServlet extends HttpServlet {
                     String usrCalUrl;
                     for( int i = 0; i < newResultFeed.getEntries().size(); i++ )
                     {
-                        System.out.println( "One would hope at least this far." );
                         CalendarEntry newEntry = newResultFeed.getEntries().get( i );
                         //String compare is not a great way to do it, 
                         //but I'm not sure there is another option.
@@ -133,10 +147,10 @@ public class addVolunteerServlet extends HttpServlet {
                             usrCalUrl = returnedCalendar.getId();
                             int splitHere = usrCalUrl.lastIndexOf("/") + 1;
                             usrCalUrl = usrCalUrl.substring(splitHere);
+                            System.out.println( usrCalUrl );
                             URL newUrl = new URL("http://www.google.com/calendar/feeds/" 
                                     + usrCalUrl + "/private/full");
                             myService.insert(newUrl, entry);
-                            System.out.println("Even as far as this");
                             break;
                         }
                     }
@@ -145,7 +159,7 @@ public class addVolunteerServlet extends HttpServlet {
                 {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                }
+                }*/
             }
         }
         

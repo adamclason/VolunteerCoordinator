@@ -165,7 +165,8 @@
        <%
     }  
     else {
-    for (CalendarEventEntry entry : results) { %>
+    for (CalendarEventEntry entry : results) { 
+        %>
       <div class ="event">
          <%
            // Get the start and end times for the event 
