@@ -91,8 +91,6 @@ public class addVolunteerServlet extends HttpServlet {
                     StringBuffer volList = new StringBuffer(contentArray[1]);
                     //make sure the user isn't already in the list
                     if (!contentArray[1].contains(name.trim())) {
-                        
-                        System.out.println( contentArray[1] );
                         int end = volList.indexOf("</volunteers>");
                         volList.insert(end, name.trim() + " ; ");
                         content = contentArray[0] + volList;
