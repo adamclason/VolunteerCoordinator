@@ -67,13 +67,15 @@ public class addVolunteerServlet extends HttpServlet {
             // Get the start time for the event 
             When time = entry.getTimes().get(0); 
             DateTime start = time.getStartTime(); 
-            
-            // TODO Find a way to automate this switching.
-            //(Offset is done in minutes)
-            //start.setTzShift(-240);
-            
-            //Use an offset of -300 for non-Daylight Savings time.
-            start.setTzShift(-300);
+            TimeZone estTZ =  TimeZone.getTimeZone("GMT-5");
+            Date startDate = new Date(start.getValue());
+            //Determine timezone offset in minutes, depending on whether or not
+            //Daylight Savings Time is in effect
+            if (estTZ.inDaylightTime(startDate)) { 
+                start.setTzShift(-240); 
+            } else {
+                start.setTzShift(-300); 
+            }
             
             // Concert to milliseconds to get a date object, which can be formatted easier. 
             Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
@@ -86,6 +88,7 @@ public class addVolunteerServlet extends HttpServlet {
             
             if (startDay.equals(date) && eventTitle.equals(title)) {
                 String content = entry.getPlainTextContent(); 
+                
                 if (content.contains("<volunteers>")) {
                     String contentArray[] = content.split("<volunteers>");
                     StringBuffer volList = new StringBuffer(contentArray[1]);
@@ -93,7 +96,7 @@ public class addVolunteerServlet extends HttpServlet {
                     if (!contentArray[1].contains(name.trim())) {
                         int end = volList.indexOf("</volunteers>");
                         volList.insert(end, name.trim() + " ; ");
-                        content = contentArray[0] + volList;
+                        content = contentArray[0] + "<volunteers>" + volList;
                     }
                 }
                 else {
@@ -110,6 +113,7 @@ public class addVolunteerServlet extends HttpServlet {
                 
                 //Search for existing calendars under this user's name
                 PersistenceManager pm = PMF.get().getPersistenceManager(); 
+
                 Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
                 Volunteer v = pm.getObjectById(Volunteer.class, k);
                 
