@@ -34,10 +34,10 @@ public class delEventServlet extends HttpServlet {
 		if (req.getParameter("catCheck") == null) {
 			cat = "null";
 		}
-		if (date.equals("null") || date.equals("") || date == null) {
+		if ( date == null || date.equals("") || date.equals("null")) {
 			date = "null";
 		}
-		if (endRange.equals("null") || endRange.equals("") ||endRange == null) {
+		if (endRange == null || endRange.equals("") || endRange.equals("null")) {
 			endRange = "null";
 		}
 

@@ -1,8 +1,3 @@
-import com.google.gdata.data.acl.AclEntry;
-import com.google.gdata.data.acl.AclScope;
-import com.google.gdata.data.calendar.CalendarAclRole;
-import com.google.gdata.util.ServiceException;
-
 <html>
 
 <head>
