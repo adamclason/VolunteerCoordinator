@@ -278,14 +278,17 @@ public class addVolunteerServlet extends HttpServlet {
                         AclEntry aclEntry = aclFeed.createEntry();
                         aclEntry.setScope(new AclScope(AclScope.Type.DEFAULT, null));
                         aclEntry.setRole(CalendarAclRole.READ);
+                        AclEntry aclEntry2 = aclFeed.createEntry();
+                        aclEntry.setScope(new AclScope(AclScope.Type.USER, "rockcreekvolunteercoordinator@gmail.com"));
+                        aclEntry.setRole(CalendarAclRole.EDITOR);
                         // Add it to the ACL  
                         try
                         {
                             myService.insert(aclUrl, aclEntry);
+                            myService.insert(aclUrl, aclEntry2);
                         }
                         catch ( ServiceException e1 )
                         {
-                            System.out.println( "Failed at inserting ACL Feed." );
                             // TODO Auto-generated catch block
                             e1.printStackTrace();
                         }

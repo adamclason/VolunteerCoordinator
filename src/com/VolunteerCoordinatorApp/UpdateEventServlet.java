@@ -10,6 +10,7 @@ import com.google.gdata.data.extensions.*;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
 import java.net.URL;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class UpdateEventServlet extends HttpServlet
@@ -30,7 +31,7 @@ public class UpdateEventServlet extends HttpServlet
         String newTitle = request.getParameter( "newTitle" );
         String name = request.getParameter( "name" );
         
-        URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
+        URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/allcalendars/full");
 
         Query myQuery = new Query( feedUrl );
         myQuery.setFullTextQuery( title );
@@ -38,7 +39,7 @@ public class UpdateEventServlet extends HttpServlet
         {
             CalendarEventFeed myResultsFeed = myService.query( myQuery, CalendarEventFeed.class );
             if (myResultsFeed.getEntries().size() > 0) 
-            {
+            {   
                 CalendarEventEntry retrievedEntry = (CalendarEventEntry) myResultsFeed.getEntries().get(0);
                 
                 int count = 0;
