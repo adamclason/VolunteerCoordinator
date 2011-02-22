@@ -26,7 +26,15 @@
 
 <script src="javascript/jquery-1.4.2.min.js"> </script>
 <script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
-<script src="javascript/volunteer.js"> </script>    
+<script src="javascript/volunteer.js"> </script>   
+
+<script type="text/javascript">
+function toggler(num) { //Shows or hides the urlbox of the given number
+	var url = 'url';
+	var id = url + num;
+	$(document.getElementById(id)).toggle();
+}
+</script>
 
 <title>Manage Jobs</title>
 
@@ -167,13 +175,10 @@
          <%
       }  
       else {
-      for (CalendarEventEntry entry : results) { 
-             //TimeZone tz = TimeZone.getTimeZone("America/New_York");
-                      
-             //tz.setDefault(null);
-           
-             //tz = TimeZone.getDefault();
-           
+          int entryNum = 0; // To keep track of each entry separately 
+      for (CalendarEventEntry entry : results) {       
+    	    entryNum++;
+    	  
              // Get the start and end times for the event 
              When time = entry.getTimes().get(0); 
              DateTime start = time.getStartTime(); 
@@ -325,12 +330,20 @@
          </span>
          </a>
         </div>
+        <span class="copy" onclick="toggler(<%=entryNum%>)"> Link </span>
+        <span class="copyURL" id="url<%=entryNum%>"> 
+            <input id="urlbox" type="text" readonly="readonly" size="15" value="/addvolunteer?date=<%=startDay%>&title=<%=title%>&id=<%=entry.getId()%>"></input>
+        </span>
         <span class="delete">
-           <a href="/delevent?name=<%=name%>&date=<%=startDay%>&title=<%=title%>&category=<%=cat%>&pageNum=<%=pageNumber%>&startDate=<%=startRange%>&endDate=<%=endRange%>&resultIndex=<%=resultIndex%>">Delete</a>
+            <a href="/delevent?name=<%=name%>&date=<%=startDay%>&title=<%=title%>&category=<%=cat%>&pageNum=<%=pageNumber%>&startDate=<%=startRange%>&endDate=<%=endRange%>&resultIndex=<%=resultIndex%>">Delete</a>
         </span>
       <% } 
       } %> 
      </div>
+     
+     <script type="text/javascript"> // Hide all the url boxes by default
+         $('.copyURL').hide(); 
+     </script>
      
      <div class="footer">
      <form action="/navigate" method="post">
@@ -354,8 +367,5 @@
    
   </div>
 
-  </body>
-  </html>
-  
-  
-  
+</body>
+</html>
