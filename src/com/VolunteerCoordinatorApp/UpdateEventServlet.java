@@ -9,6 +9,8 @@ import com.google.gdata.data.calendar.*;
 import com.google.gdata.data.extensions.*;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
+import com.google.gdata.util.ServiceForbiddenException;
+
 import java.net.URL;
 import java.util.List;
 
@@ -34,18 +36,38 @@ public class UpdateEventServlet extends HttpServlet
         URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/allcalendars/full");
 
         Query myQuery = new Query( feedUrl );
-        myQuery.setFullTextQuery( title );
+        //myQuery.setFullTextQuery( title );
         try
         {
-            CalendarEventFeed myResultsFeed = myService.query( myQuery, CalendarEventFeed.class );
+            CalendarEventFeed myResultsFeed = null;
+            try
+            {
+                myResultsFeed = myService.query( myQuery, CalendarEventFeed.class );
+            }
+            catch( ServiceForbiddenException e )
+            {
+                System.out.println( "Caught exception trying to query myService." );
+                e.printStackTrace();
+            }
             if (myResultsFeed.getEntries().size() > 0) 
             {   
                 CalendarEventEntry retrievedEntry = (CalendarEventEntry) myResultsFeed.getEntries().get(0);
-                
+                List<CalendarEventEntry> list = myResultsFeed.getEntries();
+                for( CalendarEventEntry entry : list )
+                {
+                    System.out.println( entry.getTitle().getPlainText() );
+                }
                 int count = 0;
                 while( !retrievedEntry.getTitle().getPlainText().equals( title ) )
                 {
-                    retrievedEntry = (CalendarEventEntry) myResultsFeed.getEntries().get( count++ );
+                    try
+                    {
+                        retrievedEntry = (CalendarEventEntry) myResultsFeed.getEntries().get( count++ );
+                    }
+                    catch( IndexOutOfBoundsException e )
+                    {
+                        //System.out.println( "Okay, so we ran out of CalendarEventEntries.  Anyone have any more bright ideas?" );
+                    }
                 }
                 retrievedEntry.delete();
                 
