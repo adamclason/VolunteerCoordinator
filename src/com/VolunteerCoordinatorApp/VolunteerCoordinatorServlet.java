@@ -4,21 +4,10 @@ import java.util.*;
 import java.io.*;
 
 import javax.servlet.http.*;
-
-import java.text.SimpleDateFormat;
 import javax.jdo.Query; 
 import javax.jdo.PersistenceManager;
-import com.google.gdata.client.*;
-import com.google.gdata.client.calendar.*;
-import com.google.gdata.data.*;
-import com.google.gdata.data.acl.*;
-import com.google.gdata.data.calendar.*;
-import com.google.gdata.data.extensions.*;
-import com.google.gdata.util.*;
-import com.google.common.collect.Maps;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import java.net.URL;
 
 @SuppressWarnings("serial")
 public class VolunteerCoordinatorServlet extends HttpServlet {
@@ -121,14 +110,4 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 	    
 		return v.getReminder();
 	}
-	
-	private String getCalendarId(String name) {
-
-        PersistenceManager pm = PMF.get().getPersistenceManager(); 
-
-        Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
-        Volunteer v = pm.getObjectById(Volunteer.class, k);
-        
-        return v.getReminder();
-    }
 }

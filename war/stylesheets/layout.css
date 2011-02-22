@@ -167,11 +167,51 @@ h2 {
   position:relative;
   bottom: 1.6em;
   right: 4em;
-  
 }
 .delete a:hover {
-  color: #ffffff;
   background-color:#77CC00;
+}
+.copy {
+  border: 0em none #CCCCCC;
+  display: inline;
+  overflow: hidden;
+  padding: .2em;
+  float: right;
+  color: #ffffff;
+  background-color: #774400;
+  text-decoration: none;
+  margin-right: -4em;
+  position:relative;
+  bottom: 1.6em;
+  right: 8em;
+}
+.copy:hover {
+  background-color:#77CC00;
+  cursor: pointer;
+}
+.copyURL {
+  border: 0.1em solid #774400;
+  display: inline;
+  overflow: hidden;
+  padding: .2em;
+  float: right;
+  background-color: #eeffee;
+  text-decoration: none;
+  position:relative;
+  bottom: 4em;
+  right: 14.5em;
+  margin-right: -14em;
+}
+.copyButton {
+  border: 0em none #CCCCCC;
+  padding: .2em;
+  color: #ffffff;
+  background-color: #774400;
+  text-decoration: none;
+  cursor: pointer;
+}
+.copyButton:hover {
+  background-color: #77CC00;
 }
 .navigation li  {
   width: 7em;
@@ -238,4 +278,7 @@ h2 {
 #catnav {
   width: 28em;
   margin-bottom: 1em;
+}
+#copyButton.hover {
+  background-color: #77CC00;
 }

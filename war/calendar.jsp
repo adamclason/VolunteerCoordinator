@@ -25,9 +25,15 @@ String usrCalUrl = null;
 //If no user in query string, prompt to log in.
 if (name == null || name.equalsIgnoreCase("null") || name.equals(""))
 {
-    String newURL = "/index.jsp?name=none";
-    response.sendRedirect( newURL );
-    usrCalUrl = "rockcreekvolunteercoordinator%40gmail.com";
+	//get url being used
+	String url = request.getRequestURI().toString();
+	String params = request.getQueryString();
+	if (params != null) {
+		url += "?" + params;
+	}
+	
+    url = "/index.jsp?name=none&url=" + url;
+    response.sendRedirect( url );
 }
 //Otherwise proceed normally.
 else
@@ -195,9 +201,9 @@ else
             AclEntry aclEntry = aclFeed.createEntry();
             aclEntry.setScope(new AclScope(AclScope.Type.DEFAULT, null));
             aclEntry.setRole(CalendarAclRole.READ);
-            AclEntry aclEntry2 = aclFeed.createEntry();
+          	AclEntry aclEntry2 = aclFeed.createEntry();
             aclEntry.setScope(new AclScope(AclScope.Type.USER, "rockcreekvolunteercoordinator@gmail.com"));
-            aclEntry.setRole(CalendarAclRole.EDITOR);
+          	aclEntry.setRole(CalendarAclRole.EDITOR);
             // Add it to the ACL  
             try
             {
