@@ -32,17 +32,16 @@ public class UpdateEventServlet extends HttpServlet
         String title = request.getParameter( "title" );
         String newTitle = request.getParameter( "newTitle" );
         String name = request.getParameter( "name" );
-        
+
         URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/allcalendars/full");
 
-        Query myQuery = new Query( feedUrl );
-        //myQuery.setFullTextQuery( title );
+        Query calendarQuery = new Query( feedUrl );
         try
         {
-            CalendarEventFeed myResultsFeed = null;
+            CalendarFeed myResultsFeed = null;
             try
             {
-                myResultsFeed = myService.query( myQuery, CalendarEventFeed.class );
+                myResultsFeed = myService.query( calendarQuery, CalendarFeed.class );
             }
             catch( ServiceForbiddenException e )
             {
@@ -51,107 +50,128 @@ public class UpdateEventServlet extends HttpServlet
             }
             if (myResultsFeed.getEntries().size() > 0) 
             {   
-                CalendarEventEntry retrievedEntry = (CalendarEventEntry) myResultsFeed.getEntries().get(0);
-                List<CalendarEventEntry> list = myResultsFeed.getEntries();
-                for( CalendarEventEntry entry : list )
+                List<CalendarEntry> list = myResultsFeed.getEntries();
+                for( CalendarEntry entry : list )
                 {
-                    System.out.println( entry.getTitle().getPlainText() );
-                }
-                int count = 0;
-                while( !retrievedEntry.getTitle().getPlainText().equals( title ) )
-                {
-                    try
+                    String entryId = entry.getId();
+                    int splitHere = entryId.lastIndexOf("/") + 1;
+                    entryId = entryId.substring(splitHere);
+                    //System.out.println( entry.getId() );
+                    URL entryUrl = new URL( "http://www.google.com/calendar/feeds/"
+                            + entryId + "/private/full");
+                    Query eventQuery = new Query( entryUrl );
+                    eventQuery.setFullTextQuery( title );
+                    CalendarEventFeed eventFeed = myService.query( eventQuery, CalendarEventFeed.class );
+                    for( CalendarEventEntry eventEntry : eventFeed.getEntries() )
                     {
-                        retrievedEntry = (CalendarEventEntry) myResultsFeed.getEntries().get( count++ );
-                    }
-                    catch( IndexOutOfBoundsException e )
-                    {
-                        //System.out.println( "Okay, so we ran out of CalendarEventEntries.  Anyone have any more bright ideas?" );
-                    }
-                }
-                retrievedEntry.delete();
-                
-                CalendarEventEntry newEntry = new CalendarEventEntry();
-                
-                newEntry.setTitle(new PlainTextConstruct( newTitle ));
-                String description = request.getParameter( "what" );
-                String forWho = request.getParameter( "for" );
-                String who = request.getParameter( "who" );
-                String why = request.getParameter( "why" );
-                String cat = request.getParameter( "category" );
-                System.err.println(cat);
-                if( cat.equals( "None" ) || cat == null )
-                {
-                    cat = "None";
-                }
-                
-                newEntry.setContent(new PlainTextConstruct("<description> "
-                        + description + " </description> "
-                        + "<for> " + forWho + " </for> "
-                        + "<who> " + who + " </who> "
-                        + "<why> " + why + " </why> "));
+                        if( eventEntry.getTitle().getPlainText().equals( title ) )
+                        {
+                            String volunteers = eventEntry.getPlainTextContent(); 
+                            int beginVolunteerList = volunteers.indexOf( "<volunteers>" );
+                            if( beginVolunteerList > -1 )
+                            {
+                                volunteers = volunteers.substring( beginVolunteerList );
+                            }
+                            else 
+                            {
+                                volunteers = "<volunteers>  </volunteers>";
+                            }
+                            try
+                            {
+                                eventEntry.delete();
+                            }
+                            catch( ServiceException e )
+                            {
+                                System.out.println( "Exception trying to delete calendarEventEntry" );
+                                e.printStackTrace();
+                            }
 
-	            // set category property
-	            ExtendedProperty category = new ExtendedProperty();
-	            category.setName("category");
-                category.setValue(cat);
-	            newEntry.addExtendedProperty(category);
-	            
-                int fromHrs = Integer.parseInt(request.getParameter("fromHrs"));
-                String fromMins = request.getParameter("fromMins");
-                int tillHrs = Integer.parseInt(request.getParameter("tillHrs"));
-                String tillMins = request.getParameter("tillMins");
-                
-                if(request.getParameter("fromAMPM").equals("PM")) 
-                { 
-                    fromHrs += 12;
+                            CalendarEventEntry newEntry = new CalendarEventEntry();
+
+                            newEntry.setTitle(new PlainTextConstruct( newTitle ));
+                            String description = request.getParameter( "what" );
+                            String forWho = request.getParameter( "for" );
+                            String who = request.getParameter( "who" );
+                            String why = request.getParameter( "why" );
+                            String cat = request.getParameter( "category" );
+                            System.err.println(cat);
+                            if( cat.equals( "None" ) || cat == null )
+                            {
+                                cat = "None";
+                            }
+
+                            newEntry.setContent(new PlainTextConstruct("<description> "
+                                    + description + " </description> "
+                                    + "<for> " + forWho + " </for> "
+                                    + "<who> " + who + " </who> "
+                                    + "<why> " + why + " </why> " 
+                                    + volunteers ) );
+
+                            // set category property
+                            ExtendedProperty category = new ExtendedProperty();
+                            category.setName("category");
+                            category.setValue(cat);
+                            newEntry.addExtendedProperty(category);
+
+                            int fromHrs = Integer.parseInt(request.getParameter("fromHrs"));
+                            String fromMins = request.getParameter("fromMins");
+                            int tillHrs = Integer.parseInt(request.getParameter("tillHrs"));
+                            String tillMins = request.getParameter("tillMins");
+
+                            if(request.getParameter("fromAMPM").equals("PM")) 
+                            { 
+                                fromHrs += 12;
+                            }
+                            if(request.getParameter("toAMPM").equals("PM")) 
+                            { 
+                                tillHrs += 12;
+                            }
+                            String fromHrsStr = "";
+                            if( fromHrs / 10 > 0 )
+                                fromHrsStr = String.valueOf( fromHrs );
+                            else
+                                fromHrsStr = "0" + String.valueOf( fromHrs );
+
+                            String tillHrsStr = "";
+                            if( tillHrs / 10 > 0 )
+                                tillHrsStr = String.valueOf( tillHrs );
+                            else
+                                tillHrsStr = "0" + String.valueOf( tillHrs );
+
+                            String date = request.getParameter("when");
+                            String month = date.substring(0, date.indexOf("/")); 
+                            String day = date.substring(date.indexOf("/") + 1, date.indexOf("/") + 3); 
+                            String year = date.substring(date.indexOf("/") + 4, date.length()); 
+                            String formattedDate = year + "-" + month + "-" + day; 
+
+                            String fromTime = formattedDate + "T" + fromHrsStr
+                            + ":" + fromMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
+                            String tillTime = formattedDate + "T" + tillHrsStr
+                            + ":" + tillMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
+
+                            DateTime startTime = DateTime.parseDateTime(fromTime);
+                            DateTime endTime = DateTime.parseDateTime(tillTime);
+                            When eventTimes = new When();
+                            eventTimes.setStartTime(startTime);
+                            eventTimes.setEndTime(endTime);
+                            newEntry.addTime(eventTimes);
+                            try
+                            {
+                                myService.insert( entryUrl, newEntry );
+                            }
+                            catch ( ServiceException e )
+                            {
+                                System.out.println( "Error inserting new calendar." );
+                                //Actual error handling one of these days.
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
                 }
-                if(request.getParameter("toAMPM").equals("PM")) 
-                { 
-                    tillHrs += 12;
-                }
-                String fromHrsStr = "";
-                if( fromHrs / 10 > 0 )
-                    fromHrsStr = String.valueOf( fromHrs );
-                else
-                    fromHrsStr = "0" + String.valueOf( fromHrs );
-                
-                String tillHrsStr = "";
-                if( tillHrs / 10 > 0 )
-                    tillHrsStr = String.valueOf( tillHrs );
-                else
-                    tillHrsStr = "0" + String.valueOf( tillHrs );
-                
-                String date = request.getParameter("when");
-                String month = date.substring(0, date.indexOf("/")); 
-                String day = date.substring(date.indexOf("/") + 1, date.indexOf("/") + 3); 
-                String year = date.substring(date.indexOf("/") + 4, date.length()); 
-                String formattedDate = year + "-" + month + "-" + day; 
-                
-                String fromTime = formattedDate + "T" + fromHrsStr
-                + ":" + fromMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
-                String tillTime = formattedDate + "T" + tillHrsStr
-                + ":" + tillMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
-                
-                DateTime startTime = DateTime.parseDateTime(fromTime);
-                DateTime endTime = DateTime.parseDateTime(tillTime);
-                When eventTimes = new When();
-                eventTimes.setStartTime(startTime);
-                eventTimes.setEndTime(endTime);
-                newEntry.addTime(eventTimes);
-                URL postUrl =
-                    new URL("https://www.google.com/calendar/feeds/default/private/full");
-                try
-                {
-                    myService.insert( postUrl, newEntry );
-                }
-                catch ( ServiceException e )
-                {
-                    //Actual error handling one of these days.
-                    e.printStackTrace();
-                }
+
             }
-            
+
             response.sendRedirect("/manProj.jsp?pageNumber=1&resultIndex=1&name=" + name);
         }
         catch( ServiceException e )
