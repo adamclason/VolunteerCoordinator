@@ -255,21 +255,23 @@ public class addVolunteerServlet extends HttpServlet {
 									myEntry.addTime(eventTimes);
 
 									// Send the request and receive the response:
-										try
+									try
 									{
-											myService.insert(newEntryUrl, myEntry);
+									    myService.insert(newEntryUrl, myEntry);
 									}
-										catch ( ServiceException e1 )
-										{
-											// TODO Auto-generated catch block
-											e1.printStackTrace();
-										}
+									catch ( ServiceException e1 )
+									{
+									    // TODO Auto-generated catch block
+									    System.out.println( "Error inserting new entry into CalendarService." );
+									    e1.printStackTrace();
+									}
 								}
 							}
 							// Access the Access Control List (ACL) for the calendar
 							Link link = newCalendar.getLink(AclNamespace.LINK_REL_ACCESS_CONTROL_LIST,
 									Link.Type.ATOM);
-							URL aclUrl = new URL(link.getHref());
+							//System.out.println( link.getHref() );
+							URL aclUrl = new URL( link.getHref() );
 							AclFeed aclFeed = null;
 							try
 							{
@@ -286,18 +288,15 @@ public class addVolunteerServlet extends HttpServlet {
 							AclEntry aclEntry = aclFeed.createEntry();
 							aclEntry.setScope(new AclScope(AclScope.Type.DEFAULT, null));
 							aclEntry.setRole(CalendarAclRole.READ);
-							AclEntry aclEntry2 = aclFeed.createEntry();
-	                        aclEntry.setScope(new AclScope(AclScope.Type.USER, "rockcreekvolunteercoordinator@gmail.com"));
-	                        aclEntry.setRole(CalendarAclRole.EDITOR);
 							// Add it to the ACL  
 							try
 							{
 								myService.insert(aclUrl, aclEntry);
-								myService.insert(aclUrl, aclEntry2);
 							}
 							catch ( ServiceException e1 )
 							{
 								// TODO Auto-generated catch block
+	                            System.out.println( "Error inserting new entries into ACL." );
 								e1.printStackTrace();
 							}
 						}
