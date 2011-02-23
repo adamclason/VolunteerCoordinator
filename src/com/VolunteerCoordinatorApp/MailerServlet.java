@@ -222,7 +222,7 @@ public class MailerServlet extends HttpServlet {
 	       	        String recip = v.getEmail();
 
 	       	      //must be "address of a registered developer for the application" (Google documentation)
-	       	        String senderAddress = new String("rockcreekvolunteercoordinator@gmail.com");
+	       	        String senderAddress = new String("serpentine.cougar@gmail.com");
 	       	        String senderName = new String("Rock Creek Fellowship"); //optional
 
 	       	        try {
@@ -233,6 +233,9 @@ public class MailerServlet extends HttpServlet {
 	       	            msg.addRecipients(Message.RecipientType.TO, recipEmail); //other possible types: cc, bcc
 	       	            msg.setSubject(msgSubj);
 	       	            msg.setText(msgBody);
+	       	            
+	       	            //make program wait 8 seconds before emailing, to avoid overstepping quota limits
+	       	            pause(8);
 	       	            Transport.send(msg);
 
 	       	        } catch (AddressException e) {
@@ -252,5 +255,11 @@ public class MailerServlet extends HttpServlet {
 	    }
 		
 	}
-    
+
+	public void pause(int x) { // pauses for x minutes
+		long ms2, ms1 = System.currentTimeMillis();
+		do {
+			ms2 = System.currentTimeMillis();
+		} while ((ms2 - ms1) < (x * 1000)); //convert seconds to miliseconds and check if the specified amount of time has passed 
+	}
 }
