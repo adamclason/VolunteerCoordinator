@@ -12,7 +12,9 @@ import com.google.gdata.util.ServiceException;
 import com.google.gdata.util.ServiceForbiddenException;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @SuppressWarnings("serial")
 public class UpdateEventServlet extends HttpServlet
@@ -56,7 +58,6 @@ public class UpdateEventServlet extends HttpServlet
                     String entryId = entry.getId();
                     int splitHere = entryId.lastIndexOf("/") + 1;
                     entryId = entryId.substring(splitHere);
-                    //System.out.println( entry.getId() );
                     URL entryUrl = new URL( "http://www.google.com/calendar/feeds/"
                             + entryId + "/private/full");
                     Query eventQuery = new Query( entryUrl );
@@ -151,6 +152,24 @@ public class UpdateEventServlet extends HttpServlet
 
                             DateTime startTime = DateTime.parseDateTime(fromTime);
                             DateTime endTime = DateTime.parseDateTime(tillTime);
+                            
+                            TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+                            Date startDate = new Date(startTime.getValue());
+                            Date endDate = new Date(endTime.getValue());
+                            //Determine timezone offset in minutes, depending on whether or not
+                            //Daylight Savings Time is in effect
+                            if (estTZ.inDaylightTime(startDate)) {
+                                System.out.println( "In DST" );
+                                startTime.setTzShift(-240); 
+                            } else {
+                              startTime.setTzShift(-300); 
+                            }
+                            if (estTZ.inDaylightTime(endDate)) { 
+                                endTime.setTzShift(-240);
+                            } else {
+                                endTime.setTzShift(-300);
+                            }
+                            
                             When eventTimes = new When();
                             eventTimes.setStartTime(startTime);
                             eventTimes.setEndTime(endTime);

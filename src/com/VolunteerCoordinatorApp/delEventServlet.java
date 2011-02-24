@@ -77,7 +77,7 @@ public class delEventServlet extends HttpServlet {
 	        When time = entry.getTimes().get(0); 
 	        DateTime start = time.getStartTime(); 
 
-	        TimeZone estTZ =  TimeZone.getTimeZone("GMT-5");
+	        TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
 	        Date startDate = new Date(start.getValue());
 	        //Determine timezone offset in minutes, depending on whether or not
 	        //Daylight Savings Time is in effect

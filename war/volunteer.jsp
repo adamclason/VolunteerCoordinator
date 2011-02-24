@@ -174,7 +174,7 @@
            DateTime start = time.getStartTime(); 
            DateTime end = time.getEndTime();
 
-           TimeZone estTZ =  TimeZone.getTimeZone("GMT-5");
+           TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
            Date startDate = new Date(start.getValue());
            Date endDate = new Date(end.getValue());
            //Determine timezone offset in minutes, depending on whether or not
@@ -196,6 +196,7 @@
 
            String startDay = dateFormat.format(startDate); 
            String startTime = timeFormat.format(startDate);
+           //System.out.println( start.getTzShift() );
            
            String endTime = timeFormat.format(endDate); 
            

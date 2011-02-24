@@ -158,6 +158,22 @@ else
                     When entryTime = singleEntry.getTimes().get(0);
                     DateTime entryStart = entryTime.getStartTime();
                     DateTime entryEnd = entryTime.getEndTime();
+                    
+                    TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+                    Date startDate = new Date(entryStart.getValue());
+                    Date endDate = new Date(entryEnd.getValue());
+                    //Determine timezone offset in minutes, depending on whether or not
+                    //Daylight Savings Time is in effect
+                    if (estTZ.inDaylightTime(startDate)) { 
+                        entryStart.setTzShift(-240); 
+                    } else {
+                        entryStart.setTzShift(-300); 
+                    }
+                    if (estTZ.inDaylightTime(endDate)) { 
+                        entryEnd.setTzShift(-240);
+                    } else {
+                        entryEnd.setTzShift(-300);
+                    }
 
                     //Create a new entry and add it
                     URL newEntryUrl = new URL(
