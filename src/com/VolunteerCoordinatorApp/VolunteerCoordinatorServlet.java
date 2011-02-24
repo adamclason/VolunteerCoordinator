@@ -18,13 +18,19 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
     
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		String queryStr = req.getQueryString();
 		Object taskObj = req.getAttribute("task"); 
 		Object nameObj = req.getAttribute("name"); 
 		String task;
 		String name;
 		if (taskObj == null) {
 			name = req.getParameter("name"); 
-			task = req.getQueryString().split("task=")[1];
+			if (queryStr != null && queryStr.contains("task=")) {
+				task = req.getQueryString().split("task=")[1];
+			} else {
+				task = req.getParameter("task");
+			}
+			
 		}
 		else {
 			name = nameObj.toString(); 
