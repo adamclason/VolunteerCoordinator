@@ -86,7 +86,7 @@
                 
         Date date = new Date( start.getValue() );
 
-        TimeZone estTZ =  TimeZone.getTimeZone("GMT-5");
+        TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
         Date startDate = new Date(start.getValue());
         Date endDate = new Date(end.getValue());
         //Determine timezone offset in minutes, depending on whether or not

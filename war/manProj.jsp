@@ -186,7 +186,7 @@ function toggler(num) { //Shows or hides the urlbox of the given number
                           
              Date date = new Date( start.getValue() );
 
-             TimeZone estTZ =  TimeZone.getTimeZone("GMT-5");
+             TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
              Date startDate = new Date(start.getValue());
              Date endDate = new Date(end.getValue());
              //Determine timezone offset in minutes, depending on whether or not
@@ -194,7 +194,7 @@ function toggler(num) { //Shows or hides the urlbox of the given number
              if (estTZ.inDaylightTime(startDate)) { 
                  start.setTzShift(-240); 
              } else {
-          	   start.setTzShift(-300); 
+          	     start.setTzShift(-300); 
              }
              if (estTZ.inDaylightTime(endDate)) { 
                  end.setTzShift(-240);

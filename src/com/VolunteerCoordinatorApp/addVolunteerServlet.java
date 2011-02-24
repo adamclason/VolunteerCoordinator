@@ -79,15 +79,23 @@ public class addVolunteerServlet extends HttpServlet {
 				// Get the start time for the event 
 				When time = entry.getTimes().get(0); 
 				DateTime start = time.getStartTime(); 
-				TimeZone estTZ =  TimeZone.getTimeZone("GMT-5");
-				Date startDate = new Date(start.getValue());
-				//Determine timezone offset in minutes, depending on whether or not
-				//Daylight Savings Time is in effect
-				if (estTZ.inDaylightTime(startDate)) { 
-					start.setTzShift(-240); 
-				} else {
-					start.setTzShift(-300); 
-				}
+                DateTime end = time.getEndTime();
+
+                TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+                Date startDate = new Date(start.getValue());
+                Date endDate = new Date(end.getValue());
+                //Determine timezone offset in minutes, depending on whether or not
+                //Daylight Savings Time is in effect
+                if (estTZ.inDaylightTime(startDate)) { 
+                    start.setTzShift(-240); 
+                } else {
+                   start.setTzShift(-300); 
+                }
+                if (estTZ.inDaylightTime(endDate)) { 
+                    end.setTzShift(-240);
+                } else {
+                    end.setTzShift(-300);
+                }
 
 				// Concert to milliseconds to get a date object, which can be formatted easier. 
 				Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
@@ -106,8 +114,8 @@ public class addVolunteerServlet extends HttpServlet {
 						StringBuffer volList = new StringBuffer(contentArray[1]);
 						//make sure the user isn't already in the list
 						if (!contentArray[1].contains(name.trim())) {
-							int end = volList.indexOf("</volunteers>");
-							volList.insert(end, name.trim() + " ; ");
+							int endIndex = volList.indexOf("</volunteers>");
+							volList.insert(endIndex, name.trim() + " ; ");
 							content = contentArray[0] + "<volunteers>" + volList;
 						}
 					}
@@ -242,6 +250,21 @@ public class addVolunteerServlet extends HttpServlet {
 									When entryTime = singleEntry.getTimes().get(0);
 									DateTime entryStart = entryTime.getStartTime();
 									DateTime entryEnd = entryTime.getEndTime();
+									
+					                Date entryStartDate = new Date(start.getValue());
+					                Date entryEndDate = new Date(entryEnd.getValue());
+					                //Determine timezone offset in minutes, depending on whether or not
+					                //Daylight Savings Time is in effect
+					                if (estTZ.inDaylightTime(startDate)) { 
+					                    entryStart.setTzShift(-240); 
+					                } else {
+					                    entryStart.setTzShift(-300); 
+					                }
+					                if (estTZ.inDaylightTime(entryEndDate)) { 
+					                    entryEnd.setTzShift(-240);
+					                } else {
+					                    entryEnd.setTzShift(-300);
+					                }
 
 									//Create a new entry and add it
 									URL newEntryUrl = new URL(

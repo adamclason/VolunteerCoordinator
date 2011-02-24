@@ -3,7 +3,9 @@ package com.VolunteerCoordinatorApp;
 import java.io.IOException;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -103,6 +105,22 @@ public class MakeUserServlet extends HttpServlet {
 		            When time = entry.getTimes().get(0);
 		            DateTime start = time.getStartTime();
 		            DateTime end = time.getEndTime();
+
+	                TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+	                Date startDate = new Date(start.getValue());
+	                Date endDate = new Date(end.getValue());
+	                //Determine timezone offset in minutes, depending on whether or not
+	                //Daylight Savings Time is in effect
+	                if (estTZ.inDaylightTime(startDate)) { 
+	                    start.setTzShift(-240); 
+	                } else {
+	                   start.setTzShift(-300); 
+	                }
+	                if (estTZ.inDaylightTime(endDate)) { 
+	                    end.setTzShift(-240);
+	                } else {
+	                    end.setTzShift(-300);
+	                }
 
 		            //Create a new entry and add it
 		            URL newUrl = new URL(
