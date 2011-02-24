@@ -89,7 +89,7 @@ public class addVolunteerServlet extends HttpServlet {
 					start.setTzShift(-300); 
 				}
 
-				// Concert to milliseconds to get a date object, which can be formatted easier. 
+				// Convert to milliseconds to get a date object, which can be formatted easier. 
 				Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
 
 				String datePattern = "MM-dd-yyyy"; 

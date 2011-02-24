@@ -21,14 +21,14 @@
     String last = "";
     if( splitName.length > 1 )
         last = splitName[splitName.length - 1];
-	String task = request.getParameter("task");
+	String task = request.getQueryString().split("task=")[1];
 %>
-<form action="/makeuser" method="post">
+<form action="/makeuser?task=<%=task%>" method="post">
 	First Name: <input type="text" class="textfield" id="firstName" value="<%= first %>" name="firstName" size="23" /> <br /><br />
 	Last Name: <input type="text" class="textfield" id="lastName" value="<%= last %>" name="lastName" size="23" /> <br /><br /> 
 	E-mail: <input type="text" class="textfield" id="email" name="email" size="23" /><br /><br />
 	Phone: <input type="text" class="textfield" id="phone" name="phone" size="23" /><br /><br />
-	<input type="hidden" name="task" value="<%=task%>">
+	<!-- <input type="hidden" name="task" value="<%=task%>">  -->
 	Reminder: 
 	<select name="reminder" class="dropdown">
 	    <option value="oneDay">One day before events</option>

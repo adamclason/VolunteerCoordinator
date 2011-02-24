@@ -24,19 +24,19 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 		String name;
 		if (taskObj == null) {
 			name = req.getParameter("name"); 
-			task = req.getParameter("task"); 
+			task = req.getQueryString().split("task=")[1];
 		}
 		else {
 			name = nameObj.toString(); 
 			task = taskObj.toString(); 
 		}
 		
-		if( name.equals( "" ) )
+		if( name.equals( "" ) ) //Check if there's a name
 		{
 		    String redirect = "/index.jsp?name=none";
 		    resp.sendRedirect( redirect );
 		}
-		else if(!userExists(name)) {
+		else if(!userExists(name)) { //Check if a user exists with that name
 			String splitName[] = name.split(" ");
 			String redirect = "/newUser.jsp?name=";
 			for( int i = 0; i < splitName.length; i++ )
@@ -47,7 +47,7 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 			}
 			redirect += "&task=" + task;
 			resp.sendRedirect( redirect );
-		} 
+		} //If so, carry out the task
 		else if(task.equals("volunteer")) {
 			resp.sendRedirect("/volunteer.jsp?pageNumber=1&resultIndex=1"
 					+ "&name=" + name);
@@ -65,6 +65,12 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 				    + "&email=" + getEmail(name)
 				    + "&phone=" + getPhone(name)
 				    + "&reminder=" + getReminder(name)); 
+		} else { //If none of those tasks given, 'task' contains a url, so go to it instead
+			//get url that brought user here and extract the redirect url from it
+			String url = req.getQueryString().split("task=")[1];
+			url += "&name=" + name;
+			
+			resp.sendRedirect(url);
 		}
 
 	}
