@@ -10,8 +10,14 @@ import com.google.gdata.data.calendar.*;
 import com.google.gdata.data.extensions.*;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
+import javax.jdo.PersistenceManager;
+import com.VolunteerCoordinatorApp.PMF;
+import com.VolunteerCoordinatorApp.Volunteer;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 import java.net.URL;
+import java.util.TimeZone;
 
 @SuppressWarnings("serial")
 public class MakeEventServlet extends HttpServlet {
@@ -94,14 +100,44 @@ throws IOException {
     String year = date.substring(date.indexOf("/") + 4, date.length()); 
     String formattedDate = year + "-" + month + "-" + day; 
     
+    PersistenceManager pManager = PMF.get().getPersistenceManager(); 
+
+    Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+    Volunteer vol = pManager.getObjectById(Volunteer.class, k);
+    
+    String timeZone = vol.getTimeZone();
+    if( timeZone == null )
+    {
+        timeZone = "America/New_York";
+    }
+    
+    TimeZone TZ =  TimeZone.getTimeZone( timeZone );
+
+    int offset = TZ.getOffset( DateTime.parseDate( formattedDate ).getValue() );
+
+    //Converts milisecond offset to positive hour offset.
+    offset = Math.abs( ( ( ( offset / 60 ) / 60 ) / 1000 ) );
+    String offsetString;
+    //It's a 2-digit offset; no leading zero needed
+    if( offset > 9 )
+    {
+        offsetString = "-" + offset + ":00";
+    }
+    //Single-digit offset; leading zero req'd.  Or we've royally screwed up input somehow,
+    //but how likely is *that*?
+    else
+    {
+        offsetString = "-0" + offset + ":00";
+    }
+
     String fromTime = formattedDate + "T" + fromHrsStr
-    + ":" + fromMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
+        + ":" + fromMins + ":00" + offsetString; //Should adjust to the user's TZ
     String tillTime = formattedDate + "T" + tillHrsStr
-    + ":" + tillMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
-			
+        + ":" + tillMins + ":00" + offsetString; //Should adjust to the user's TZ			
 		
 	DateTime startTime = DateTime.parseDateTime(fromTime);
 	DateTime endTime = DateTime.parseDateTime(tillTime);
+				
 	if (startTime.compareTo(endTime) > 0) { // handle bug where endtime is before the starttime
 		resp.sendRedirect("/add.jsp?name=" + name + "&title=" + title + "&errordate=true&desc=" +
 		        description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +

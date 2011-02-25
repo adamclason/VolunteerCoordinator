@@ -34,6 +34,14 @@
 	    <option value="oneDay">One day before events</option>
 	    <option value="twoDay">Two days before events</option>
 	    <option value="threeDay">Three days before events</option>
+	</select> 
+	<br /> <br />
+	Time Zone:
+	<select name="timezone" class="dropdown">
+	    <option value="est">Eastern Time</option>
+	    <option value="cst">Central Time</option>
+	    <option value="mst">Mountain Time</option>
+	    <option value="pst">Pacific Time</option>
 	</select>
 <br />
 	<div class="submit">

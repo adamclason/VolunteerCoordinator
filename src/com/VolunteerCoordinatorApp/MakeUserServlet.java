@@ -39,6 +39,7 @@ public class MakeUserServlet extends HttpServlet {
 		String reminder = req.getParameter("reminder");
 		String task = req.getParameter("task"); 
 		String name = firstName + " " + lastName;
+		String timeZone = req.getParameter( "timezone" );
 		//If the user fixed a typo in their name or something, we don't want to 
 		//create a new user.
 		if( userExists( name ) )
@@ -174,12 +175,34 @@ public class MakeUserServlet extends HttpServlet {
 		        // TODO Auto-generated catch block
 		        e1.printStackTrace();
 		    }
+		    
+		    //Translate the time zone code into something non-depreciated for Java
+		    if( timeZone.equalsIgnoreCase( "est" ) )
+		    {
+		        timeZone = "America/New_York";
+		    }
+		    else if( timeZone.equalsIgnoreCase( "cst" ) )
+            {
+                timeZone = "America/Chicago";
+            }
+		    else if( timeZone.equalsIgnoreCase( "mst" ) )
+            {
+                timeZone = "America/Denver";
+            }
+		    else if( timeZone.equalsIgnoreCase( "pst" ) )
+            {
+                timeZone = "America/Los_Angeles";
+            }
+		    else
+		    {
+		        timeZone = "America/New_York";
+		    }
 
 		    //Make a new volunteer and associate all the new information with it in
 		    //the datastore.
 		    PersistenceManager pm = PMF.get().getPersistenceManager();
 
-		    Volunteer v = new Volunteer(firstName, lastName, email, phone, reminder, usrCalUrl);
+		    Volunteer v = new Volunteer(firstName, lastName, email, phone, reminder, usrCalUrl, timeZone);
 
 		    Key key = KeyFactory.createKey(Volunteer.class.getSimpleName(), (firstName + " " + lastName));
 		    v.setKey(key);
