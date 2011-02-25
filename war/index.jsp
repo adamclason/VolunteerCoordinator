@@ -30,7 +30,7 @@
     
     // if no url given, let user pick where to go
     if (request.getParameter("url") == null) { 
-%>   
+    %>
 	<form action="/volunteercoordinator" method="post">	
 		I am: <input type="text" name="name" class="textfield" value="<%= name %>" size ="22"><br><br>
 		I want to: <select name="task" class ="dropdown">
@@ -40,10 +40,6 @@
 			<option value="dashboard">View Dashboard</option>
 			<option value="preferences">View/Change Preferences</option>
 		</select>
-		<div class="submit">
-		<input type="submit" id="submitButton" value="Submit"/>
-		</div>
-	</form> 	
 	
 <% } else { // if url given, have a button to take user there
 	//get url that brought user here and extract the redirect url from it, removing name=null from it in the process
@@ -62,14 +58,14 @@
 				url += urlPart.substring(urlThree); // /servlet?query1=param&query2=param
 			}
 		}
-	} %> 
-	<form action="<%=url%>" method="post">
-	  <div class="submit">
+	} %>
+	<form action="/volunteercoordinator?task=<%=url%>" method="post">	
 		I am: <input type="text" name="name" class="textfield" value="<%= name %>" size ="22"><br><br>
+<% } %>
+	  <div class="submit">
 		<input type="submit" id="submitButton" value="Continue"/>
 	  </div>
-	</form>
-<% } %>
+	</form> 	
 
 </div>
 </body>

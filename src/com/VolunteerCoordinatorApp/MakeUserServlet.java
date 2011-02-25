@@ -37,7 +37,10 @@ public class MakeUserServlet extends HttpServlet {
 		String email = req.getParameter("email");  
 		String phone = req.getParameter("phone");  
 		String reminder = req.getParameter("reminder");
-		String task = req.getParameter("task"); 
+		
+		String task = req.getQueryString().split("task=")[1];
+		//String task="";
+		
 		String name = firstName + " " + lastName;
 		String timeZone = req.getParameter( "timezone" );
 		//If the user fixed a typo in their name or something, we don't want to 
@@ -211,19 +214,9 @@ public class MakeUserServlet extends HttpServlet {
 		        pm.makePersistent(v);
 		    } finally {
 		        pm.close();
-		    }
-
-		    req.setAttribute("name", name);
-		    req.setAttribute("task", task); 
-
-		    RequestDispatcher rd= req.getRequestDispatcher("/volunteercoordinator");
-
-		    try {
-		        rd.forward(req, resp);
-		    } catch (ServletException e) {
-		        // TODO Auto-generated catch block
-		        e.printStackTrace();
 		    } 
+
+			resp.sendRedirect("/volunteercoordinator" + "?name=" + name + "&task=" + task);
 		}
 		
 	}	
