@@ -37,8 +37,11 @@ public class Volunteer {
 	@Persistent
 	private String calendarId;
 	
+	@Persistent
+	private String timeZone;
+	
 	public Volunteer(String firstname, String lastname, String email, String phone, 
-	        String reminder, String calendarId) {
+	        String reminder, String calendarId, String timeZone) {
 		this.name = firstname.trim() + " " + lastname.trim();
 		this.firstName = firstname; 
 		this.lastName = lastname;
@@ -46,6 +49,7 @@ public class Volunteer {
 		this.phone = phone; 
 		this.reminder = reminder;
 		this.calendarId = calendarId;
+		this.timeZone = timeZone;
 	}
 	
 	public Key getKey() {
@@ -104,5 +108,15 @@ public class Volunteer {
     public void setCalendarId(String calendarId) 
     {
         this.calendarId = calendarId;
+    }
+    
+    public String getTimeZone() 
+    {
+        return this.timeZone;
+    }
+    
+    public void setTimeZone(String timeZone) 
+    {
+        this.timeZone = timeZone;
     }
 }

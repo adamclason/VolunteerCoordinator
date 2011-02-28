@@ -19,7 +19,12 @@
 
 <%@ include file="getCalendarService.jsp" %>
 
-<% String name = request.getParameter("name");
+<% String name = request.getParameter("name"); %>
+
+<%@ include file="getUserTimeZone.jsp" %>
+
+<%
+//Declared here so i in-scope for the iFrame at the bottom
 String usrCalUrl = null;
 
 //If no user in query string, prompt to log in.
@@ -102,12 +107,13 @@ else
 
         //No extant calendars for this user; make a new one.
         if( usrCalUrl == null || calendarDeleted )
-        {
+        {               
             CalendarEntry calendar = new CalendarEntry();
             calendar.setTitle(new PlainTextConstruct(name + "'s Jobs"));
             calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered for."));
-            calendar.setTimeZone(new TimeZoneProperty("America/New_York"));
+            calendar.setTimeZone(new TimeZoneProperty(timeZone));
             calendar.setHidden(HiddenProperty.FALSE);
+            
 
             // Insert the calendar
             URL postUrl = new URL("https://www.google.com/calendar/feeds/default/owncalendars/full");
@@ -121,6 +127,7 @@ else
                 // TODO Auto-generated catch block
                 e2.printStackTrace();
             }
+                        
             // Get the calender's url
             usrCalUrl = newCalendar.getId();
             int splitHere = usrCalUrl.lastIndexOf("/") + 1;
@@ -152,21 +159,20 @@ else
                     DateTime entryStart = entryTime.getStartTime();
                     DateTime entryEnd = entryTime.getEndTime();
                     
-                    TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
                     Date startDate = new Date(entryStart.getValue());
                     Date endDate = new Date(entryEnd.getValue());
-                    //Determine timezone offset in minutes, depending on whether or not
-                    //Daylight Savings Time is in effect
-                    if (estTZ.inDaylightTime(startDate)) { 
-                        entryStart.setTzShift(-240); 
-                    } else {
-                        entryStart.setTzShift(-300); 
-                    }
-                    if (estTZ.inDaylightTime(endDate)) { 
-                        entryEnd.setTzShift(-240);
-                    } else {
-                        entryEnd.setTzShift(-300);
-                    }
+                    
+                    //timeZone was set in getUserTimeZone
+                    TimeZone TZ =  TimeZone.getTimeZone( timeZone );
+
+                    int startOffset = TZ.getOffset( entryStart.getValue() );
+                    int endOffset = TZ.getOffset( entryEnd.getValue() );
+
+                    startOffset = ( startOffset / 60 ) / 1000;
+                    endOffset = ( endOffset / 60 ) / 1000;
+                    
+                    entryStart.setTzShift( startOffset );
+                    entryEnd.setTzShift( endOffset );
 
                     //Create a new entry and add it
                     URL newEntryUrl = new URL(
@@ -256,7 +262,7 @@ else
 </ul>
 
 <div class="content" id="calendar">
-<iframe src="http://www.google.com/calendar/embed?height=500&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=<%=usrCalUrl%>&amp;color=%23691426&amp;ctz=America%2FNew_York" style=" border-width:0 " width="700" height="500" frameborder="0" scrolling="no"></iframe>
+<iframe src="http://www.google.com/calendar/embed?height=500&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=<%=usrCalUrl%>&amp;color=%23691426&amp;ctz=<%=timeZone%>" style=" border-width:0 " width="700" height="500" frameborder="0" scrolling="no"></iframe>
 </div>
 
 </body>

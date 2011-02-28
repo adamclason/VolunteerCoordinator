@@ -36,6 +36,10 @@
 <%
 
    String name = request.getParameter("name");
+%>
+<%@ include file="getUserTimeZone.jsp" %>
+
+<%
 
    // See if the user has selected some of the filter settings 
    String startRange = request.getParameter("startDate"); 
@@ -174,25 +178,21 @@
            DateTime start = time.getStartTime(); 
            DateTime end = time.getEndTime();
 
-           TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
-           Date startDate = new Date(start.getValue());
-           Date endDate = new Date(end.getValue());
-           //Determine timezone offset in minutes, depending on whether or not
-           //Daylight Savings Time is in effect
-           if (estTZ.inDaylightTime(startDate)) { 
-               start.setTzShift(-240); 
-           } else {
-        	   start.setTzShift(-300); 
-           }
-           if (estTZ.inDaylightTime(endDate)) { 
-               end.setTzShift(-240);
-           } else {
-               end.setTzShift(-300);
-           }
+           //timeZone was set in getUserTimeZone
+           TimeZone TZ =  TimeZone.getTimeZone( timeZone );
+
+           int startOffset = TZ.getOffset( start.getValue() );
+           int endOffset = TZ.getOffset( end.getValue() );
+
+           startOffset = ( startOffset / 60 ) / 1000;
+           endOffset = ( endOffset / 60 ) / 1000;
+           
+           start.setTzShift( startOffset );
+           end.setTzShift( endOffset );
                       
            // Convert to milliseconds to get a date object, which can be formatted easier. 
-           startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
-           endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
+           Date startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
+           Date endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
 
            String startDay = dateFormat.format(startDate); 
            String startTime = timeFormat.format(startDate);
