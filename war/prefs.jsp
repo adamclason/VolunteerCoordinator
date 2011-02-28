@@ -5,38 +5,68 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/layout.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/colors.css">
 
-<title>Change Preferences</title>
+<title>Edit Your Settings</title>
 </head>
-
 <body>
 
-<ul class="navigation" style="width: 25.5em;">
+<ul class="navigation" style="width: 24.5em;">
 <%@ include file="LinkHome.jsp" %>
 </ul>
 
-<div class="content" id="main">
-<%
+<div id="main"> 
+<% 
     String name = request.getParameter("name");
-    String email = request.getParameter("email");
-    String phone = request.getParameter("phone");
-    String reminder = request.getParameter("reminder");    
+    if( name == null )
+    {
+        response.sendRedirect( "/index.jsp?name=none" );
+    }
+%>
+<%@ include file="getUserTimeZone.jsp"%>
+<%
+PersistenceManager pManager = PMF.get().getPersistenceManager(); 
+
+Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+Volunteer vol = pManager.getObjectById(Volunteer.class, k);
+
+String estOption = "value=\"America/New_York\"";
+String cstOption = "value=\"America/Chicago\"";
+String mstOption = "value=\"America/Denver\"";
+String pstOption = "value=\"America/Los_Angeles\"";
+
+if( vol.getTimeZone().equals( "America/New_York" ) )
+    estOption += " selected";
+if( vol.getTimeZone().equals( "America/Chicago" ) )
+    cstOption += " selected";
+if( vol.getTimeZone().equals( "America/Denver" ) )
+    mstOption += " selected";
+if( vol.getTimeZone().equals( "America/Los_Angeles" ) )
+    pstOption += " selected";
+
 %>
 <form action="/editprefs" method="post">
-    <input type="hidden" name="name" value="<%= name %>">
-	E-mail: <input type="text" class="textfield" id="email" name="email" value="<%= email %>" size="23" /><br /><br />
-	Phone: <input type="text" class="textfield" id="phone" name="phone" value="<%= phone %>" size="23" /><br /><br />
-    Reminder:
+    E-mail: <input type="text" class="textfield" id="email" value="<%= vol.getEmail() %>" name="email" size="23" /><br /><br />
+    Phone: <input type="text" class="textfield" id="phone" value="<%= vol.getPhone() %>" name="phone" size="23" /><br /><br />
+    Reminder: 
     <select name="reminder" class="dropdown">
-	    <option value="oneDay" <% if (reminder.equals("oneDay")) { %>selected="selected"<% } %>>One day before events</option>
-	    <option value="twoDay" <% if (reminder.equals("twoDay")) { %>selected="selected"<% } %>>Two days before events</option>
-	    <option value="threeDay" <% if (reminder.equals("threeDay")) { %>selected="selected"<% } %>>Three days before events</option>
+        <option value="oneDay">One day before events</option>
+        <option value="twoDay">Two days before events</option>
+        <option value="threeDay">Three days before events</option>
+    </select> 
+    <br /> <br />
+    Time Zone:
+    <select name="timeZone" class="dropdown">
+        <option <%= estOption %>>Eastern Time</option>
+        <option <%= cstOption %>>Central Time</option>
+        <option <%= mstOption %>>Mountain Time</option>
+        <option <%= pstOption %>>Pacific Time</option>
     </select>
 <br />
-	<div class="submit">
-		<input type="submit" class="submitButton" value="Submit"/>
-	</div>
+    <input type="hidden" name="origName" value="<%= name %>"/>
+    <div class="submit">
+        <input type="submit" class="submitButton" value="Submit"/>
+    </div>
 </form>
-</div>
-
+ </div>
+ 
 </body>
 </html>
