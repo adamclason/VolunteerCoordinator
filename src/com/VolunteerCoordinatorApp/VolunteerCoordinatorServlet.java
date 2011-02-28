@@ -39,7 +39,7 @@ public class VolunteerCoordinatorServlet extends HttpServlet {
 		
 		if( name.equals( "" ) ) //Check if there's a name
 		{
-		    String redirect = "/index.jsp?name=none";
+		    String redirect = "/index.jsp?name=none&task=" + task;
 		    resp.sendRedirect( redirect );
 		}
 		else if(!userExists(name)) { //Check if a user exists with that name

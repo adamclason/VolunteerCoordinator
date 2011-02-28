@@ -332,7 +332,13 @@ function toggler(num) { //Shows or hides the urlbox of the given number
         </div>
         <span class="copy" onclick="toggler(<%=entryNum%>)"> Link </span>
         <span class="copyURL" id="url<%=entryNum%>"> 
-            <input id="urlbox" type="text" readonly="readonly" size="15" value="/addvolunteer?date=<%=startDay%>&title=<%=title%>&id=<%=entry.getId()%>"></input>
+            <% 
+            StringBuffer fullURL = request.getRequestURL();
+            String URI = request.getRequestURI();
+            int plc = fullURL.indexOf(URI);
+            String host = fullURL.substring(0, plc);
+            %>
+            <input id="urlbox" type="text" readonly="readonly" size="15" value="<%=host%>/addvolunteer?date=<%=startDay%>&title=<%=title%>&id=<%=entry.getId()%>"></input>
         </span>
         <span class="delete">
             <a href="/delevent?name=<%=name%>&date=<%=startDay%>&title=<%=title%>&category=<%=cat%>&pageNum=<%=pageNumber%>&startDate=<%=startRange%>&endDate=<%=endRange%>&resultIndex=<%=resultIndex%>">Delete</a>
