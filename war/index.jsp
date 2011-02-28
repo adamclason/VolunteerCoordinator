@@ -12,8 +12,11 @@
 <div class="navigation"></div>
 <div id="main"> 
 <%
-
-    String name = request.getParameter("name"); 
+String name = request.getParameter("name"); 
+String task = request.getParameter("task");
+if (task == null) {
+	task = "";
+}
     
     if (name != null) {
         if( name.equals( "none" ) )
@@ -34,11 +37,11 @@
 	<form action="/volunteercoordinator" method="post">	
 		I am: <input type="text" name="name" class="textfield" value="<%= name %>" size ="22"><br><br>
 		I want to: <select name="task" class ="dropdown">
-			<option value="volunteer" selected="selected">Volunteer</option>
-			<option value="initiate">Initiate a Job</option>
-			<option value="manage">Manage Jobs</option>
-			<option value="dashboard">View Dashboard</option>
-			<option value="preferences">View/Change Preferences</option>
+			<option value="volunteer">Volunteer</option>
+			<option value="initiate"<% if (task.equals("initiate")) %>selected="selected"<% ; %>>Initiate a Job</option>
+			<option value="manage"<% if (task.equals("manage")) %>selected="selected"<% ; %>>Manage Jobs</option>
+			<option value="dashboard"<% if (task.equals("dashboard")) %>selected="selected"<% ; %>>View Dashboard</option>
+			<option value="preferences"<% if (task.equals("preferences")) %>selected="selected"<% ; %>>View/Change Preferences</option>
 		</select>
 	
 <% } else { // if url given, have a button to take user there
@@ -51,11 +54,15 @@
 		url = urlPieces[0] + "?"; // /servlet?
 		if (urlPieces.length > 1) {
 			urlPart = urlPieces[1]; // query1=param&name=null&query2=param
-			int urlTwo = urlPart.indexOf("name=");
-			url += urlPart.substring(0, urlTwo); // /servlet?query1=param&
-			int urlThree = urlPart.indexOf("&", urlTwo) + 1; //+1 so doesn't include a second '&'
-			if (urlThree != -1) {
-				url += urlPart.substring(urlThree); // /servlet?query1=param&query2=param
+			if (urlPart.contains("name=")) { //Make sure a name parameter exists to be extracted
+				int urlTwo = urlPart.indexOf("name=");
+				url += urlPart.substring(0, urlTwo); // /servlet?query1=param&
+				int urlThree = urlPart.indexOf("&", urlTwo) + 1; //+1 so doesn't include a second '&'
+				if (urlThree != -1) {
+					url += urlPart.substring(urlThree); // /servlet?query1=param&query2=param
+				}
+			} else {
+				url += urlPart;
 			}
 		}
 	} %>

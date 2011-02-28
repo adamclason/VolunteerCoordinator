@@ -44,8 +44,8 @@ public class delEventServlet extends HttpServlet {
 	    //If no user in query string, prompt to log in.
 	    if (name == null || name.equalsIgnoreCase("null") || name.equals(""))
 	    {
-	        String newURL = "/index.jsp?name=none";
-	        resp.sendRedirect( newURL );
+	    	resp.sendRedirect("/loginredirect?url=" + req.getRequestURI() + "?" 
+	    			+ req.getQueryString());
 	    }
 		
 		URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/" +

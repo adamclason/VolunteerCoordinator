@@ -36,16 +36,9 @@ public class addVolunteerServlet extends HttpServlet {
 		//If no user in query string, prompt to log in.
 		if (name == null || name.equalsIgnoreCase("null") || name.equals(""))
 		{
-			//get url being used
-			String url = req.getRequestURI().toString();
-			String params = req.getQueryString();
-			if (params != null) {
-				url += "?" + params;
-			}
-
-			url = "/index.jsp?name=none&url=" + url;
-			resp.sendRedirect( url );
-		}        
+			resp.sendRedirect("/loginredirect?url=" + req.getRequestURI() + "?" 
+					+ req.getQueryString());
+		} 
 		//Otherwise proceed normally.
 		else
 		{
@@ -60,7 +53,7 @@ public class addVolunteerServlet extends HttpServlet {
 				myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
 			} catch (AuthenticationException e) {
 				// TODO Auto-generated catch block
-				System.out.println( "Failed to authenticate service." );
+				System.err.println( "Failed to authenticate service." );
 				e.printStackTrace();
 			}
 			// Send the request and receive the response:
@@ -69,7 +62,7 @@ public class addVolunteerServlet extends HttpServlet {
 				resultFeed = myService.query(myQuery, CalendarEventFeed.class);
 			} catch (ServiceException e) {
 				// TODO Auto-generated catch block
-				System.out.println( "Failed to send query." );
+				System.err.println( "Failed to send query." );
 				e.printStackTrace();
 			}
 
@@ -128,7 +121,7 @@ public class addVolunteerServlet extends HttpServlet {
 						myService.update(editUrl, entry);
 					} catch (ServiceException e) {
 						// TODO Auto-generated catch block
-						System.out.println( "Failed to successfully set content." );
+						System.err.println( "Failed to successfully set content." );
 						e.printStackTrace();
 					}
 
@@ -150,7 +143,7 @@ public class addVolunteerServlet extends HttpServlet {
 					}
 					catch ( ServiceException e )
 					{
-						System.out.println( "Failed to insert into calendar at " + usrCalUrl );
+						System.err.println( "Failed to insert into calendar at " + usrCalUrl );
 						URL newFeedUrl = new URL("https://www.google.com/calendar/feeds/default/owncalendars/full");
 						CalendarFeed newResultFeed = null;
 						try
@@ -160,7 +153,7 @@ public class addVolunteerServlet extends HttpServlet {
 						catch ( ServiceException e3 )
 						{
 							// TODO Auto-generated catch block
-							System.out.println( "Failed to fetch feed of calendars." );
+							System.err.println( "Failed to fetch feed of calendars." );
 							e3.printStackTrace();
 						}
 						String calUrl = null;
@@ -192,7 +185,7 @@ public class addVolunteerServlet extends HttpServlet {
 							}
 							catch( Exception e1 )
 							{
-								System.out.println( "Failed to access calendar at " + calUrl );
+								System.err.println( "Failed to access calendar at " + calUrl );
 								calendarDeleted = true;
 							}
 						}
@@ -216,7 +209,7 @@ public class addVolunteerServlet extends HttpServlet {
 							catch ( ServiceException e2 )
 							{
 								// TODO Auto-generated catch block
-								System.out.println( "Failed at getting inserting new calendar." );
+								System.err.println( "Failed at getting inserting new calendar." );
 								e2.printStackTrace();
 							}
 							// Get the calender's url
@@ -236,7 +229,7 @@ public class addVolunteerServlet extends HttpServlet {
 							catch ( ServiceException e1 )
 							{
 								// TODO Auto-generated catch block
-								System.out.println( "Failed at getting a query." );
+								System.err.println( "Failed at getting a query." );
 								e1.printStackTrace();
 							}
 							List<CalendarEventEntry> entries = (List<CalendarEventEntry>)resultFeed.getEntries();
@@ -285,7 +278,7 @@ public class addVolunteerServlet extends HttpServlet {
 									catch ( ServiceException e1 )
 									{
 									    // TODO Auto-generated catch block
-									    System.out.println( "Error inserting new entry into CalendarService." );
+									    System.err.println( "Error inserting new entry into CalendarService." );
 									    e1.printStackTrace();
 									}
 								}
@@ -293,7 +286,7 @@ public class addVolunteerServlet extends HttpServlet {
 							// Access the Access Control List (ACL) for the calendar
 							Link link = newCalendar.getLink(AclNamespace.LINK_REL_ACCESS_CONTROL_LIST,
 									Link.Type.ATOM);
-							//System.out.println( link.getHref() );
+							//System.err.println( link.getHref() );
 							URL aclUrl = new URL( link.getHref() );
 							AclFeed aclFeed = null;
 							try
@@ -303,7 +296,7 @@ public class addVolunteerServlet extends HttpServlet {
 							catch ( ServiceException e1 )
 							{
 								// TODO Auto-generated catch block
-								System.out.println( "Failed at getting ACL Feed." );
+								System.err.println( "Failed at getting ACL Feed." );
 								e1.printStackTrace();
 							}
 
@@ -319,7 +312,7 @@ public class addVolunteerServlet extends HttpServlet {
 							catch ( ServiceException e1 )
 							{
 								// TODO Auto-generated catch block
-	                            System.out.println( "Error inserting new entries into ACL." );
+	                            System.err.println( "Error inserting new entries into ACL." );
 								e1.printStackTrace();
 							}
 						}

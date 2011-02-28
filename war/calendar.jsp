@@ -30,15 +30,8 @@ String usrCalUrl = null;
 //If no user in query string, prompt to log in.
 if (name == null || name.equalsIgnoreCase("null") || name.equals(""))
 {
-	//get url being used
-	String url = request.getRequestURI().toString();
-	String params = request.getQueryString();
-	if (params != null) {
-		url += "?" + params;
-	}
-	
-    url = "/index.jsp?name=none&url=" + url;
-    response.sendRedirect( url );
+	response.sendRedirect("/loginredirect?url=" + request.getRequestURI() + "?" 
+			+ request.getQueryString());
 }
 //Otherwise proceed normally.
 else

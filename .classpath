@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/google-collect-1.0-rc2.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-r07-gwt.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-r07.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
