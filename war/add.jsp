@@ -93,6 +93,7 @@ if(toAMPM.equals("PM")) {
 %>
 
 <div class="content" id="addEvent">
+	<h2> Create a New Event: </h2>
     <form method="post" action="/makeevent">
     	<div class="inputItem"> 
         Job Name: <input type="text" name="title" class="textfield" value="<%= title %>" />

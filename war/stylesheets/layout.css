@@ -4,6 +4,7 @@ body {
 }
 h2 {
   font-style: italic; 
+  margin-top: -0.5em;
 }
 
 #filterSettings {

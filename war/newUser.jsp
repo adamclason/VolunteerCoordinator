@@ -23,6 +23,7 @@
         last = splitName[splitName.length - 1];
 	String task = request.getQueryString().split("task=")[1];
 %>
+    <h2> Create a New User: </h2>
 <form action="/makeuser?task=<%=task%>" method="post">
 	First Name: <input type="text" class="textfield" id="firstName" value="<%= first %>" name="firstName" size="23" /> <br /><br />
 	Last Name: <input type="text" class="textfield" id="lastName" value="<%= last %>" name="lastName" size="23" /> <br /><br /> 

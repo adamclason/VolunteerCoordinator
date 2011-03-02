@@ -28,6 +28,7 @@
   </ul>
 
 <div class="category" id="page">
+    <h2> Create a New Category: </h2>
     <form method="post" action="/makecategory">
     	<div class="inputItem"> 
         Category Title: <input type="text" name="title" class="textfield" size="30" maxlength="30" />

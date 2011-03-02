@@ -18,7 +18,7 @@
     String name = request.getParameter("name");
     if( name == null )
     {
-        response.sendRedirect( "/index.jsp?name=none" );
+        response.sendRedirect( "/index.jsp?name=none&task=preferences" );
     }
 %>
 <%@ include file="getUserTimeZone.jsp"%>
@@ -43,6 +43,7 @@ if( vol.getTimeZone().equals( "America/Los_Angeles" ) )
     pstOption += " selected";
 
 %>
+<h2> Edit Preferences: </h2>
 <form action="/editprefs" method="post">
     E-mail: <input type="text" class="textfield" id="email" value="<%= vol.getEmail() %>" name="email" size="23" /><br /><br />
     Phone: <input type="text" class="textfield" id="phone" value="<%= vol.getPhone() %>" name="phone" size="23" /><br /><br />

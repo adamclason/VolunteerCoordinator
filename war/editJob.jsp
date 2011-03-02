@@ -215,6 +215,7 @@
 %>
     <div class="content" id="addEvent">
     <form method="post" action="/updateevent">
+	<h2> Edit Job: </h2>
         <div class="inputItem"> 
         Job Name: <input type="text" name="newTitle" class="textfield" value="<%=title%>" />
         </div> 
@@ -362,13 +363,9 @@
                 </select>
             </div>
         </div> 
-        <div class="inputItem" visibility="hidden">
+
             <input name="name" type="hidden" value="<%=name%>">
-        </div>
-        
-        <div class="inputItem" visibility="hidden">
             <input name="title" type="hidden" value="<%=title%>">
-        </div>
        
         <div class="submit">
             <input type="submit" class="submitButton" value="Submit"/>

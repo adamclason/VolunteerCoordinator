@@ -40,6 +40,7 @@
 </ul>
 
 <div class="category" id="page">
+<h2> Edit Categories: </h2>
     <form method="post" action="/editcategory">
         <div class="inputItem">
         	Select Category: 
