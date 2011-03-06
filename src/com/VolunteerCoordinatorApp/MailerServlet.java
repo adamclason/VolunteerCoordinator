@@ -1,5 +1,8 @@
 package com.VolunteerCoordinatorApp;
 
+// When run, this servlet emails a reminder to all users who have
+// volunteered for an event taking place in the next 48 hours
+
 import java.io.IOException;
 import java.net.URL;
 import javax.servlet.http.*;
@@ -62,7 +65,7 @@ public class MailerServlet extends HttpServlet {
 	    List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
 	    
 	    if (!results.isEmpty()) {
-	    	for (CalendarEventEntry entry : results) {
+	    	for (CalendarEventEntry entry : results) { // For each event...
 	    		// Get event details
 
 	    		// Get the start and end times for the event 
@@ -204,7 +207,7 @@ public class MailerServlet extends HttpServlet {
 	       		
 	    		PersistenceManager pm = PMF.get().getPersistenceManager(); 
 	          if (!volList.isEmpty()) {       		
-	       		for (String vol : volList) {
+	       		for (String vol : volList) { // For each volunteer...
 		            Properties props = new Properties();
 		            Session session = Session.getDefaultInstance(props, null);
 
@@ -245,10 +248,6 @@ public class MailerServlet extends HttpServlet {
 	       	        } 
 	       		}
 	       	  }    		
-	            
-	            
-	            
-	            
 	            
 	            
 		    }

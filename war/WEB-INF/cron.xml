@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
+  <cron>
+    <url>/mailer</url>
+    <description>Mail users scheduled to do a job within the next two days</description>
+    <schedule>every 48 hours synchronized</schedule>
+  </cron> 
 </cronentries>
