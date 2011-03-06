@@ -6,12 +6,14 @@ com.google.appengine.api.datastore.Key,
 com.google.appengine.api.datastore.KeyFactory"
 %>
 <%
+String tzName = request.getParameter("name");
+System.err.println(tzName);
 String timeZone = null;
-if( name != null )
+if( tzName != null )
 {
     PersistenceManager pManager = PMF.get().getPersistenceManager(); 
 
-    Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+    Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), tzName);
     Volunteer vol = pManager.getObjectById(Volunteer.class, k);
     
     timeZone = vol.getTimeZone();

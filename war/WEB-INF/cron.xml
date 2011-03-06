@@ -2,7 +2,8 @@
 <cronentries>
   <cron>
     <url>/mailer</url>
-    <description>Mail users scheduled to do a job within the next two days</description>
-    <schedule>every 48 hours synchronized</schedule>
+    <description>Mail users scheduled to do a job the next day</description>
+    <schedule>every day 00:00</schedule>
+    <timezone>America/New_York</timezone>
   </cron> 
 </cronentries>

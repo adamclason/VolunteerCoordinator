@@ -1,7 +1,7 @@
 package com.VolunteerCoordinatorApp;
 
 // When run, this servlet emails a reminder to all users who have
-// volunteered for an event taking place in the next 48 hours
+// volunteered for an event taking place tomorrow
 
 import java.io.IOException;
 import java.net.URL;
@@ -44,9 +44,14 @@ public class MailerServlet extends HttpServlet {
 	    DateTime startDT = new DateTime(today); 
 	    DateTime endDT = new DateTime(tomorrow); 
 
-	    //shift end date to the next day (86400000 milliseconds = 1 day), then
-	    // shift end date to midnight at end of day instead of beginning of day
-	    // this assumes the MailerServlet is being run at midnight
+	    // Shift start date forward one day
+	    long startL = startDT.getValue();
+	    startL += 86400000;
+	    startDT.setValue(startL);
+	    
+	    // Shift end date to the next day (86400000 milliseconds = 1 day), then
+	    // shift end date to midnight at end of day instead of beginning of day.
+	    // This assumes the MailerServlet is being run at midnight
 	    long endL = endDT.getValue();
 	    endL += 86400000 + 86399999;
 	    endDT.setValue(endL);
