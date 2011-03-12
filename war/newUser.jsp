@@ -32,9 +32,9 @@
 	<!-- <input type="hidden" name="task" value="<%=task%>">  -->
 	Reminder: 
 	<select name="reminder" class="dropdown">
-	    <option value="oneDay">One day before events</option>
-	    <option value="twoDay">Two days before events</option>
-	    <option value="threeDay">Three days before events</option>
+	    <option value="1">One day before events</option>
+	    <option value="2">Two days before events</option>
+	    <option value="3">Three days before events</option>
 	</select> 
 	<br /> <br />
 	Time Zone:

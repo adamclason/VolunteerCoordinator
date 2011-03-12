@@ -116,6 +116,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>loginRedirect</servlet-name>
 		<url-pattern>/loginredirect</url-pattern>
 	</servlet-mapping>
+    <servlet>
+		<servlet-name>delUsers</servlet-name>
+		<servlet-class>com.VolunteerCoordinatorApp.delUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>delUsers</servlet-name>
+		<url-pattern>/delusers</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>

@@ -42,6 +42,17 @@ if( vol.getTimeZone().equals( "America/Denver" ) )
 if( vol.getTimeZone().equals( "America/Los_Angeles" ) )
     pstOption += " selected";
 
+String remind1 = new String("\"1\"");
+String remind2 = new String("\"2\"");
+String remind3 = new String("\"3\"");
+
+if (vol.getReminder().equals("1"))
+	remind1 += " selected";
+if (vol.getReminder().equals("2"))
+	remind2 += " selected";
+if (vol.getReminder().equals("3"))
+	remind3 += " selected";
+
 %>
 <h2> Edit Preferences: </h2>
 <form action="/editprefs" method="post">
@@ -49,9 +60,9 @@ if( vol.getTimeZone().equals( "America/Los_Angeles" ) )
     Phone: <input type="text" class="textfield" id="phone" value="<%= vol.getPhone() %>" name="phone" size="23" /><br /><br />
     Reminder: 
     <select name="reminder" class="dropdown">
-        <option value="oneDay">One day before events</option>
-        <option value="twoDay">Two days before events</option>
-        <option value="threeDay">Three days before events</option>
+        <option value=<%=remind1%>>One day before events</option>
+        <option value=<%=remind2%>>Two days before events</option>
+        <option value=<%=remind3%>>Three days before events</option>
     </select> 
     <br /> <br />
     Time Zone:
