@@ -134,7 +134,9 @@ throws IOException {
         + ":" + fromMins + ":00" + offsetString; //Should adjust to the user's TZ
     String tillTime = formattedDate + "T" + tillHrsStr
         + ":" + tillMins + ":00" + offsetString; //Should adjust to the user's TZ			
-		
+
+    System.err.println(fromTime);
+    System.err.println(tillTime);
 	DateTime startTime = DateTime.parseDateTime(fromTime);
 	DateTime endTime = DateTime.parseDateTime(tillTime);
 				
@@ -149,32 +151,30 @@ throws IOException {
 	When eventTimes = new When();
 	eventTimes.setStartTime(startTime);
 	eventTimes.setEndTime(endTime);
-	entry.addTime(eventTimes);
 	
-	/*
 	String recurStr = req.getParameter("recur");
-	if (!recurStr.equals("none")) {
-	String recurData = new String("");
-	if (recurStr.equals("week")) {
-	recurData = "DTSTART;VALUE=DATE:" + year + month + day + "\r\n"
-		+ "DTEND;VALUE=DATE:" + year + month + day + "\r\n"
-		+ "RRULE:FREQ=WEEKLY\r\n";
+	if (recurStr.equals("none")) { //If no recurrence, add the date/times
+		entry.addTime(eventTimes);
+	} else { //If recurrence selected, apply it
+		String recurData = "DTSTART;TZID=" + timeZone + ":" + year + month + day + "T" + fromHrsStr
+		    + fromMins + "00\r\n"
+		    + "DTEND;TZID=" + timeZone + ":" + year + month + day + "T" + tillHrsStr
+		    + tillMins + "00\r\n";
+		if (recurStr.equals("week")) {
+			recurData += "RRULE:FREQ=WEEKLY\r\n";
+		}
+		else if (recurStr.equals("biweek")) {
+			recurData += "RRULE:FREQ=WEEKLY;INTERVAL=2\r\n";
+		}
+		else if (recurStr.equals("month")) {
+			recurData += "RRULE:FREQ=MONTHLY\r\n";
+		}
+		Recurrence recur = new Recurrence();
+		System.err.println(recurData);
+		recur.setValue(recurData);
+		entry.setRecurrence(recur);
 	}
-	else if (recurStr.equals("biweek")) {
-	recurData = "DTSTART;VALUE=DATE:" + year + month + day + "\r\n"
-		+ "DTEND;VALUE=DATE:" + year + month + day + "\r\n"
-		+ "RRULE:FREQ=WEEKLY;INTERVAL=2\r\n";
-	}
-	else if (recurStr.equals("month")) {
-	recurData = "DTSTART;VALUE=DATE:" + year + month + day + "\r\n"
-		+ "DTEND;VALUE=DATE:" + year + month + day + "\r\n"
-		+ "RRULE:FREQ=MONTHLY\r\n";
-	}
-	Recurrence recur = new Recurrence();
-	recur.setValue(recurData);
-	entry.setRecurrence(recur);
-	}
-	*/
+	
 	
 	try {
 		cService.insert(postUrl, entry);

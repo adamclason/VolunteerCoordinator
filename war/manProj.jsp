@@ -96,7 +96,8 @@ function toggler(num) { //Shows or hides the urlbox of the given number
 	myQuery.setMaxResults(10); 
 	myQuery.setStartIndex(Integer.parseInt(resultIndex));
 	myQuery.setStringCustomParameter("orderby", "starttime");
-	myQuery.setStringCustomParameter("sortorder", "ascending");  
+	myQuery.setStringCustomParameter("sortorder", "ascending");
+	myQuery.setStringCustomParameter("singleevents", "true");
    
    CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar"); 
    myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");

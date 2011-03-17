@@ -29,7 +29,6 @@
 	Last Name: <input type="text" class="textfield" id="lastName" value="<%= last %>" name="lastName" size="23" /> <br /><br /> 
 	E-mail: <input type="text" class="textfield" id="email" name="email" size="23" /><br /><br />
 	Phone: <input type="text" class="textfield" id="phone" name="phone" size="23" /><br /><br />
-	<!-- <input type="hidden" name="task" value="<%=task%>">  -->
 	Reminder: 
 	<select name="reminder" class="dropdown">
 	    <option value="1">One day before events</option>

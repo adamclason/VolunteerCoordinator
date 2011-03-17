@@ -89,7 +89,8 @@
    myQuery.setMaxResults(10); 
    myQuery.setStartIndex(Integer.parseInt(request.getParameter("resultIndex")));
    myQuery.setStringCustomParameter("orderby", "starttime");
-   myQuery.setStringCustomParameter("sortorder", "ascending");  
+   myQuery.setStringCustomParameter("sortorder", "ascending");
+   myQuery.setStringCustomParameter("singleevents", "true");
 
    // Send the request and receive the response:
    CalendarEventFeed resultFeed = myService.query(myQuery, CalendarEventFeed.class);
