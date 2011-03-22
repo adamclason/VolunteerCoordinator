@@ -158,7 +158,7 @@ h2 {
   background-color:#eeeeee;
   border-color: #774400;
 }
-.delete a {
+.delete {
   border: 0em none #CCCCCC;
   display: inline;
   overflow: hidden;
@@ -172,8 +172,26 @@ h2 {
   bottom: 1.6em;
   right: 4em;
 }
-.delete a:hover {
+.delete:hover {
   background-color:#77CC00;
+  cursor: pointer;
+}
+.delete a {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.delOptions {
+  border: 0.1em solid #774400;
+  display: inline;
+  overflow: hidden;
+  padding: .75em;
+  float: right;
+  background-color: #eeffee;
+  text-decoration: none;
+  position:relative;
+  bottom: 8.5em;
+  right: 9em;
+  margin-right: -14em;
 }
 .copy {
   border: 0em none #CCCCCC;
@@ -242,6 +260,10 @@ h2 {
 .dropdown { 
 	float: right;
 	clear: both; 
+}
+#padding {
+	margin-top: .3em;
+	margin-bottom: .3em;
 }
 #prevB {
   float:left;

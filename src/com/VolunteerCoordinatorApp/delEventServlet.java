@@ -2,6 +2,7 @@ package com.VolunteerCoordinatorApp;
 
 import java.io.*;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.servlet.http.*;
@@ -31,6 +32,8 @@ public class delEventServlet extends HttpServlet {
 		String startRange = req.getParameter("startDate"); 
 		String endRange = req.getParameter("endDate"); 
 		String resultIndex = req.getParameter("resultIndex"); 
+		String del = req.getParameter("del"); 
+        System.err.println(date+" "+title);
 		if (req.getParameter("catCheck") == null) {
 			cat = "null";
 		}
@@ -52,6 +55,26 @@ public class delEventServlet extends HttpServlet {
 		        "private/full");
 		  
 		CalendarQuery myQuery = new CalendarQuery(feedUrl);
+		myQuery.setStringCustomParameter("orderby", "starttime");
+		myQuery.setStringCustomParameter("sortorder", "ascending");
+		if (del == null) {
+			del = "";
+		} if (del.equals("this")) {
+		    myQuery.setStringCustomParameter("singleevents", "true");
+		}
+		
+		if (date != "null") {
+		      SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+			try {
+				Date start = format.parse(date);
+			    DateTime startDT = new DateTime(start);
+			    myQuery.setMinimumStartTime(startDT); 
+			    //System.err.println("in the try");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 }
 		   
 		CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar"); 
 		try {
@@ -70,40 +93,56 @@ public class delEventServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		  
-		List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries(); 
+		List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
+		CalendarEventEntry event = null; //References the event to be deleted
 		
-		for (CalendarEventEntry entry : results) {
-	        // Get the start time for the event 
-	        When time = entry.getTimes().get(0); 
-	        DateTime start = time.getStartTime(); 
-
-	        TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
-	        Date startDate = new Date(start.getValue());
-	        //Determine timezone offset in minutes, depending on whether or not
-	        //Daylight Savings Time is in effect
-	        if (estTZ.inDaylightTime(startDate)) { 
-	            start.setTzShift(-240); 
-	        } else {
-	            start.setTzShift(-300); 
-	        }
-	        
-	        // Concert to milliseconds to get a date object, which can be formatted easier. 
-	        Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
-	        
-			String datePattern = "MM-dd-yyyy"; 
-			SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-	        String startDay = dateFormat.format(entryDate);
-	        
-	        String eventTitle = new String(entry.getTitle().getPlainText());
-	        
-	        if (startDay.equals(date) && eventTitle.equals(title)) {
-	        	try {
-					entry.delete();
-				} catch (ServiceException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		if (del.equals("all")) {
+			ArrayList<CalendarEventEntry> recurList = new ArrayList<CalendarEventEntry>();
+			//Get the events in the series of recurring events
+			for (CalendarEventEntry entry : results) {
+				String eventTitle = new String(entry.getTitle().getPlainText());
+				if (eventTitle.equals(title)) { //Check title to see if it's the correct event
+					recurList.add(entry);
 				}
-	        }
+			}
+			event = recurList.get(0); //Set the first one (holds recurring data) to be deleted
+		} else { //Select event to delete as normal
+			for (CalendarEventEntry entry : results) {
+				// Get the start time for the event 
+				When time = entry.getTimes().get(0); 
+				DateTime start = time.getStartTime(); 
+
+				TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+				Date startDate = new Date(start.getValue());
+				//Determine timezone offset in minutes, depending on whether or not
+				//Daylight Savings Time is in effect
+				if (estTZ.inDaylightTime(startDate)) { 
+					start.setTzShift(-240); 
+				} else {
+					start.setTzShift(-300); 
+				}
+
+				// Convert to milliseconds to get a date object, which can be formatted easier. 
+				Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
+
+				String datePattern = "MM-dd-yyyy"; 
+				SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+				String startDay = dateFormat.format(entryDate);
+
+				String eventTitle = new String(entry.getTitle().getPlainText());
+				
+				if (startDay.equals(date) && eventTitle.equals(title)) {
+					event = entry;
+				}
+			}
+		}
+		
+		if (event != null) { //Delete the event
+			try {
+				event.delete();
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
 		}
         
         resp.sendRedirect("/manProj.jsp?name=" + name + "&startDate=" + startRange + "&endDate="

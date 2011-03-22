@@ -29,8 +29,13 @@
 <script src="javascript/volunteer.js"> </script>   
 
 <script type="text/javascript">
-function toggler(num) { //Shows or hides the urlbox of the given number
+function copyToggler(num) { //Shows or hides the urlbox of the given number
 	var url = 'url';
+	var id = url + num;
+	$(document.getElementById(id)).toggle();
+}
+function delToggler(num) { //Shows or hides the urlbox of the given number
+	var url = 'del';
 	var id = url + num;
 	$(document.getElementById(id)).toggle();
 }
@@ -47,7 +52,6 @@ function toggler(num) { //Shows or hides the urlbox of the given number
 <%@ include file="getUserTimeZone.jsp" %>
 
 <%
-
    // See if the user has selected some of the filter settings 
    String startRange = request.getParameter("startDate"); 
    String endRange = request.getParameter("endDate"); 
@@ -329,7 +333,7 @@ function toggler(num) { //Shows or hides the urlbox of the given number
          </span>
          </a>
         </div>
-        <span class="copy" onclick="toggler(<%=entryNum%>)"> Link </span>
+        <span class="copy" onclick="copyToggler(<%=entryNum%>)"> Link </span>
         <span class="copyURL" id="url<%=entryNum%>"> 
             <% 
             StringBuffer fullURL = request.getRequestURL();
@@ -339,15 +343,32 @@ function toggler(num) { //Shows or hides the urlbox of the given number
             %>
             <input id="urlbox" type="text" readonly="readonly" size="15" value="<%=host%>/addvolunteer?date=<%=startDay%>&title=<%=title%>&id=<%=entry.getId()%>"></input>
         </span>
+        <%
+        OriginalEvent oe = entry.getOriginalEvent();
+        if (oe == null) { //Event is not recurring
+        %>
         <span class="delete">
             <a href="/delevent?name=<%=name%>&date=<%=startDay%>&title=<%=title%>&category=<%=cat%>&pageNum=<%=pageNumber%>&startDate=<%=startRange%>&endDate=<%=endRange%>&resultIndex=<%=resultIndex%>">Delete</a>
         </span>
-      <% } 
+        <% } else { //Event is recurring %>
+        <span class="delete" onclick="delToggler(<%=entryNum%>)"> Delete </span>
+        <span class="delOptions" id="del<%=entryNum%>"> 
+                This is a recurring event. <br />
+            <form class="delButton" action="/delevent?name=<%=name%>&date=<%=startDay%>&title=<%=title%>&category=<%=cat%>&pageNum=<%=pageNumber%>&startDate=<%=startRange%>&endDate=<%=endRange%>&resultIndex=<%=resultIndex%>&del=this" method="post">
+                <input type="submit" id="padding" name="delThis" value="Delete Just This Event"> <br />
+            </form>
+            <form action="/delevent?name=<%=name%>&date=<%=startDay%>&title=<%=title%>&category=<%=cat%>&pageNum=<%=pageNumber%>&startDate=<%=startRange%>&endDate=<%=endRange%>&resultIndex=<%=resultIndex%>&del=all" method="post">
+                <input type="submit" id name="delAll" value="Delete All Events in Series">
+            </form>
+        </span>
+      <%  }
+        } 
       } %> 
      </div>
      
      <script type="text/javascript"> // Hide all the url boxes by default
          $('.copyURL').hide(); 
+         $('.delOptions').hide(); 
      </script>
      
      <div class="footer">
