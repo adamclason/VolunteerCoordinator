@@ -127,7 +127,7 @@ if(toAMPM.equals("PM")) {
         
         <%         
         if (request.getParameter("errordate") != null) {
-            out.println( "<b>Start time must be less than or equal to end time.</b>" );
+            out.println( "<div id=\"error\">Start time must be less than or equal to end time.</div>" );
         }
         %>
         

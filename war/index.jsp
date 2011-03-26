@@ -21,7 +21,7 @@ if (task == null) {
     if (name != null) {
         if( name.equals( "none" ) )
         {
-            out.println( "<b>Please enter a name.</b>" );
+            out.println( "<div id=\"error\">Please enter a name.</div>" );
             name = "";
         } else if ( name.equals( "null" ) ) {
         	name = "";

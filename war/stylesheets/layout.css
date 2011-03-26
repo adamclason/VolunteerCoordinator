@@ -261,6 +261,9 @@ h2 {
 	float: right;
 	clear: both; 
 }
+#error {
+	font-weight: bold;
+}
 #padding {
 	margin-top: .3em;
 	margin-bottom: .3em;

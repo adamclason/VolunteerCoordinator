@@ -59,7 +59,8 @@ public class delEventServlet extends HttpServlet {
 		myQuery.setStringCustomParameter("sortorder", "ascending");
 		if (del == null) {
 			del = "";
-		} if (del.equals("this")) {
+		}
+		if (del.equals("this")) {
 		    myQuery.setStringCustomParameter("singleevents", "true");
 		}
 		

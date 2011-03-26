@@ -16,7 +16,6 @@
     com.google.common.collect.Maps,
     java.io.*,
     java.text.SimpleDateFormat"
-    
 %>
 
 <link rel="stylesheet" type="text/css" href="stylesheets/layout.css" />
@@ -57,16 +56,42 @@
 
     Query myQuery = new Query( feedUrl );
     myQuery.setFullTextQuery( title );
+	myQuery.setStringCustomParameter("orderby", "starttime");
+	myQuery.setStringCustomParameter("sortorder", "ascending");
+    myQuery.setStringCustomParameter( "singleevents", "true" );
     CalendarEventFeed myResultsFeed = myService.query( myQuery, CalendarEventFeed.class );
+    List<CalendarEventEntry> results = (List<CalendarEventEntry>)myResultsFeed.getEntries();
     
     if (myResultsFeed.getEntries().size() > 0) 
     {
-        CalendarEventEntry entry = (CalendarEventEntry) myResultsFeed.getEntries().get(0); 
-        int count = 0;
-        while( !entry.getId().equals( id ) )
-        {
-            entry = (CalendarEventEntry) myResultsFeed.getEntries().get( count++ );
+        CalendarEventEntry entry = null;//(CalendarEventEntry) myResultsFeed.getEntries().get(0);
+        for (CalendarEventEntry e : results) {
+        	if (e.getId().equals( id )) { //Get the right event based on id
+        		entry = e;
+        	}
         }
+        
+        String recurring;
+        if (entry.getOriginalEvent() == null) { //If the entry is recurring
+        	recurring = "no";
+        } else {
+        	recurring = "yes";
+        }
+        System.err.println("editjob "+recurring);
+        
+        if (recurring.equals("yes")) { //If the entry is recurring
+        	
+        	ArrayList<CalendarEventEntry> recurList = new ArrayList<CalendarEventEntry>();
+			//Get the events in the series of recurring events
+			for (CalendarEventEntry event : results) {
+				String eventTitle = new String(event.getTitle().getPlainText());
+				if (eventTitle.equals(title)) { //Check title to see if it's the correct event
+					recurList.add(event);
+				}
+			}
+			entry = recurList.get(0); //Select the first one (which holds recurring data)
+        }
+        
         title = entry.getTitle().getPlainText();
         String content = entry.getPlainTextContent();
 
@@ -118,6 +143,7 @@
         String why = "";
         String category = "";
         String volList = "";
+        String recur = "";
 
         String cur = sc.next().trim(); 
         if(cur.equals("<description>")) 
@@ -211,7 +237,16 @@
                 cur = sc.next();
             }
         }
-    
+        
+        List<ExtendedProperty> propList = entry.getExtendedProperty();
+		for (ExtendedProperty prop : propList) {
+			if (prop.getName().equals("category")) {
+				category = prop.getValue();
+			}
+			if (prop.getName().equals("recurrence")) {
+				recur = prop.getValue();
+			}
+		}
 %>
     <div class="content" id="addEvent">
     <form method="post" action="/updateevent">
@@ -356,16 +391,17 @@
             Recurring: 
             <div class="dropdown"> 
                 <select name="recur" class="dropdown">
-                    <option value="none" selected="selected">None</option>
-                    <option value="week">Weekly</option>
-                    <option value="biweek">Bi-weekly</option>
-                    <option value="month">Monthly</option>
+                    <option value="none" <% if (recur.equals("none")) %>selected="selected"<% ; %>>None</option>
+		            <option value="week"<% if (recur.equals("week")) %>selected="selected"<% ; %>>Weekly</option>
+		            <option value="biweek"<% if (recur.equals("biweek")) %>selected="selected"<% ; %>>Bi-weekly</option>
+		            <option value="month"<% if (recur.equals("month")) %>selected="selected"<% ; %>>Monthly</option>
                 </select>
             </div>
         </div> 
 
             <input name="name" type="hidden" value="<%=name%>">
             <input name="title" type="hidden" value="<%=title%>">
+            <input name="recurring" type="hidden" value="<%=recurring%>">
        
         <div class="submit">
             <input type="submit" class="submitButton" value="Submit"/>

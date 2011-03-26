@@ -153,9 +153,13 @@ throws IOException {
 	eventTimes.setEndTime(endTime);
 	
 	String recurStr = req.getParameter("recur");
+	ExtendedProperty recurrence = new ExtendedProperty();
+	recurrence.setName("recurrence");
+	recurrence.setValue(recurStr);
+	entry.addExtendedProperty(recurrence);
+	
 	if (recurStr.equals("none")) { //If no recurrence, add the date/times
 		entry.addTime(eventTimes);
-		System.err.println("no recurrence");
 	} else { //If recurrence selected, apply it
 		String recurData = "DTSTART;TZID=" + timeZone + ":" + year + month + day + "T" + fromHrsStr
 		    + fromMins + "00\r\n"
@@ -171,7 +175,6 @@ throws IOException {
 			recurData += "RRULE:FREQ=MONTHLY\r\n";
 		}
 		Recurrence recur = new Recurrence();
-		System.err.println(recurData);
 		recur.setValue(recurData);
 		entry.setRecurrence(recur);
 	}
