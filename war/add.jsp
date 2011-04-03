@@ -95,6 +95,12 @@ if(toAMPM.equals("PM")) {
 <div class="content" id="addEvent">
 	<h2> Create a New Event: </h2>
     <form method="post" action="/makeevent">
+        <%         
+        if (request.getParameter("errortitle") != null) {
+            out.println( "<div id=\"error\">Please give the job a name.</div>" );
+        }
+        %>
+        
     	<div class="inputItem"> 
         Job Name: <input type="text" name="title" class="textfield" value="<%= title %>" />
         </div> 
@@ -118,6 +124,12 @@ if(toAMPM.equals("PM")) {
         	</div> 
         </div> 
         
+        <%         
+        if (request.getParameter("errordate") != null) {
+            out.println( "<div id=\"error\">Please enter a date.</div>" );
+        }
+        %>
+        
         <div class="inputItem">
         	When: 
 	        <div class="dropdown">
@@ -126,7 +138,7 @@ if(toAMPM.equals("PM")) {
         </div>
         
         <%         
-        if (request.getParameter("errordate") != null) {
+        if (request.getParameter("errortime") != null) {
             out.println( "<div id=\"error\">Start time must be less than or equal to end time.</div>" );
         }
         %>

@@ -7,7 +7,6 @@ com.google.appengine.api.datastore.KeyFactory"
 %>
 <%
 String tzName = request.getParameter("name");
-System.err.println(tzName);
 String timeZone = null;
 if( tzName != null )
 {

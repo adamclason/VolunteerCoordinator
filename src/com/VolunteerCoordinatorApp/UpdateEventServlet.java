@@ -9,8 +9,6 @@ import com.google.gdata.data.calendar.*;
 import com.google.gdata.data.extensions.*;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
-import com.google.gdata.util.ServiceForbiddenException;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,8 +26,7 @@ public class UpdateEventServlet extends HttpServlet
             myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
         } 
         catch (AuthenticationException e) 
-        {
-            // TODO Auto-generated catch block
+        { // TODO Auto-generated catch block
             e.printStackTrace();
         }
         String title = request.getParameter( "title" );
@@ -41,8 +38,6 @@ public class UpdateEventServlet extends HttpServlet
         URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
 
         Query calendarQuery = new Query( feedUrl );
-        //calendarQuery.setStringCustomParameter("orderby", "starttime");
-        //calendarQuery.setStringCustomParameter("sortorder", "ascending");
         
         CalendarEventFeed resultFeed = null;
 		try {
@@ -54,7 +49,6 @@ public class UpdateEventServlet extends HttpServlet
 		
 		List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
 		CalendarEventEntry event = null; //References the event to be updated
-		//System.err.println(recurring);
 		
 		if (recurring.equals("yes")) { //Select recurring event
 			ArrayList<CalendarEventEntry> recurList = new ArrayList<CalendarEventEntry>();
@@ -68,7 +62,6 @@ public class UpdateEventServlet extends HttpServlet
 			event = recurList.get(0); //Set the first one (holds recurring data) to be deleted
 		} else { //Select normal event
 			for (CalendarEventEntry entry : results) {
-				//System.err.println(entry.getTitle().getPlainText()+" "+ title);
 				if( entry.getTitle().getPlainText().equals( title ) ) {
 					event = entry;
 					volunteers = event.getPlainTextContent(); 
@@ -89,26 +82,15 @@ public class UpdateEventServlet extends HttpServlet
         int splitHere = entryId.lastIndexOf("/") + 1;
         entryId = entryId.substring(splitHere);
         URL entryUrl = new URL( "https://www.google.com/calendar/feeds/default/private/full");
-		
-		try
-        {
-			event.delete();
-        }
-        catch( ServiceException e )
-        {
-            System.err.println( "Exception trying to delete calendarEventEntry" );
-            e.printStackTrace();
-        }
         
         CalendarEventEntry newEntry = new CalendarEventEntry();
 
-        newEntry.setTitle(new PlainTextConstruct( newTitle ));
         String description = request.getParameter( "what" );
         String forWho = request.getParameter( "for" );
         String who = request.getParameter( "who" );
         String why = request.getParameter( "why" );
         String cat = request.getParameter( "category" );
-        System.err.println("cat="+cat);
+
         if( cat.equals( "None" ) || cat == null )
         {
             cat = "None";
@@ -153,10 +135,32 @@ public class UpdateEventServlet extends HttpServlet
             tillHrsStr = "0" + String.valueOf( tillHrs );
 
         String date = request.getParameter("when");
+		if (date == null || date.equals("") || date.equals("null")) { //Handle bug where user didn't input a date 
+			response.sendRedirect("/editJob.jsp?name=" + name + "&title=" + title + "&errordate=true&desc=" +
+					description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
+					cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
+					"&tillMins=" + tillMins + "&fromAMPM=" + request.getParameter("fromAMPM") +
+					"&toAMPM=" + request.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
+					request.getParameter("recur") + "&id=" + event.getId() + "&newTitle=" + newTitle);
+			return;
+		}
+		
         String month = date.substring(0, date.indexOf("/")); 
         String day = date.substring(date.indexOf("/") + 1, date.indexOf("/") + 3); 
         String year = date.substring(date.indexOf("/") + 4, date.length()); 
-        String formattedDate = year + "-" + month + "-" + day; 
+        String formattedDate = year + "-" + month + "-" + day;  
+		
+		if (newTitle == null || newTitle.equals("") || newTitle.equals("null")) { //Handle bug where user didn't input a title 
+			response.sendRedirect("/editJob.jsp?name=" + name + "&title=" + title + "&errortitle=true&desc=" +
+					description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
+					cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
+					"&tillMins=" + tillMins + "&fromAMPM=" + request.getParameter("fromAMPM") +
+					"&toAMPM=" + request.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
+					request.getParameter("recur") + "&id=" + event.getId() + "&newTitle=" + newTitle);
+			return;
+		} else {
+			newEntry.setTitle(new PlainTextConstruct( newTitle ));
+		}
 
         String fromTime = formattedDate + "T" + fromHrsStr
         + ":" + fromMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
@@ -172,7 +176,6 @@ public class UpdateEventServlet extends HttpServlet
         //Determine timezone offset in minutes, depending on whether or not
         //Daylight Savings Time is in effect
         if (estTZ.inDaylightTime(startDate)) {
-            System.err.println( "In DST" );
             startTime.setTzShift(-240); 
         } else {
           startTime.setTzShift(-300); 
@@ -182,6 +185,16 @@ public class UpdateEventServlet extends HttpServlet
         } else {
             endTime.setTzShift(-300);
         }
+
+		if (startTime.compareTo(endTime) > 0) { // handle bug where endtime is before the starttime
+			response.sendRedirect("/editJob.jsp?name=" + name + "&title=" + title + "&errortime=true&desc=" +
+					description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
+					cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
+					"&tillMins=" + tillMins + "&fromAMPM=" + request.getParameter("fromAMPM") +
+					"&toAMPM=" + request.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
+					request.getParameter("recur") + "&id=" + event.getId() + "&newTitle=" + newTitle);
+			return;
+		}
         
         When eventTimes = new When();
         eventTimes.setStartTime(startTime);
@@ -195,7 +208,6 @@ public class UpdateEventServlet extends HttpServlet
     	
     	if (recurStr.equals("none")) { //If no recurrence, add the date/times
     		newEntry.addTime(eventTimes);
-    		System.err.println("no recurrence");
     	} else { //If recurrence selected, apply it
     		String recurData = "DTSTART;TZID=America/New_York" + ":" + year + month + day + "T" + fromHrsStr
     		    + fromMins + "00\r\n"
@@ -214,14 +226,24 @@ public class UpdateEventServlet extends HttpServlet
     		recur.setValue(recurData);
     		newEntry.setRecurrence(recur);
     	}
+    	
+		try //Try to delete old event
+        {
+			event.delete();
+        }
+        catch( ServiceException e )
+        {
+            System.err.println( "Exception trying to delete calendarEventEntry" );
+            e.printStackTrace();
+        }
         
-        try
+        try //Try to post the new one
         {
             myService.insert( entryUrl, newEntry );
         }
         catch ( ServiceException e )
         {
-            System.err.println( "Error inserting new calendar." );
+            System.err.println( "Exception inserting new calendar." );
             //Actual error handling one of these days.
             e.printStackTrace();
         }

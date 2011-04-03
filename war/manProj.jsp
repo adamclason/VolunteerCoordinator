@@ -83,8 +83,6 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
 	    endL += 86399999;
 	    endDT.setValue(endL);
 	      
-	    System.err.println(startDT + " " + endDT);
-	      
 	    myQuery.setMinimumStartTime(startDT); 
 	    myQuery.setMaximumStartTime(endDT); 
 	 } else if (request.getParameter("date") != null) {
@@ -314,7 +312,7 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
         			if (prop.getName().equals("category")) {
         				category = prop.getValue();
         			}
-        		}
+        		}System.err.println(entry.getId());
            %>
         <div class ="event">
          <a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> 

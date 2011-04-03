@@ -30,11 +30,9 @@ public class delUsrCalendarsServlet extends HttpServlet {
 			CalendarEntry calendar = resultFeed.getEntries().get(0);
 			for (int i = 0; i < resultFeed.getEntries().size(); i++) {
 			  CalendarEntry entry = resultFeed.getEntries().get(i);
-			  System.err.println("Deleting calendar: " + entry.getTitle().getPlainText());
 			  try {
 			    entry.delete();
 			  } catch (InvalidEntryException e) {
-			    System.err.println("\tUnable to delete primary calendar");
 			  }
 		    }
 		} catch (ServiceException e1) {

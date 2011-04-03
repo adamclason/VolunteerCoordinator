@@ -33,7 +33,7 @@ public class delEventServlet extends HttpServlet {
 		String endRange = req.getParameter("endDate"); 
 		String resultIndex = req.getParameter("resultIndex"); 
 		String del = req.getParameter("del"); 
-        System.err.println(date+" "+title);
+
 		if (req.getParameter("catCheck") == null) {
 			cat = "null";
 		}
@@ -70,7 +70,6 @@ public class delEventServlet extends HttpServlet {
 				Date start = format.parse(date);
 			    DateTime startDT = new DateTime(start);
 			    myQuery.setMinimumStartTime(startDT); 
-			    //System.err.println("in the try");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -38,10 +38,17 @@
     String query = "select from " + Category.class.getName();
     List<Category> categories = (List<Category>) pm.newQuery(query).execute();
     
-    String title = request.getParameter( "title" );
-    String name = request.getParameter( "name" );
-    String id = request.getParameter( "id" );
-    
+    String title = request.getParameter( "title" ); System.err.println(title);
+    String name = request.getParameter( "name" ); //null when used on an upated event
+    String id = request.getParameter( "id" ); //null when used on an upated event
+    String newTitle = request.getParameter( "newTitle" );
+
+    if (title == null || title.equals("") || title.equals("null")) {
+    	title = "";
+    }
+    if (newTitle == null || newTitle.equals("") || newTitle.equals("null")) {
+    	newTitle = title;
+    }
     %>
     <%@ include file="getUserTimeZone.jsp" %>
     
@@ -50,11 +57,10 @@
         <%@ include file="LinkHome.jsp" %>
     </ul>
 
-    <%
-    
+    <% 
     URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
 
-    Query myQuery = new Query( feedUrl );
+    CalendarQuery myQuery = new CalendarQuery( feedUrl );
     myQuery.setFullTextQuery( title );
 	myQuery.setStringCustomParameter("orderby", "starttime");
 	myQuery.setStringCustomParameter("sortorder", "ascending");
@@ -66,10 +72,13 @@
     {
         CalendarEventEntry entry = null;//(CalendarEventEntry) myResultsFeed.getEntries().get(0);
         for (CalendarEventEntry e : results) {
+        	//System.err.println(title +" || " + e.getTitle().getPlainText());
+        	//System.err.println(id + " || " + e.getId());
+        	//System.err.println("---------------------------");
         	if (e.getId().equals( id )) { //Get the right event based on id
         		entry = e;
         	}
-        }
+        }//System.err.println("AAAAAAAAAAAAAAAAAAAAAAA");//entry is null
         
         String recurring;
         if (entry.getOriginalEvent() == null) { //If the entry is recurring
@@ -77,7 +86,6 @@
         } else {
         	recurring = "yes";
         }
-        System.err.println("editjob "+recurring);
         
         if (recurring.equals("yes")) { //If the entry is recurring
         	
@@ -94,7 +102,7 @@
         
         title = entry.getTitle().getPlainText();
         String content = entry.getPlainTextContent();
-
+        
         String datePattern = "MM/dd/yyyy"; 
         SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);   
 
@@ -251,8 +259,15 @@
     <div class="content" id="addEvent">
     <form method="post" action="/updateevent">
 	<h2> Edit Job: </h2>
+                
+        <%         
+        if (request.getParameter("errortitle") != null) { //If title was blank, make it blank and print out an alert
+        	newTitle = "";
+            out.println( "<div id=\"error\">Please give the job a name.</div>" );
+        }
+        %>
         <div class="inputItem"> 
-        Job Name: <input type="text" name="newTitle" class="textfield" value="<%=title%>" />
+            Job Name: <input type="text" name="newTitle" class="textfield" value="<%=newTitle%>" />
         </div> 
         
         <div class="inputItem">
@@ -279,6 +294,12 @@
             </div> 
         </div> 
         
+        <%         
+        if (request.getParameter("errordate") != null) {
+        	startDay = "";
+            out.println( "<div id=\"error\">Please enter a date.</div>" );
+        }
+        %>
         <div class="inputItem">
             When: 
             <div class="dropdown">
@@ -286,13 +307,21 @@
             </div>
         </div>
         
+        <%   
+        boolean timeError = false;
+        if (request.getParameter("errortime") != null) {
+        	timeError = true;
+            out.println( "<div id=\"error\">Start time must be less than or equal to end time.</div>" );
+        }
+        %>
+        
         <div class="inputItem"> 
             From
             <div class="dropdown">
                 <select name="fromHrs">
                     <% for (int i = 1; i < 13; i++) 
                        {
-                            if( i == Integer.parseInt( startHour ) )
+                            if( i == Integer.parseInt( startHour ) && !timeError )
                             {%>
                                 <option value="<% if (i<10) %>0<% ; %><%= i %>" selected="selected"><%=i%></option>
                          <% }
@@ -307,7 +336,7 @@
                 <select name="fromMins">
                     <% for (int i = 0; i < 60; i += 5) 
                     {
-                        if( i == Integer.parseInt( startMinute ) )
+                        if( i == Integer.parseInt( startMinute ) && !timeError )
                         {%>
                             <option value="<% if (i<10) %>0<% ; %><%= i %>" selected="selected"><% if (i<10) %>0<% ; %><%= i %></option>
                      <% }
@@ -320,8 +349,8 @@
                 </select>
                 
                 <select name="fromAMPM">
-                    <option value="AM" <% if( startMeridiem.equals( "AM" ) ) %> selected="selected" <% ; %> >AM</option> 
-                    <option value="PM" <% if( startMeridiem.equals( "PM" ) ) %> selected="selected" <% ; %> >PM</option>
+                    <option value="AM" <% if( startMeridiem.equals( "AM" ) && !timeError ) %> selected="selected" <% ; %> >AM</option> 
+                    <option value="PM" <% if( startMeridiem.equals( "PM" ) && !timeError ) %> selected="selected" <% ; %> >PM</option>
                 </select>   
             </div> 
         </div>
@@ -332,7 +361,7 @@
                 <select name="tillHrs">
                 <% for (int i = 1; i < 13; i++) 
                 {
-                     if( i == Integer.parseInt( endHour ) )
+                     if( i == Integer.parseInt( endHour ) && !timeError )
                      {%>
                          <option value="<% if (i<10) %>0<% ; %><%= i %>" selected="selected"><%=i%></option>
                   <% }
@@ -346,7 +375,7 @@
                 <select name="tillMins">
                 <% for (int i = 0; i < 60; i += 5) 
                 {
-                    if( i == Integer.parseInt( endMinute ) )
+                    if( i == Integer.parseInt( endMinute ) && !timeError )
                     {%>
                         <option value="<% if (i<10) %>0<% ; %><%= i %>" selected="selected"><% if (i<10) %>0<% ; %><%= i %></option>
                  <% }
@@ -359,8 +388,8 @@
                 </select>
                 
                 <select name="toAMPM">
-                <option value="AM" <% if( endMeridiem.equals( "AM" ) ) %> selected="selected" <% ; %> >AM</option> 
-                <option value="PM" <% if( endMeridiem.equals( "PM" ) ) %> selected="selected" <% ; %> >PM</option>
+                <option value="AM" <% if( endMeridiem.equals( "AM" ) && !timeError ) %> selected="selected" <% ; %> >AM</option> 
+                <option value="PM" <% if( endMeridiem.equals( "PM" ) && !timeError ) %> selected="selected" <% ; %> >PM</option>
                 </select>
             </div>
         </div>

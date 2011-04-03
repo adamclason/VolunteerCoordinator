@@ -286,7 +286,6 @@ public class addVolunteerServlet extends HttpServlet {
 							// Access the Access Control List (ACL) for the calendar
 							Link link = newCalendar.getLink(AclNamespace.LINK_REL_ACCESS_CONTROL_LIST,
 									Link.Type.ATOM);
-							//System.err.println( link.getHref() );
 							URL aclUrl = new URL( link.getHref() );
 							AclFeed aclFeed = null;
 							try
