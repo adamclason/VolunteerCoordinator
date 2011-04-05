@@ -134,33 +134,13 @@ public class UpdateEventServlet extends HttpServlet
         else
             tillHrsStr = "0" + String.valueOf( tillHrs );
 
-        String date = request.getParameter("when");
-		if (date == null || date.equals("") || date.equals("null")) { //Handle bug where user didn't input a date 
-			response.sendRedirect("/editJob.jsp?name=" + name + "&title=" + title + "&errordate=true&desc=" +
-					description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
-					cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
-					"&tillMins=" + tillMins + "&fromAMPM=" + request.getParameter("fromAMPM") +
-					"&toAMPM=" + request.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
-					request.getParameter("recur") + "&id=" + event.getId() + "&newTitle=" + newTitle);
-			return;
-		}
-		
+        String date = request.getParameter("when");		
         String month = date.substring(0, date.indexOf("/")); 
         String day = date.substring(date.indexOf("/") + 1, date.indexOf("/") + 3); 
         String year = date.substring(date.indexOf("/") + 4, date.length()); 
         String formattedDate = year + "-" + month + "-" + day;  
 		
-		if (newTitle == null || newTitle.equals("") || newTitle.equals("null")) { //Handle bug where user didn't input a title 
-			response.sendRedirect("/editJob.jsp?name=" + name + "&title=" + title + "&errortitle=true&desc=" +
-					description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
-					cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
-					"&tillMins=" + tillMins + "&fromAMPM=" + request.getParameter("fromAMPM") +
-					"&toAMPM=" + request.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
-					request.getParameter("recur") + "&id=" + event.getId() + "&newTitle=" + newTitle);
-			return;
-		} else {
-			newEntry.setTitle(new PlainTextConstruct( newTitle ));
-		}
+		newEntry.setTitle(new PlainTextConstruct( newTitle ));
 
         String fromTime = formattedDate + "T" + fromHrsStr
         + ":" + fromMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
@@ -185,16 +165,6 @@ public class UpdateEventServlet extends HttpServlet
         } else {
             endTime.setTzShift(-300);
         }
-
-		if (startTime.compareTo(endTime) > 0) { // handle bug where endtime is before the starttime
-			response.sendRedirect("/editJob.jsp?name=" + name + "&title=" + title + "&errortime=true&desc=" +
-					description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
-					cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
-					"&tillMins=" + tillMins + "&fromAMPM=" + request.getParameter("fromAMPM") +
-					"&toAMPM=" + request.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
-					request.getParameter("recur") + "&id=" + event.getId() + "&newTitle=" + newTitle);
-			return;
-		}
         
         When eventTimes = new When();
         eventTimes.setStartTime(startTime);

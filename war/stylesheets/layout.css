@@ -261,7 +261,13 @@ h2 {
 	float: right;
 	clear: both; 
 }
-#error {
+#titleError {
+	font-weight: bold;
+}
+#dateError {
+	font-weight: bold;
+}
+#timeError {
 	font-weight: bold;
 }
 #padding {

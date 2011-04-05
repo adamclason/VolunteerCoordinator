@@ -29,6 +29,68 @@
 <script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
 <script src="javascript/addEvent.js"> </script>
 
+<script type="text/javascript">
+String.prototype.trim = function () {
+    return this.replace(/^\s*/, "").replace(/\s*$/, "");
+}
+
+function handleErrors() { //Checks for errors in the form before sending to the servlet
+	var noErrs = true;
+	var div;
+	var title = document.forms["editForm"]["newTitle"].value;
+	title = title.trim();
+	if (title==null || title=="") { //Make sure title isn't blank
+		div = document.getElementById("titleError");
+		div.innerHTML = "<b>Please give the job a name.</b>";
+		noErrs = false;
+	} else {
+		div = document.getElementById("titleError");
+		div.innerHTML = "";
+	}
+	
+	var date = document.forms["editForm"]["when"].value;
+	if (date==null || date=="") {//Make sure date isn't blank
+		div = document.getElementById("dateError");
+		div.innerHTML = "<b>Please enter a date.</b>";
+	    noErrs = false;
+	} else {
+		div = document.getElementById("dateError");
+		div.innerHTML = "";
+	}
+	
+	//Get starting time in minutes
+	var fromHrs = parseInt(document.forms["editForm"]["fromHrs"].value, 10);
+	var fromMins = parseInt(document.forms["editForm"]["fromMins"].value, 10);
+	var fromAMPM = document.forms["editForm"]["fromAMPM"].value;
+	if (fromAMPM == "PM") { //Adjust if it's PM
+		fromHrs = fromHrs + 12;
+	}
+	var fromTime = (fromHrs*60) + fromMins;
+	
+	//Get ending time in minutes
+	var tillHrs = parseInt(document.forms["editForm"]["tillHrs"].value, 10);
+	var tillMins = parseInt(document.forms["editForm"]["tillMins"].value, 10);
+	var tillAMPM = document.forms["editForm"]["toAMPM"].value;
+	if (tillAMPM == "PM") { //Adjust if it's PM
+		tillHrs = tillHrs + 12;
+	}
+	var tillTime = (tillHrs*60) + tillMins;
+	
+	if (fromTime > tillTime) {//Make sure ending time isn't before starting time
+		div = document.getElementById("timeError");
+		div.innerHTML = "<b>Start time must be less than or equal to end time.</b>";
+	    noErrs = false;
+	} else {
+		div = document.getElementById("timeError");
+		div.innerHTML = "";
+	}
+	
+	if (noErrs) { //If no errors, go to servlet and update event
+		document.forms["editForm"].submit();
+	}
+}
+</script>
+
 <title>Edit Job</title>
 </head>
 <body>
@@ -257,15 +319,12 @@
 		}
 %>
     <div class="content" id="addEvent">
-    <form method="post" action="/updateevent">
+    <form method="post" action="/updateevent" id="editForm">
 	<h2> Edit Job: </h2>
-                
-        <%         
-        if (request.getParameter("errortitle") != null) { //If title was blank, make it blank and print out an alert
-        	newTitle = "";
-            out.println( "<div id=\"error\">Please give the job a name.</div>" );
-        }
-        %>
+             
+        <div id="titleError">
+        </div> 
+        
         <div class="inputItem"> 
             Job Name: <input type="text" name="newTitle" class="textfield" value="<%=newTitle%>" />
         </div> 
@@ -294,12 +353,9 @@
             </div> 
         </div> 
         
-        <%         
-        if (request.getParameter("errordate") != null) {
-        	startDay = "";
-            out.println( "<div id=\"error\">Please enter a date.</div>" );
-        }
-        %>
+        <div id="dateError">
+        </div>
+        
         <div class="inputItem">
             When: 
             <div class="dropdown">
@@ -307,13 +363,8 @@
             </div>
         </div>
         
-        <%   
-        boolean timeError = false;
-        if (request.getParameter("errortime") != null) {
-        	timeError = true;
-            out.println( "<div id=\"error\">Start time must be less than or equal to end time.</div>" );
-        }
-        %>
+        <div id="timeError">
+        </div>
         
         <div class="inputItem"> 
             From
@@ -321,7 +372,7 @@
                 <select name="fromHrs">
                     <% for (int i = 1; i < 13; i++) 
                        {
-                            if( i == Integer.parseInt( startHour ) && !timeError )
+                            if( i == Integer.parseInt( startHour ))
                             {%>
                                 <option value="<% if (i<10) %>0<% ; %><%= i %>" selected="selected"><%=i%></option>
                          <% }
@@ -336,7 +387,7 @@
                 <select name="fromMins">
                     <% for (int i = 0; i < 60; i += 5) 
                     {
-                        if( i == Integer.parseInt( startMinute ) && !timeError )
+                        if( i == Integer.parseInt( startMinute ) )
                         {%>
                             <option value="<% if (i<10) %>0<% ; %><%= i %>" selected="selected"><% if (i<10) %>0<% ; %><%= i %></option>
                      <% }
@@ -349,8 +400,8 @@
                 </select>
                 
                 <select name="fromAMPM">
-                    <option value="AM" <% if( startMeridiem.equals( "AM" ) && !timeError ) %> selected="selected" <% ; %> >AM</option> 
-                    <option value="PM" <% if( startMeridiem.equals( "PM" ) && !timeError ) %> selected="selected" <% ; %> >PM</option>
+                    <option value="AM" <% if( startMeridiem.equals( "AM" ) ) %> selected="selected" <% ; %> >AM</option> 
+                    <option value="PM" <% if( startMeridiem.equals( "PM" ) ) %> selected="selected" <% ; %> >PM</option>
                 </select>   
             </div> 
         </div>
@@ -361,7 +412,7 @@
                 <select name="tillHrs">
                 <% for (int i = 1; i < 13; i++) 
                 {
-                     if( i == Integer.parseInt( endHour ) && !timeError )
+                     if( i == Integer.parseInt( endHour ) )
                      {%>
                          <option value="<% if (i<10) %>0<% ; %><%= i %>" selected="selected"><%=i%></option>
                   <% }
@@ -375,7 +426,7 @@
                 <select name="tillMins">
                 <% for (int i = 0; i < 60; i += 5) 
                 {
-                    if( i == Integer.parseInt( endMinute ) && !timeError )
+                    if( i == Integer.parseInt( endMinute ) )
                     {%>
                         <option value="<% if (i<10) %>0<% ; %><%= i %>" selected="selected"><% if (i<10) %>0<% ; %><%= i %></option>
                  <% }
@@ -388,8 +439,8 @@
                 </select>
                 
                 <select name="toAMPM">
-                <option value="AM" <% if( endMeridiem.equals( "AM" ) && !timeError ) %> selected="selected" <% ; %> >AM</option> 
-                <option value="PM" <% if( endMeridiem.equals( "PM" ) && !timeError ) %> selected="selected" <% ; %> >PM</option>
+                <option value="AM" <% if( endMeridiem.equals( "AM" ) ) %> selected="selected" <% ; %> >AM</option> 
+                <option value="PM" <% if( endMeridiem.equals( "PM" ) ) %> selected="selected" <% ; %> >PM</option>
                 </select>
             </div>
         </div>
@@ -433,7 +484,7 @@
             <input name="recurring" type="hidden" value="<%=recurring%>">
        
         <div class="submit">
-            <input type="submit" class="submitButton" value="Submit"/>
+            <input type="button" class="submitButton" value="Submit" onclick="handleErrors()"/>
         </div>
     </form>
     </div>
