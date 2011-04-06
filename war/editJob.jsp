@@ -28,68 +28,7 @@
 <script src="javascript/jquery-1.4.2.min.js"> </script>
 <script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
 <script src="javascript/addEvent.js"> </script>
-
-<script type="text/javascript">
-String.prototype.trim = function () {
-    return this.replace(/^\s*/, "").replace(/\s*$/, "");
-}
-
-function handleErrors() { //Checks for errors in the form before sending to the servlet
-	var noErrs = true;
-	var div;
-	var title = document.forms["editForm"]["newTitle"].value;
-	title = title.trim();
-	if (title==null || title=="") { //Make sure title isn't blank
-		div = document.getElementById("titleError");
-		div.innerHTML = "<b>Please give the job a name.</b>";
-		noErrs = false;
-	} else {
-		div = document.getElementById("titleError");
-		div.innerHTML = "";
-	}
-	
-	var date = document.forms["editForm"]["when"].value;
-	if (date==null || date=="") {//Make sure date isn't blank
-		div = document.getElementById("dateError");
-		div.innerHTML = "<b>Please enter a date.</b>";
-	    noErrs = false;
-	} else {
-		div = document.getElementById("dateError");
-		div.innerHTML = "";
-	}
-	
-	//Get starting time in minutes
-	var fromHrs = parseInt(document.forms["editForm"]["fromHrs"].value, 10);
-	var fromMins = parseInt(document.forms["editForm"]["fromMins"].value, 10);
-	var fromAMPM = document.forms["editForm"]["fromAMPM"].value;
-	if (fromAMPM == "PM") { //Adjust if it's PM
-		fromHrs = fromHrs + 12;
-	}
-	var fromTime = (fromHrs*60) + fromMins;
-	
-	//Get ending time in minutes
-	var tillHrs = parseInt(document.forms["editForm"]["tillHrs"].value, 10);
-	var tillMins = parseInt(document.forms["editForm"]["tillMins"].value, 10);
-	var tillAMPM = document.forms["editForm"]["toAMPM"].value;
-	if (tillAMPM == "PM") { //Adjust if it's PM
-		tillHrs = tillHrs + 12;
-	}
-	var tillTime = (tillHrs*60) + tillMins;
-	
-	if (fromTime > tillTime) {//Make sure ending time isn't before starting time
-		div = document.getElementById("timeError");
-		div.innerHTML = "<b>Start time must be less than or equal to end time.</b>";
-	    noErrs = false;
-	} else {
-		div = document.getElementById("timeError");
-		div.innerHTML = "";
-	}
-	
-	if (noErrs) { //If no errors, go to servlet and update event
-		document.forms["editForm"].submit();
-	}
-}
-</script>
+<script src="javascript/eventErrors.js"> </script>
 
 <title>Edit Job</title>
 </head>
@@ -127,6 +66,11 @@ function handleErrors() { //Checks for errors in the form before sending to the 
 	myQuery.setStringCustomParameter("orderby", "starttime");
 	myQuery.setStringCustomParameter("sortorder", "ascending");
     myQuery.setStringCustomParameter( "singleevents", "true" );
+    if (request.getParameter("date") != null) {
+
+	} else {
+	    myQuery.setStringCustomParameter("futureevents", "true"); 
+	}
     CalendarEventFeed myResultsFeed = myService.query( myQuery, CalendarEventFeed.class );
     List<CalendarEventEntry> results = (List<CalendarEventEntry>)myResultsFeed.getEntries();
     
@@ -317,12 +261,18 @@ function handleErrors() { //Checks for errors in the form before sending to the 
 				recur = prop.getValue();
 			}
 		}
+		
+		//Style for error messages
+		String errorStyle="style=\"color: #FF0000; font-weight: bold;\"";
 %>
     <div class="content" id="addEvent">
-    <form method="post" action="/updateevent" id="editForm">
 	<h2> Edit Job: </h2>
+    <form method="post" action="/updateevent" id="eventForm">
              
-        <div id="titleError">
+        <div id="titleError" <%=errorStyle%>>
+        </div> 
+        
+        <div id="charError" <%=errorStyle%>>
         </div> 
         
         <div class="inputItem"> 
@@ -353,7 +303,7 @@ function handleErrors() { //Checks for errors in the form before sending to the 
             </div> 
         </div> 
         
-        <div id="dateError">
+        <div id="dateError" <%=errorStyle%>>
         </div>
         
         <div class="inputItem">
@@ -363,7 +313,7 @@ function handleErrors() { //Checks for errors in the form before sending to the 
             </div>
         </div>
         
-        <div id="timeError">
+        <div id="timeError" <%=errorStyle%>>
         </div>
         
         <div class="inputItem"> 

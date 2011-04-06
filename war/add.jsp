@@ -19,6 +19,7 @@
 <script src="http://code.jquery.com/jquery-1.4.3.min.js"> </script>
 <script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
 <script src="javascript/addEvent.js"> </script>
+<script src="javascript/eventErrors.js"> </script>
 
 <title>Add Job</title>
 </head>
@@ -90,19 +91,23 @@ if(toAMPM.equals("PM")) {
     PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Category.class.getName();
     List<Category> categories = (List<Category>) pm.newQuery(query).execute();
+	
+	//Style for error messages
+	String errorStyle="style=\"color: #FF0000; font-weight: bold;\"";
 %>
 
 <div class="content" id="addEvent">
 	<h2> Create a New Event: </h2>
-    <form method="post" action="/makeevent">
-        <%         
-        if (request.getParameter("errortitle") != null) {
-            out.println( "<div id=\"error\">Please give the job a name.</div>" );
-        }
-        %>
+    <form method="post" action="/makeevent" id="eventForm">
+        
+        <div id="titleError" <%=errorStyle%>>
+        </div> 
+        
+        <div id="charError" <%=errorStyle%>>
+        </div>
         
     	<div class="inputItem"> 
-        Job Name: <input type="text" name="title" class="textfield" value="<%= title %>" />
+        Job Name: <input type="text" name="newTitle" class="textfield" value="<%= title %>" />
         </div> 
         
         <div class="inputItem">
@@ -124,11 +129,8 @@ if(toAMPM.equals("PM")) {
         	</div> 
         </div> 
         
-        <%         
-        if (request.getParameter("errordate") != null) {
-            out.println( "<div id=\"error\">Please enter a date.</div>" );
-        }
-        %>
+        <div id="dateError" <%=errorStyle%>>
+        </div>
         
         <div class="inputItem">
         	When: 
@@ -137,11 +139,8 @@ if(toAMPM.equals("PM")) {
 	        </div>
         </div>
         
-        <%         
-        if (request.getParameter("errortime") != null) {
-            out.println( "<div id=\"error\">Start time must be less than or equal to end time.</div>" );
-        }
-        %>
+        <div id="timeError" <%=errorStyle%>>
+        </div>
         
         <div class="inputItem"> 
         	From
@@ -229,7 +228,7 @@ if(toAMPM.equals("PM")) {
         <input type="hidden" name="name" value="<%=name%>">
        
         <div class="submit">
-        	<input type="submit" class="submitButton" value="Submit"/>
+        	<input type="button" class="submitButton" value="Submit" onclick="handleErrors()"/>
         </div>
     </form>
 </div>

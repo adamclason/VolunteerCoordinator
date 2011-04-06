@@ -1,5 +1,4 @@
 
-
 package com.VolunteerCoordinatorApp;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class MakeEventServlet extends HttpServlet {
 			CalendarEventEntry entry = new CalendarEventEntry();
 			//CalendarQuery q = new CalendarQuery(new URL("hello")); 
 
-			String title = req.getParameter( "title" );
+			String title = req.getParameter( "newTitle" );
 			entry.setTitle(new PlainTextConstruct(title));
 
 			String description = req.getParameter( "what" );
@@ -104,28 +103,10 @@ public class MakeEventServlet extends HttpServlet {
 				tillHrsStr = "0" + String.valueOf( tillHrs );
 
 			String date = req.getParameter("when");
-			if (date == null || date.equals("")) { //Handle bug where user didn't input a date 
-				resp.sendRedirect("/add.jsp?name=" + name + "&title=" + title + "&errordate=true&desc=" +
-						description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
-						cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
-						"&tillMins=" + tillMins + "&fromAMPM=" + req.getParameter("fromAMPM") +
-						"&toAMPM=" + req.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
-						req.getParameter("recur"));
-			}
-
 			String month = date.substring(0, date.indexOf("/")); 
 			String day = date.substring(date.indexOf("/") + 1, date.indexOf("/") + 3); 
 			String year = date.substring(date.indexOf("/") + 4, date.length()); 
 			String formattedDate = year + "-" + month + "-" + day; 
-			
-			if (title == null || title.equals("")) { //Handle bug where user didn't input a title 
-				resp.sendRedirect("/add.jsp?name=" + name + "&title=" + title + "&errortitle=true&desc=" +
-						description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
-						cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
-						"&tillMins=" + tillMins + "&fromAMPM=" + req.getParameter("fromAMPM") +
-						"&toAMPM=" + req.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
-						req.getParameter("recur"));
-			}
 
 			PersistenceManager pManager = PMF.get().getPersistenceManager(); 
 
@@ -164,15 +145,6 @@ public class MakeEventServlet extends HttpServlet {
 
 			DateTime startTime = DateTime.parseDateTime(fromTime);
 			DateTime endTime = DateTime.parseDateTime(tillTime);
-
-			if (startTime.compareTo(endTime) > 0) { // handle bug where endtime is before the starttime
-				resp.sendRedirect("/add.jsp?name=" + name + "&title=" + title + "&errortime=true&desc=" +
-						description + "&for=" + forWho + "&who=" + who + "&why=" + why + "&cat=" +
-						cat + "&fromHrs=" + fromHrs + "&fromMins=" + fromMins + "&tillHrs=" + tillHrs +
-						"&tillMins=" + tillMins + "&fromAMPM=" + req.getParameter("fromAMPM") +
-						"&toAMPM=" + req.getParameter("toAMPM") + "&when=" + date + "&recur=" + 
-						req.getParameter("recur"));
-			}
 			
 			When eventTimes = new When();
 			eventTimes.setStartTime(startTime);

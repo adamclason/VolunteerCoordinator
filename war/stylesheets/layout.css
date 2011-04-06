@@ -261,15 +261,6 @@ h2 {
 	float: right;
 	clear: both; 
 }
-#titleError {
-	font-weight: bold;
-}
-#dateError {
-	font-weight: bold;
-}
-#timeError {
-	font-weight: bold;
-}
 #padding {
 	margin-top: .3em;
 	margin-bottom: .3em;
