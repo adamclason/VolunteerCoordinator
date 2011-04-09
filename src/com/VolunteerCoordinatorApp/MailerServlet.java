@@ -250,16 +250,17 @@ public class MailerServlet extends HttpServlet {
 							TimeZone TZ =  TimeZone.getTimeZone( timeZone );
 							
 							int offset = TZ.getOffset( startDate.getTime() ); //returns in milliseconds
-							start.setTzShift( offset * 1000 * 60 ); //takes argument in minutes
+							start.setTzShift( offset / 1000 / 60 ); //takes argument in minutes
 							
 							// Get a date object, which can be formatted easier.
-							startDate = new Date(start.getValue() + start.getTzShift() );  
+							startDate = new Date( start.getValue() + 1000 * (start.getTzShift() * 60) );  
 
 							String hourPattern = "hh:mma"; 
 							SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern); 
 							String startDay = format.format(startDate); 
 							String startTime = timeFormat.format(startDate);
 							//String endTime = timeFormat.format(endDate);
+							System.out.println(title+" "+startTime+" "+startDay);
 
 							// Set email subject and body
 							String msgSubj = new String("Volunteer Reminder");
@@ -274,7 +275,7 @@ public class MailerServlet extends HttpServlet {
 							String senderAddress = new String("serpentine.cougar@gmail.com");
 							String senderName = new String("Rock Creek Fellowship"); //optional
 
-							try {
+			/*				try {
 								InternetAddress[] recipEmail = InternetAddress.parse(recip);
 
 								Message msg = new MimeMessage(session);
@@ -291,7 +292,7 @@ public class MailerServlet extends HttpServlet {
 								System.err.println("Address Exception");
 							} catch (MessagingException e) {
 								System.err.println("Messaging Exception");
-							} 
+							} */
 						}
 					}
 				}
