@@ -9,6 +9,7 @@ import java.net.URL;
 import javax.servlet.http.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 import javax.jdo.PersistenceManager;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -83,14 +84,17 @@ public class MailerServlet extends HttpServlet {
 			for (CalendarEventEntry entry : results) { // For each event...
 				// Get event details
 
+				
 				// Get the start and end times for the event 
 				When time = entry.getTimes().get(0); 
 				DateTime start = time.getStartTime(); 
-				DateTime end = time.getEndTime();
-
-				TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+				//DateTime end = time.getEndTime();
 				Date startDate = new Date(start.getValue());
-				Date endDate = new Date(end.getValue());
+
+				/*
+				TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+				//Date startDate = new Date(start.getValue());
+				//Date endDate = new Date(end.getValue());
 				//Determine timezone offset in minutes, depending on whether or not
 				//Daylight Savings Time is in effect
 				if (estTZ.inDaylightTime(startDate)) { 
@@ -98,11 +102,11 @@ public class MailerServlet extends HttpServlet {
 				} else {
 					start.setTzShift(-300); 
 				}
-				if (estTZ.inDaylightTime(endDate)) { 
-					end.setTzShift(-240);
-				} else {
-					end.setTzShift(-300);
-				}
+				//if (estTZ.inDaylightTime(endDate)) { 
+				//	end.setTzShift(-240);
+				//} else {
+				//	end.setTzShift(-300);
+				//}
 
 				// Convert to milliseconds to get a date object, which can be formatted easier. 
 				startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
@@ -113,6 +117,7 @@ public class MailerServlet extends HttpServlet {
 				String startDay = format.format(startDate); 
 				String startTime = timeFormat.format(startDate);
 				//String endTime = timeFormat.format(endDate); 
+				*/
 
 				String title = entry.getTitle().getPlainText();
 
@@ -235,6 +240,26 @@ public class MailerServlet extends HttpServlet {
 
 							// Get volunteer's email address
 							String recip = v.getEmail();
+							
+							//Adjust starting time according to volunteer's timezone setting
+							String timeZone = v.getTimeZone();
+							if( timeZone == null )
+							{
+								timeZone = "America/New_York";
+							}
+							TimeZone TZ =  TimeZone.getTimeZone( timeZone );
+							
+							int offset = TZ.getOffset( startDate.getTime() ); //returns in milliseconds
+							start.setTzShift( offset * 1000 * 60 ); //takes argument in minutes
+							
+							// Get a date object, which can be formatted easier.
+							startDate = new Date(start.getValue() + start.getTzShift() );  
+
+							String hourPattern = "hh:mma"; 
+							SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern); 
+							String startDay = format.format(startDate); 
+							String startTime = timeFormat.format(startDate);
+							//String endTime = timeFormat.format(endDate);
 
 							// Set email subject and body
 							String msgSubj = new String("Volunteer Reminder");

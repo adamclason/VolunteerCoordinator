@@ -16,6 +16,8 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/colors.css" />
 <link type="text/css" href="stylesheets/jquery-ui-1.8.6.custom.css" rel="Stylesheet" />
 
+<%@ include file="errorStyle.jsp"  %>
+
 <script src="http://code.jquery.com/jquery-1.4.3.min.js"> </script>
 <script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
 <script src="javascript/addEvent.js"> </script>
@@ -91,9 +93,6 @@ if(toAMPM.equals("PM")) {
     PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Category.class.getName();
     List<Category> categories = (List<Category>) pm.newQuery(query).execute();
-	
-	//Style for error messages
-	String errorStyle="style=\"color: #FF0000; font-weight: bold;\"";
 %>
 
 <div class="content" id="addEvent">

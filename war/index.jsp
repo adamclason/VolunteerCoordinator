@@ -5,6 +5,8 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/layout.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/colors.css">
 
+<%@ include file="errorStyle.jsp"  %>
+
 <title>Volunteer Coordinator</title>
 </head>
 
@@ -21,7 +23,7 @@ if (task == null) {
     if (name != null) {
         if( name.equals( "none" ) )
         {
-            out.println( "<div id=\"error\">Please enter a name.</div>" );
+            out.println( "<div " + errorStyle + ">Please enter a name.</div>" );
             name = "";
         } else if ( name.equals( "null" ) ) {
         	name = "";

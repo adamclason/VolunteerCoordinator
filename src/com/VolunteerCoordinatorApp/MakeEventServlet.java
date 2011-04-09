@@ -141,7 +141,7 @@ public class MakeEventServlet extends HttpServlet {
 			String fromTime = formattedDate + "T" + fromHrsStr
 			+ ":" + fromMins + ":00" + offsetString; //Should adjust to the user's TZ
 			String tillTime = formattedDate + "T" + tillHrsStr
-			+ ":" + tillMins + ":00" + offsetString; //Should adjust to the user's TZ			
+			+ ":" + tillMins + ":00" + offsetString; //Should adjust to the user's TZ		
 
 			DateTime startTime = DateTime.parseDateTime(fromTime);
 			DateTime endTime = DateTime.parseDateTime(tillTime);

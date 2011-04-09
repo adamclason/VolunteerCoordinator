@@ -23,6 +23,7 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/jquery-ui-1.8.6.custom.css" />
 
 <%@ include file="getCalendarService.jsp"  %>
+<%@ include file="errorStyle.jsp"  %>
 
 
 <script src="javascript/jquery-1.4.2.min.js"> </script>
@@ -261,9 +262,6 @@
 				recur = prop.getValue();
 			}
 		}
-		
-		//Style for error messages
-		String errorStyle="style=\"color: #FF0000; font-weight: bold;\"";
 %>
     <div class="content" id="addEvent">
 	<h2> Edit Job: </h2>

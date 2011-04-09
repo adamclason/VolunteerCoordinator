@@ -1,7 +1,12 @@
 package com.VolunteerCoordinatorApp;
 
 import java.io.IOException;
+
+import javax.jdo.PersistenceManager;
 import javax.servlet.http.*;
+
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gdata.client.Query;
 import com.google.gdata.client.calendar.*;
 import com.google.gdata.data.*;
@@ -108,6 +113,8 @@ public class UpdateEventServlet extends HttpServlet
         category.setName("category");
         category.setValue(cat);
         newEntry.addExtendedProperty(category);
+		
+		newEntry.setTitle(new PlainTextConstruct( newTitle ));
 
         int fromHrs = Integer.parseInt(request.getParameter("fromHrs"));
         String fromMins = request.getParameter("fromMins");
@@ -139,32 +146,55 @@ public class UpdateEventServlet extends HttpServlet
         String day = date.substring(date.indexOf("/") + 1, date.indexOf("/") + 3); 
         String year = date.substring(date.indexOf("/") + 4, date.length()); 
         String formattedDate = year + "-" + month + "-" + day;  
-		
-		newEntry.setTitle(new PlainTextConstruct( newTitle ));
 
-        String fromTime = formattedDate + "T" + fromHrsStr
-        + ":" + fromMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
-        String tillTime = formattedDate + "T" + tillHrsStr
-        + ":" + tillMins + ":00" + "-05:00"; //-5:00 adjusts to correct time zone
+        PersistenceManager pManager = PMF.get().getPersistenceManager(); 
+
+		Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+		Volunteer vol = pManager.getObjectById(Volunteer.class, k);
+
+		String timeZone = vol.getTimeZone();
+		if( timeZone == null )
+		{
+			timeZone = "America/New_York";
+		}
+
+		TimeZone TZ =  TimeZone.getTimeZone( timeZone );
+
+		int offset = TZ.getOffset( DateTime.parseDate( formattedDate ).getValue() );
+
+		//Converts milisecond offset to positive hour offset.
+		offset = Math.abs( ( ( ( offset / 60 ) / 60 ) / 1000 ) );
+		String offsetString;
+		//It's a 2-digit offset; no leading zero needed
+		if( offset > 9 )
+		{
+			offsetString = "-" + offset + ":00";
+		}
+		//Single-digit offset; leading zero req'd.  Or we've royally screwed up input somehow,
+		//but how likely is *that*?
+		else
+		{
+			offsetString = "-0" + offset + ":00";
+		}
+
+		String fromTime = formattedDate + "T" + fromHrsStr
+		+ ":" + fromMins + ":00" + offsetString; //Should adjust to the user's TZ
+		String tillTime = formattedDate + "T" + tillHrsStr
+		+ ":" + tillMins + ":00" + offsetString; //Should adjust to the user's TZ
 
         DateTime startTime = DateTime.parseDateTime(fromTime);
         DateTime endTime = DateTime.parseDateTime(tillTime);
-        
-        TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+        /*
+        //TODO figure out if this is the right way to do timezone handling
         Date startDate = new Date(startTime.getValue());
         Date endDate = new Date(endTime.getValue());
-        //Determine timezone offset in minutes, depending on whether or not
-        //Daylight Savings Time is in effect
-        if (estTZ.inDaylightTime(startDate)) {
-            startTime.setTzShift(-240); 
-        } else {
-          startTime.setTzShift(-300); 
+        //If Daylight Savings is in effect, shift times an hour forward (60 minutes)
+        if (TZ.inDaylightTime(startDate)) {
+            startTime.setTzShift(+60); 
         }
-        if (estTZ.inDaylightTime(endDate)) { 
-            endTime.setTzShift(-240);
-        } else {
-            endTime.setTzShift(-300);
-        }
+        if (TZ.inDaylightTime(endDate)) { 
+            endTime.setTzShift(+60);
+        }*/
         
         When eventTimes = new When();
         eventTimes.setStartTime(startTime);

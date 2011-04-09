@@ -312,7 +312,7 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
         			if (prop.getName().equals("category")) {
         				category = prop.getValue();
         			}
-        		}System.err.println(entry.getId());
+        		}
            %>
         <div class ="event">
          <a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> 
