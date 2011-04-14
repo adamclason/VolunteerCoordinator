@@ -105,13 +105,14 @@
    String hourPattern = "hh:mma"; 
    SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern); 
 %> 
-  <ul class="navigation"> 
+<div class="navigation">
+  <ul> 
     <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
     <li><a href="/underConstruction.jsp?name=<%=name%>"> My Jobs </a></li>
     <li><a href="/calendar.jsp?name=<%=name%>"> My Calendar </a></li>
-    <%@ include file="LinkHome.jsp" %>
   </ul>
- 
+    <%@ include file="LinkHome.jsp" %>
+ </div>
 <%
     PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Category.class.getName();

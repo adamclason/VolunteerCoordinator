@@ -42,7 +42,7 @@ if (task == null) {
 			<option value="volunteer">Volunteer</option>
 			<option value="initiate"<% if (task.equals("initiate")) %>selected="selected"<% ; %>>Initiate a Job</option>
 			<option value="manage"<% if (task.equals("manage")) %>selected="selected"<% ; %>>Manage Jobs</option>
-			<option value="dashboard"<% if (task.equals("dashboard")) %>selected="selected"<% ; %>>View Dashboard</option>
+		<!-- <option value="dashboard"<% if (task.equals("dashboard")) %>selected="selected"<% ; %>>View Dashboard</option>  -->
 			<option value="preferences"<% if (task.equals("preferences")) %>selected="selected"<% ; %>>View/Change Preferences</option>
 		</select>
 	

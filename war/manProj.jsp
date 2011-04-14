@@ -117,13 +117,14 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
    String hourPattern = "hh:mma"; 
    SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern);  
 %> 
-  <ul class="navigation" id="catnav" style="width: 44.5em"> 
+<div class="navigation" id="catnav">
+  <ul style="width: 44.5em"> 
     <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Manage Jobs </a></li>
     <li><a href="/newCat.jsp?name=<%=name%>"> New Category </a></li>
     <li><a href="/catMaint.jsp?name=<%=name%>"> Category Maintennance </a></li>
-    <%@ include file="LinkHome.jsp" %>
   </ul>
- 
+    <%@ include file="LinkHome.jsp" %>
+ </div>
 <%
     PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Category.class.getName();

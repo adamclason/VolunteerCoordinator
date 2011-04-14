@@ -28,7 +28,12 @@
 
 <body>
 
-<% String name = request.getParameter("name"); 
+<% 
+    String name = request.getParameter("name");
+    if( name == null )
+    {
+        response.sendRedirect( "/index.jsp?name=none&task=initiate" );
+    } 
 String title = request.getParameter("title"); 
 String desc = request.getParameter("desc"); 
 String forWho = request.getParameter("for"); 

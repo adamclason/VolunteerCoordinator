@@ -77,6 +77,7 @@ public class MakeUserServlet extends HttpServlet {
 		    catch ( ServiceException e2 )
 		    {
 		        // TODO Auto-generated catch block
+				System.err.println( "Failed at inserting new calendar." );
 		        e2.printStackTrace();
 		    }
 		    // Get the calender's url

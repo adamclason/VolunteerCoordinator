@@ -302,8 +302,8 @@ h2 {
   width: 22em;
 }
 #catnav {
-  width: 28em;
-  margin-bottom: 1em;
+  /*width: 28em;*/
+  margin-bottom: 1.1em;
 }
 #copyButton.hover {
   background-color: #77CC00;

@@ -46,7 +46,8 @@ public class addVolunteerServlet extends HttpServlet {
 
 
 			CalendarQuery myQuery = new CalendarQuery(feedUrl);
-			myQuery.setStringCustomParameter("futureevents", "true"); 
+			myQuery.setStringCustomParameter("futureevents", "true");
+			myQuery.setStringCustomParameter("singleevents", "true");
 
 			CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar");
 			try {
@@ -73,6 +74,7 @@ public class addVolunteerServlet extends HttpServlet {
 				When time = entry.getTimes().get(0); 
 				DateTime start = time.getStartTime(); 
                 DateTime end = time.getEndTime();
+                System.err.println(entry.getTimes().get(0).getStartTime());
 
                 TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
                 Date startDate = new Date(start.getValue());
@@ -91,7 +93,7 @@ public class addVolunteerServlet extends HttpServlet {
                 }
 
 				// Convert to milliseconds to get a date object, which can be formatted easier. 
-				Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
+				Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60));
 
 				String datePattern = "MM-dd-yyyy"; 
 				SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
@@ -99,7 +101,9 @@ public class addVolunteerServlet extends HttpServlet {
 
 				String eventTitle = new String(entry.getTitle().getPlainText());
 
+				System.err.println(startDay+" "+date+" "+eventTitle+" "+title);
 				if (startDay.equals(date) && eventTitle.equals(title)) {
+					System.err.println("^ HERE WE ARE ^ "+entry.getTimes().get(0).getStartTime());
 					String content = entry.getPlainTextContent(); 
 
 					if (content.contains("<volunteers>")) {
@@ -137,6 +141,8 @@ public class addVolunteerServlet extends HttpServlet {
 					//If insert is unsuccessful, we look for a way to replace the stored
 					//calendar URL, up to and including making a new calendar.
 
+					System.err.println("Inserting "+entry.getTitle().getPlainText()+" "+entry.getTimes().get(0).getStartTime());
+					System.err.println(newUrl);
 					try
 					{
 						myService.insert(newUrl, entry);
@@ -144,6 +150,8 @@ public class addVolunteerServlet extends HttpServlet {
 					catch ( ServiceException e )
 					{
 						System.err.println( "Failed to insert into calendar at " + usrCalUrl );
+						System.err.println(e.getMessage());
+						e.printStackTrace();
 						URL newFeedUrl = new URL("https://www.google.com/calendar/feeds/default/owncalendars/full");
 						CalendarFeed newResultFeed = null;
 						try
@@ -209,7 +217,7 @@ public class addVolunteerServlet extends HttpServlet {
 							catch ( ServiceException e2 )
 							{
 								// TODO Auto-generated catch block
-								System.err.println( "Failed at getting inserting new calendar." );
+								System.err.println( "Failed at inserting new calendar." );
 								e2.printStackTrace();
 							}
 							// Get the calender's url
