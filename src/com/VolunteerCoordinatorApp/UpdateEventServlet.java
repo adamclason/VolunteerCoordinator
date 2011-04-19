@@ -50,6 +50,14 @@ public class UpdateEventServlet extends HttpServlet
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// Retry
+			try {
+				resultFeed = myService.query(calendarQuery, CalendarEventFeed.class);
+			} catch (ServiceException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 		List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();

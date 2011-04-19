@@ -26,7 +26,12 @@ public class delUsrCalendarsServlet extends HttpServlet {
 		URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/owncalendars/full");
 		CalendarFeed resultFeed;
 		try {
-			resultFeed = myService.getFeed(feedUrl, CalendarFeed.class);
+			try {
+			    resultFeed = myService.getFeed(feedUrl, CalendarFeed.class);
+			} catch (IOException e) {
+				// Retry
+				resultFeed = myService.getFeed(feedUrl, CalendarFeed.class);
+			}
 			CalendarEntry calendar = resultFeed.getEntries().get(0);
 			for (int i = 0; i < resultFeed.getEntries().size(); i++) {
 			  CalendarEntry entry = resultFeed.getEntries().get(i);

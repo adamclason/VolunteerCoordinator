@@ -98,7 +98,15 @@ public class MakeUserServlet extends HttpServlet {
 		    {
 		        // TODO Auto-generated catch block
 		        e1.printStackTrace();
-		    }
+		    } catch (IOException e) {
+				// Retry
+				try {
+					resultFeed = myService.query(myQuery, CalendarEventFeed.class);
+				} catch (ServiceException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 		    List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
 
 		    //Add all of those events to the new calendar
@@ -163,7 +171,15 @@ public class MakeUserServlet extends HttpServlet {
 		    {
 		        // TODO Auto-generated catch block
 		        e1.printStackTrace();
-		    }
+		    } catch (IOException e) {
+				// Retry
+				try {
+					aclFeed = myService.getFeed(aclUrl, AclFeed.class);
+				} catch (ServiceException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 
 		    // Set the default to "read-only" for all users
 		    AclEntry aclEntry = aclFeed.createEntry();

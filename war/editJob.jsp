@@ -72,7 +72,18 @@
 	} else {
 	    myQuery.setStringCustomParameter("futureevents", "true"); 
 	}
-    CalendarEventFeed myResultsFeed = myService.query( myQuery, CalendarEventFeed.class );
+    CalendarEventFeed myResultsFeed = null;
+    try {
+        myResultsFeed = myService.query( myQuery, CalendarEventFeed.class );
+    }  catch (IOException e) {
+		// Retry
+		try {
+			myResultsFeed = myService.query( myQuery, CalendarEventFeed.class );
+		} catch (ServiceException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
     List<CalendarEventEntry> results = (List<CalendarEventEntry>)myResultsFeed.getEntries();
     
     if (myResultsFeed.getEntries().size() > 0) 

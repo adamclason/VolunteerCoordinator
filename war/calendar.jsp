@@ -13,7 +13,8 @@
     com.google.appengine.api.datastore.KeyFactory,
     com.google.gdata.client.calendar.*,
     com.google.gdata.data.calendar.*,
-    java.net.URL"
+    java.net.URL,
+    java.io.IOException"
     %>
 </head>
 
@@ -72,7 +73,15 @@ else
         {
             // TODO Auto-generated catch block
             e3.printStackTrace();
-        }
+        } catch (IOException e) {
+			// Retry
+			try {
+				newResultFeed = myService.getFeed(newFeedUrl, CalendarFeed.class);
+			} catch (ServiceException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
         for( int i = 0; i < newResultFeed.getEntries().size(); i++ )
         {
             CalendarEntry newEntry = newResultFeed.getEntries().get( i );
@@ -146,7 +155,15 @@ else
             {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
-            }
+            } catch (IOException e) {
+    			// Retry
+    			try {
+    				resultFeed = myService.query(myQuery, CalendarEventFeed.class);
+    			} catch (ServiceException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}
+    		}
             List<CalendarEventEntry> entries = (List<CalendarEventEntry>)resultFeed.getEntries();
 
             //Add all of those events to the new calendar
@@ -210,7 +227,15 @@ else
             {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
-            }
+            } catch (IOException e) {
+    			// Retry
+    			try {
+    				aclFeed = myService.getFeed(aclUrl, AclFeed.class);
+    			} catch (ServiceException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}
+    		}
 
             // Set the default to "read-only" for all users
             AclEntry aclEntry = aclFeed.createEntry();

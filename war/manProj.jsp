@@ -28,6 +28,8 @@
 <script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
 <script src="javascript/volunteer.js"> </script>   
 
+<%@ include file="getCalendarService.jsp" %>
+
 <script type="text/javascript">
 function copyToggler(num) { //Shows or hides the urlbox of the given number
 	var url = 'url';
@@ -100,12 +102,20 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
 	myQuery.setStringCustomParameter("orderby", "starttime");
 	myQuery.setStringCustomParameter("sortorder", "ascending");
 	myQuery.setStringCustomParameter("singleevents", "true");
-   
-   CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar"); 
-   myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
 
    // Send the request and receive the response:
-   CalendarEventFeed resultFeed = myService.query(myQuery, CalendarEventFeed.class);
+   CalendarEventFeed resultFeed = null;
+   try {
+       resultFeed = myService.query(myQuery, CalendarEventFeed.class);
+   } catch (IOException e) {
+		// Retry
+		try {
+			resultFeed = myService.query(myQuery, CalendarEventFeed.class);
+		} catch (ServiceException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
   
    List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries(); 
    
