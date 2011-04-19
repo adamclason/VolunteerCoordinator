@@ -183,6 +183,14 @@ public class MakeEventServlet extends HttpServlet {
 			} catch (ServiceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (IOException e) {
+				//Retry
+				try {
+					cService.insert(postUrl, entry);
+				} catch (ServiceException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 
 			resp.sendRedirect("/index.jsp?name=" + name);

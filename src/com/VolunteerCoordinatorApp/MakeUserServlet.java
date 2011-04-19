@@ -80,6 +80,19 @@ public class MakeUserServlet extends HttpServlet {
 				System.err.println( "Failed at inserting new calendar." );
 		        e2.printStackTrace();
 		    }
+		    catch (IOException e) {
+		    	//Retry
+		    	try
+			    {
+			        newCalendar = myService.insert(postUrl, calendar);
+			    }
+			    catch ( ServiceException e2 )
+			    {
+			        // TODO Auto-generated catch block
+					System.err.println( "Failed at inserting new calendar." );
+			        e2.printStackTrace();
+			    }
+		    }
 		    // Get the calender's url
 		    String usrCalUrl = newCalendar.getId();
 		    int splitHere = usrCalUrl.lastIndexOf("/") + 1;
@@ -156,6 +169,18 @@ public class MakeUserServlet extends HttpServlet {
 		                // TODO Auto-generated catch block
 		                e.printStackTrace();
 		            }
+		            catch (IOException e) {
+		            	//Retry
+		            	try
+			            {
+			                myService.insert(newUrl, myEntry);
+			            }
+			            catch ( ServiceException e1 )
+			            {
+			                // TODO Auto-generated catch block
+			                e1.printStackTrace();
+			            }
+		            }
 		        }
 		    }
 		    // Access the Access Control List (ACL) for the calendar
@@ -194,6 +219,18 @@ public class MakeUserServlet extends HttpServlet {
 		    {
 		        // TODO Auto-generated catch block
 		        e1.printStackTrace();
+		    }
+		    catch (IOException e) {
+		    	//Retry
+			    try
+			    {
+			        myService.insert(aclUrl, aclEntry);
+			    }
+			    catch ( ServiceException e1 )
+			    {
+			        // TODO Auto-generated catch block
+			        e1.printStackTrace();
+			    }
 		    }
 		    
 		    //Translate the time zone code into something non-depreciated for Java

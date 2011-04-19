@@ -244,6 +244,18 @@ public class UpdateEventServlet extends HttpServlet
             System.err.println( "Exception trying to delete calendarEventEntry" );
             e.printStackTrace();
         }
+        catch (IOException e) {
+        	//Retry
+        	try
+            {
+    			event.delete();
+            }
+            catch( ServiceException e1 )
+            {
+                System.err.println( "Exception trying to delete calendarEventEntry" );
+                e1.printStackTrace();
+            }
+        }
         
         try //Try to post the new one
         {
@@ -254,6 +266,19 @@ public class UpdateEventServlet extends HttpServlet
             System.err.println( "Exception inserting new calendar." );
             //Actual error handling one of these days.
             e.printStackTrace();
+        }
+        catch (IOException e3) {
+        	//Retry
+        	try
+            {
+                myService.insert( entryUrl, newEntry );
+            }
+            catch ( ServiceException e )
+            {
+                System.err.println( "Exception inserting new calendar." );
+                //Actual error handling one of these days.
+                e.printStackTrace();
+            }
         }
         
         response.sendRedirect("/manProj.jsp?pageNumber=1&resultIndex=1&name=" + name);

@@ -161,7 +161,13 @@ public class addVolunteerServlet extends HttpServlet {
 					System.err.println(newUrl);
 					try
 					{
-						myService.insert(newUrl, entry);
+						try {
+						    myService.insert(newUrl, entry);
+						}
+						catch (IOException ioe) {
+							//Retry
+							myService.insert(newUrl, entry);
+						}
 					}
 					catch ( ServiceException e )
 					{
@@ -243,6 +249,15 @@ public class addVolunteerServlet extends HttpServlet {
 								// TODO Auto-generated catch block
 								System.err.println( "Failed at inserting new calendar." );
 								e2.printStackTrace();
+							} catch ( IOException e1 )
+							{
+								// Retry
+								try {
+									newCalendar = myService.insert(postUrl, calendar);
+								} catch (ServiceException e2) {
+									// TODO Auto-generated catch block
+									e2.printStackTrace();
+								}
 							}
 							// Get the calender's url
 							calUrl = newCalendar.getId();
@@ -321,6 +336,17 @@ public class addVolunteerServlet extends HttpServlet {
 									    System.err.println( "Error inserting new entry into CalendarService." );
 									    e1.printStackTrace();
 									}
+									catch ( IOException e1 )
+									{
+										//Retry
+										try {
+											myService.insert(newEntryUrl, myEntry);
+										} catch (ServiceException e2) {
+											// TODO Auto-generated catch block
+											System.err.println( "Error inserting new entry into CalendarService." );
+										    e2.printStackTrace();
+										}
+									}
 								}
 							}
 							// Access the Access Control List (ACL) for the calendar
@@ -361,6 +387,20 @@ public class addVolunteerServlet extends HttpServlet {
 								// TODO Auto-generated catch block
 	                            System.err.println( "Error inserting new entries into ACL." );
 								e1.printStackTrace();
+							}
+							catch ( IOException e1 )
+							{
+								//Retry
+								try
+								{
+									myService.insert(aclUrl, aclEntry);
+								}
+								catch ( ServiceException e2 )
+								{
+									// TODO Auto-generated catch block
+		                            System.err.println( "Error inserting new entries into ACL." );
+									e2.printStackTrace();
+								}
 							}
 						}
 

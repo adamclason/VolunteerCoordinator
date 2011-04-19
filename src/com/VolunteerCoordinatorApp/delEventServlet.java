@@ -151,6 +151,13 @@ public class delEventServlet extends HttpServlet {
 				event.delete();
 			} catch (ServiceException e) {
 				e.printStackTrace();
+			} catch (IOException e) {
+				//Retry
+				try {
+					event.delete();
+				} catch (ServiceException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
         
