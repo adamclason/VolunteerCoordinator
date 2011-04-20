@@ -43,8 +43,6 @@ public class UpdateEventServlet extends HttpServlet
         URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/allcalendars/full");
 
         Query calendarQuery = new Query( feedUrl );
-        try
-        {
             CalendarFeed myResultsFeed = null;
             try 
             {
@@ -69,7 +67,17 @@ public class UpdateEventServlet extends HttpServlet
                             + entryId + "/private/full");
                     Query eventQuery = new Query( entryUrl );
                     eventQuery.setFullTextQuery( title );
-                    CalendarEventFeed eventFeed = myService.query( eventQuery, CalendarEventFeed.class );
+                    CalendarEventFeed eventFeed = null;
+                    try
+                    {
+                        eventFeed = myService.query( eventQuery, CalendarEventFeed.class );
+                    }
+                    catch ( ServiceException e2 )
+                    {
+                        // TODO Auto-generated catch block
+                        System.out.println( "Error attepting to get an eventFeed." );
+                        e2.printStackTrace();
+                    }
                     
                     List<CalendarEventEntry> results = (List<CalendarEventEntry>) eventFeed.getEntries();
                                         
@@ -94,8 +102,15 @@ public class UpdateEventServlet extends HttpServlet
                         }
                         catch( ServiceException e )
                         {
-                            System.err.println( "Exception trying to delete calendarEventEntry" );
-                            e.printStackTrace();
+                            try
+                            {
+                                updatingEvent.delete();
+                            }
+                            catch( ServiceException e1 )
+                            {
+                                System.err.println( "Exception trying to delete calendarEventEntry" );
+                                e1.printStackTrace();
+                            }
                         }
                     } 
                     else 
@@ -273,18 +288,20 @@ public class UpdateEventServlet extends HttpServlet
                     }
                     catch ( ServiceException e )
                     {
-                        System.err.println( "Exception inserting new calendar." );
-                        //Actual error handling one of these days.
-                        e.printStackTrace();
+                        //Retry
+                        try
+                        {
+                            myService.insert( entryUrl, newEntry );
+                        }
+                        catch ( ServiceException e1 )
+                        {
+                            System.err.println( "Exception inserting new calendar." );
+                            //Actual error handling one of these days.
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
             response.sendRedirect("/manProj.jsp?pageNumber=1&resultIndex=1&name=" + name);
-        }
-        catch( ServiceException e )
-        {
-            System.out.println( e.getMessage() );
-            e.printStackTrace();
-        }
     }
 }

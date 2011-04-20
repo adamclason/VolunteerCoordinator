@@ -28,6 +28,8 @@
 <script src="javascript/jquery-ui-1.8.6.custom.min.js"> </script>
 <script src="javascript/volunteer.js"> </script>	
 
+<%@ include file="getCalendarService.jsp" %>
+
 <title>Volunteer</title>
 
 </head>
@@ -58,9 +60,6 @@
    URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full"); //&max-results=10");
   
    CalendarQuery myQuery = new CalendarQuery(feedUrl);
- 
-   CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar"); 
-   myService.setUserCredentials("rockcreekvolunteercoordinator@gmail.com", "G0covenant");
    
    if(startRange != null && endRange != null && !startRange.equals("null") && !endRange.equals("null")) { //request.getParameter("date") != null && 
    	  //Calendar curCal = Calendar.getInstance(); 
@@ -94,7 +93,18 @@
    myQuery.setStringCustomParameter("singleevents", "true");
 
    // Send the request and receive the response:
-   CalendarEventFeed resultFeed = myService.query(myQuery, CalendarEventFeed.class);
+   CalendarEventFeed resultFeed = null;
+   try {
+       resultFeed = myService.query(myQuery, CalendarEventFeed.class);
+   } catch (IOException e) {
+		// Retry
+		try {
+			resultFeed = myService.query(myQuery, CalendarEventFeed.class);
+		} catch (ServiceException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
   
    List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
    

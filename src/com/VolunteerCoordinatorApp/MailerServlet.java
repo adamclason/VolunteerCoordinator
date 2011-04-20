@@ -77,7 +77,15 @@ public class MailerServlet extends HttpServlet {
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	   
+		} catch (IOException e) {
+			// Retry
+			try {
+				resultFeed = myService.query(myQuery, CalendarEventFeed.class);
+			} catch (ServiceException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		List<CalendarEventEntry> results = (List<CalendarEventEntry>)resultFeed.getEntries();
 
 		if (!results.isEmpty()) {
