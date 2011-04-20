@@ -45,6 +45,7 @@
    String startRange = request.getParameter("startDate"); 
    String endRange = request.getParameter("endDate"); 
    String cat = request.getParameter("category");
+   String resultIndex = request.getParameter( "resultIndex" );
   
    // Determine which page of job results should be displayed  
    String pageNumber = request.getParameter("pageNumber");  
@@ -87,7 +88,7 @@
    }
 
    myQuery.setMaxResults(10); 
-   myQuery.setStartIndex(Integer.parseInt(request.getParameter("resultIndex")));
+   myQuery.setStartIndex( Integer.parseInt( resultIndex ) );
    myQuery.setStringCustomParameter("orderby", "starttime");
    myQuery.setStringCustomParameter("sortorder", "ascending");
    myQuery.setStringCustomParameter("singleevents", "true");
@@ -108,7 +109,7 @@
 <div class="navigation">
   <ul> 
     <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
-    <li><a href="/underConstruction.jsp?name=<%=name%>"> My Jobs </a></li>
+    <li><a href="/myJobs.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> My Jobs </a></li>
     <li><a href="/calendar.jsp?name=<%=name%>"> My Calendar </a></li>
   </ul>
     <%@ include file="LinkHome.jsp" %>
@@ -295,33 +296,48 @@
                    cur = sc.next();
                }
            }
-           
       		List<ExtendedProperty> propList = entry.getExtendedProperty();
+      		String acceptedBy = "nobody";
       		for (ExtendedProperty prop : propList) {
-      			if (prop.getName().equals("category")) {
+      			if (prop.getName().equals("category")) 
+      			{
       				category = prop.getValue();
+      			}
+      			if( prop.getName().equals( "acceptedBy" ) )
+      			{
+      			    acceptedBy = prop.getValue();
       			}
       		}
          %>
-       <a href = "/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>""> 
-       <div class="date"> 
-          <%=startDay%>   
-       </div>  
-       <div class="title"><%=title%></div> 
-       <div class="description">
-          <%=description%>
-       </div>
-       <div class="category">
-          <%=category%>
-       </div>
-       <div class="time">
-          <%=startTime%> - <%=endTime%>
-       </div>
-       </a>
-      </div>
+      <% 
+      if( acceptedBy.equals( "nobody" ) )
+      {
+      %>
+      <div class="innerEvent">
+      <div class="date"> 
+         <%=startDay%>   
+      </div><!-- /date -->  
+      <div class="title"><%=title%></div> <!-- /title -->
+      <div class="description">
+         <%=description%>
+      </div><!-- /description -->
+      <div class="category">
+         <%=category%>
+      </div><!-- /category -->
+      <div class="time">
+         <%=startTime%> - <%=endTime%>
+      </div><!-- /time -->
+      </div><!-- /innerEvent -->
+      <span class="volunteer">
+          <a href="/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>">Volunteer</a>
+      </span><!-- /volunteer -->
+       <%
+       }
+       %>
+      </div><!-- /event -->
     <% } 
     } %> 
-   </div>
+   </div><!-- /events -->
    
    <div class="footer">
    <form action="/navigate" method="post">

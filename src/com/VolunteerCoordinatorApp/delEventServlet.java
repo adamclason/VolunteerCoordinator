@@ -5,7 +5,12 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.jdo.PersistenceManager;
 import javax.servlet.http.*;
+
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gdata.client.calendar.CalendarQuery;
 import com.google.gdata.client.calendar.CalendarService;
 import com.google.gdata.data.DateTime;
@@ -107,16 +112,24 @@ public class delEventServlet extends HttpServlet {
 			}
 			event = recurList.get(0); //Set the first one (holds recurring data) to be deleted
 		} else { //Select event to delete as normal
+		    PersistenceManager pManager = PMF.get().getPersistenceManager(); 
+
+		    Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+		    Volunteer vol = pManager.getObjectById(Volunteer.class, k);
+		    
+		    String timeZone = vol.getTimeZone();
+		    
+		    TimeZone TZ =  TimeZone.getTimeZone( timeZone );
+		    
 			for (CalendarEventEntry entry : results) {
 				// Get the start time for the event 
 				When time = entry.getTimes().get(0); 
 				DateTime start = time.getStartTime(); 
 
-				TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
 				Date startDate = new Date(start.getValue());
 				//Determine timezone offset in minutes, depending on whether or not
 				//Daylight Savings Time is in effect
-				if (estTZ.inDaylightTime(startDate)) { 
+				if (TZ.inDaylightTime(startDate)) { 
 					start.setTzShift(-240); 
 				} else {
 					start.setTzShift(-300); 

@@ -316,7 +316,9 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
         		}
            %>
         <div class ="event">
-         <a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> 
+         <!--<a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> -->
+         <div class="innerEvent">
+         <a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>">
          <span class="date"> 
             <%=startDay%>   
          </span>  
@@ -331,6 +333,8 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
             <%=startTime%> - <%=endTime%>
          </span>
          </a>
+         </div>
+         <!---->
         </div>
         <span class="copy" onclick="copyToggler(<%=entryNum%>)"> Link </span>
         <span class="copyURL" id="url<%=entryNum%>"> 

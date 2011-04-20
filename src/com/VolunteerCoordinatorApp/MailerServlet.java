@@ -91,34 +91,6 @@ public class MailerServlet extends HttpServlet {
 				//DateTime end = time.getEndTime();
 				Date startDate = new Date(start.getValue());
 
-				/*
-				TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
-				//Date startDate = new Date(start.getValue());
-				//Date endDate = new Date(end.getValue());
-				//Determine timezone offset in minutes, depending on whether or not
-				//Daylight Savings Time is in effect
-				if (estTZ.inDaylightTime(startDate)) { 
-					start.setTzShift(-240); 
-				} else {
-					start.setTzShift(-300); 
-				}
-				//if (estTZ.inDaylightTime(endDate)) { 
-				//	end.setTzShift(-240);
-				//} else {
-				//	end.setTzShift(-300);
-				//}
-
-				// Convert to milliseconds to get a date object, which can be formatted easier. 
-				startDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60)); 
-				//Date endDate = new Date(end.getValue() + 1000 * (end.getTzShift() * 60)); 
-
-				String hourPattern = "hh:mma"; 
-				SimpleDateFormat timeFormat = new SimpleDateFormat(hourPattern); 
-				String startDay = format.format(startDate); 
-				String startTime = timeFormat.format(startDate);
-				//String endTime = timeFormat.format(endDate); 
-				*/
-
 				String title = entry.getTitle().getPlainText();
 
 				// Access the description field of the calendar 

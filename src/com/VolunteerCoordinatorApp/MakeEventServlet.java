@@ -71,6 +71,11 @@ public class MakeEventServlet extends HttpServlet {
 			category.setName("category");
 			category.setValue(cat);
 			entry.addExtendedProperty(category);
+			
+			ExtendedProperty acceptedBy = new ExtendedProperty();
+			acceptedBy.setName( "acceptedBy" );
+			acceptedBy.setValue( "nobody" );
+            entry.addExtendedProperty( acceptedBy );
 
 			//	int day = Integer.parseInt(req.getParameter("day"));
 			//	int month = Integer.parseInt(req.getParameter("month"));

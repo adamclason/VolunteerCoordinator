@@ -117,16 +117,16 @@ h2 {
   border-width: .15em;
   border-color:#774400;
 }
-.event a .description { 
+.event .innerEvent .description { 
   float: right;
   clear: right;
   width: 28em;
 }
-.event a .date {
+.event .innerEvent .date {
   float: right;
   padding-bottom: .5em;
 }
-.event a {
+.event .innerEvent {
   display: block; 
   text-decoration: none;
   color: black; 
@@ -139,22 +139,22 @@ h2 {
   padding: 1em;
   padding-bottom: 1.75em;
 }
-.event a .title {
+.event .innerEvent .title {
   font: 15px arial, sans-serif; 
   font-weight:bold;
   float: left;
   clear: right;
 }
-.event a .time {
+.event .innerEvent .time {
   float:left; 
   clear: left;
 }
-.event a .category {
+.event .innerEvent .category {
   float:left; 
   clear: left;
   font-style: italic;
 }
-.event a:hover {
+.event .innerEvent:hover {
   background-color:#eeeeee;
   border-color: #774400;
 }
@@ -235,6 +235,30 @@ h2 {
 .copyButton:hover {
   background-color: #77CC00;
 }
+
+.volunteer {
+  border: 0em none #CCCCCC;
+  display: inline;
+  overflow: hidden;
+  padding: .2em;
+  float: right;
+  color: #ffffff;
+  background-color: #774400;
+  text-decoration: none;
+  margin-right: -5em;
+  position:relative;
+  bottom: 1.6em;
+  right: 5em;
+}
+.volunteer:hover {
+  background-color:#77CC00;
+  cursor: pointer;
+}
+.volunteer a {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
 .navigation li  {
   width: 7em;
   display: inline;

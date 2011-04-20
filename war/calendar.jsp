@@ -24,7 +24,7 @@
 <%@ include file="getUserTimeZone.jsp" %>
 
 <%
-//Declared here so i in-scope for the iFrame at the bottom
+//Declared here so it's in-scope for the iFrame at the bottom
 String usrCalUrl = null;
 
 //If no user in query string, prompt to log in.
@@ -256,7 +256,7 @@ else
 
 <ul class="navigation">
 <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
-<li><a href="/underConstruction.jsp"> My Jobs </a></li>
+<li><a href="/myJobs.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> My Jobs </a></li>
 <li><a href="/calendar.jsp?name=<%=name%>"> My Calendar </a></li>
 <%@ include file="LinkHome.jsp" %>
 </ul>

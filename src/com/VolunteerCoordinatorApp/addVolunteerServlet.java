@@ -76,17 +76,26 @@ public class addVolunteerServlet extends HttpServlet {
                 DateTime end = time.getEndTime();
                 System.err.println(entry.getTimes().get(0).getStartTime());
 
-                TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+                PersistenceManager pManager = PMF.get().getPersistenceManager(); 
+
+                Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
+                Volunteer vol = pManager.getObjectById(Volunteer.class, k);
+                
+                String timeZone = vol.getTimeZone();
+                
+                //Set time zone to be the time zone of whatever user is volunteering
+                TimeZone TZ =  TimeZone.getTimeZone( timeZone );
+                
                 Date startDate = new Date(start.getValue());
                 Date endDate = new Date(end.getValue());
                 //Determine timezone offset in minutes, depending on whether or not
                 //Daylight Savings Time is in effect
-                if (estTZ.inDaylightTime(startDate)) { 
+                if (TZ.inDaylightTime(startDate)) { 
                     start.setTzShift(-240); 
                 } else {
                    start.setTzShift(-300); 
                 }
-                if (estTZ.inDaylightTime(endDate)) { 
+                if (TZ.inDaylightTime(endDate)) { 
                     end.setTzShift(-240);
                 } else {
                     end.setTzShift(-300);
@@ -102,9 +111,27 @@ public class addVolunteerServlet extends HttpServlet {
 				String eventTitle = new String(entry.getTitle().getPlainText());
 
 				System.err.println(startDay+" "+date+" "+eventTitle+" "+title);
-				if (startDay.equals(date) && eventTitle.equals(title)) {
+				if (startDay.equals(date) && eventTitle.equals(title)) 
+				{
 					System.err.println("^ HERE WE ARE ^ "+entry.getTimes().get(0).getStartTime());
 					String content = entry.getPlainTextContent(); 
+					//Updates the acceptedBy tag to show the username of the acceptor
+	                List<ExtendedProperty> propList = entry.getExtendedProperty();
+	                boolean propFound = false;
+	                for (ExtendedProperty prop : propList) 
+	                {
+	                    if( prop.getName().equals( "acceptedBy" ) )
+	                    {
+	                        prop.setValue( name );
+	                    }
+	                }
+	                if( !propFound )
+	                {
+	                    ExtendedProperty acceptedBy = new ExtendedProperty();
+	                    acceptedBy.setName( "acceptedBy" );
+	                    acceptedBy.setValue( name );
+	                    entry.addExtendedProperty( acceptedBy );
+	                }
 
 					if (content.contains("<volunteers>")) {
 						String contentArray[] = content.split("<volunteers>");
@@ -130,12 +157,8 @@ public class addVolunteerServlet extends HttpServlet {
 					}
 
 					//Get the ID of this user's calendar from the datastore.
-					PersistenceManager pm = PMF.get().getPersistenceManager(); 
 
-					Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), name);
-					Volunteer v = pm.getObjectById(Volunteer.class, k);
-
-					String usrCalUrl = v.getCalendarId();
+					String usrCalUrl = vol.getCalendarId();
 					URL newUrl = new URL("http://www.google.com/calendar/feeds/" 
 							+ usrCalUrl + "/private/full");
 					//If insert is unsuccessful, we look for a way to replace the stored
@@ -252,16 +275,16 @@ public class addVolunteerServlet extends HttpServlet {
 									DateTime entryStart = entryTime.getStartTime();
 									DateTime entryEnd = entryTime.getEndTime();
 									
-					                Date entryStartDate = new Date(start.getValue());
+					                //Date entryStartDate = new Date(start.getValue());
 					                Date entryEndDate = new Date(entryEnd.getValue());
 					                //Determine timezone offset in minutes, depending on whether or not
 					                //Daylight Savings Time is in effect
-					                if (estTZ.inDaylightTime(startDate)) { 
+					                if (TZ.inDaylightTime(startDate)) { 
 					                    entryStart.setTzShift(-240); 
 					                } else {
 					                    entryStart.setTzShift(-300); 
 					                }
-					                if (estTZ.inDaylightTime(entryEndDate)) { 
+					                if (TZ.inDaylightTime(entryEndDate)) { 
 					                    entryEnd.setTzShift(-240);
 					                } else {
 					                    entryEnd.setTzShift(-300);

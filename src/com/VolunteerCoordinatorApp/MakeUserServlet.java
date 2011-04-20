@@ -56,7 +56,7 @@ public class MakeUserServlet extends HttpServlet {
 		    CalendarEntry calendar = new CalendarEntry();
 		    calendar.setTitle(new PlainTextConstruct(name + "'s Jobs"));
 		    calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered for."));
-		    calendar.setTimeZone(new TimeZoneProperty("America/New_York"));
+		    calendar.setTimeZone(new TimeZoneProperty( timeZone ));
 		    calendar.setHidden(HiddenProperty.FALSE);
 
 		    CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar");
@@ -111,17 +111,17 @@ public class MakeUserServlet extends HttpServlet {
 		            DateTime start = time.getStartTime();
 		            DateTime end = time.getEndTime();
 
-	                TimeZone estTZ =  TimeZone.getTimeZone("America/New_York");
+	                TimeZone TZ =  TimeZone.getTimeZone( timeZone );
 	                Date startDate = new Date(start.getValue());
 	                Date endDate = new Date(end.getValue());
 	                //Determine timezone offset in minutes, depending on whether or not
 	                //Daylight Savings Time is in effect
-	                if (estTZ.inDaylightTime(startDate)) { 
+	                if (TZ.inDaylightTime(startDate)) { 
 	                    start.setTzShift(-240); 
 	                } else {
 	                   start.setTzShift(-300); 
 	                }
-	                if (estTZ.inDaylightTime(endDate)) { 
+	                if (TZ.inDaylightTime(endDate)) { 
 	                    end.setTzShift(-240);
 	                } else {
 	                    end.setTzShift(-300);
