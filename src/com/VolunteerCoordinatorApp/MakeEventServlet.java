@@ -45,8 +45,8 @@ public class MakeEventServlet extends HttpServlet {
 			URL postUrl =
 				new URL("https://www.google.com/calendar/feeds/default/private/full");
 			CalendarEventEntry entry = new CalendarEventEntry();
-			//CalendarQuery q = new CalendarQuery(new URL("hello")); 
 
+			//get and set title
 			String title = req.getParameter( "newTitle" );
 			entry.setTitle(new PlainTextConstruct(title));
 
@@ -60,18 +60,34 @@ public class MakeEventServlet extends HttpServlet {
 				cat = "None";
 			}
 
-			entry.setContent(new PlainTextConstruct("<description> "
-					+ description + " </description> "
-					+ "<for> " + forWho + " </for> "
-					+ "<who> " + who + " </who> "
-					+ "<why> " + why + " </why> "));
+			//set description
+			entry.setContent(new PlainTextConstruct( description ));
 
-			// set category property
-			ExtendedProperty category = new ExtendedProperty();
-			category.setName("category");
-			category.setValue(cat);
-			entry.addExtendedProperty(category);
+			//set "for whom" property
+			ExtendedProperty forProp = new ExtendedProperty();
+			forProp.setName("for");
+			forProp.setValue(forWho);
+			entry.addExtendedProperty(forProp);
 			
+			//set "who should do it" property
+			ExtendedProperty whoProp = new ExtendedProperty();
+			whoProp.setName("who");
+			whoProp.setValue(who);
+			entry.addExtendedProperty(whoProp);
+			
+			//set why property
+			ExtendedProperty whyProp = new ExtendedProperty();
+			whyProp.setName("why");
+			whyProp.setValue(why);
+			entry.addExtendedProperty(whyProp);
+			
+			// set category property
+			ExtendedProperty catProp = new ExtendedProperty();
+			catProp.setName("category");
+			catProp.setValue(cat);
+			entry.addExtendedProperty(catProp);
+			
+			//set propertry of who accepted to coordinate the job
 			ExtendedProperty acceptedBy = new ExtendedProperty();
 			acceptedBy.setName( "acceptedBy" );
 			acceptedBy.setValue( "nobody" );

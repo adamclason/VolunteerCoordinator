@@ -38,7 +38,7 @@ public class UpdateEventServlet extends HttpServlet
         String newTitle = request.getParameter( "newTitle" );
         String name = request.getParameter( "name" );
         String recurring = request.getParameter( "recurring" );
-        String volunteers = "";
+        String acceptedBy = "";
 
         URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/allcalendars/full");
 
@@ -96,6 +96,15 @@ public class UpdateEventServlet extends HttpServlet
                             }
                         }
                         updatingEvent = recurList.get(0); //Set the first one (holds recurring data) to be deleted
+                        //Get the volunteers
+                  		List<ExtendedProperty> propList = updatingEvent.getExtendedProperty();
+                        for (ExtendedProperty prop : propList) {
+                  			if( prop.getName().equals( "acceptedBy" ) )
+                  			{
+                  			    acceptedBy = prop.getValue();
+                  			}
+                  		}
+                        
                         try //Try to delete old event
                         {
                             updatingEvent.delete();
@@ -120,16 +129,14 @@ public class UpdateEventServlet extends HttpServlet
                             if( foundEvent.getTitle().getPlainText().equals( title ) ) 
                             {
                                 updatingEvent = foundEvent;
-                                volunteers = updatingEvent.getPlainTextContent(); 
-                                int beginVolunteerList = volunteers.indexOf( "<volunteers>" );
-                                if( beginVolunteerList > -1 )
-                                {
-                                    volunteers = volunteers.substring( beginVolunteerList );
-                                }
-                                else 
-                                {
-                                    volunteers = "<volunteers>  </volunteers>";
-                                }
+                                //Get the volunteers
+                          		List<ExtendedProperty> propList = updatingEvent.getExtendedProperty();
+                                for (ExtendedProperty prop : propList) {
+                          			if( prop.getName().equals( "acceptedBy" ) )
+                          			{
+                          			    acceptedBy = prop.getValue();
+                          			}
+                          		}
                                 try //Try to delete old event
                                 {
                                     updatingEvent.delete();
@@ -156,18 +163,38 @@ public class UpdateEventServlet extends HttpServlet
                         cat = "None";
                     }
 
-                    newEntry.setContent(new PlainTextConstruct("<description> "
-                            + description + " </description> "
-                            + "<for> " + forWho + " </for> "
-                            + "<who> " + who + " </who> "
-                            + "<why> " + why + " </why> " 
-                            + volunteers ) );
+        			//set description
+                    newEntry.setContent(new PlainTextConstruct( description ));
 
-                    // set category property
-                    ExtendedProperty category = new ExtendedProperty();
-                    category.setName("category");
-                    category.setValue(cat);
-                    newEntry.addExtendedProperty(category);
+        			//set "for whom" property
+        			ExtendedProperty forProp = new ExtendedProperty();
+        			forProp.setName("for");
+        			forProp.setValue(forWho);
+        			newEntry.addExtendedProperty(forProp);
+        			
+        			//set "who should do it" property
+        			ExtendedProperty whoProp = new ExtendedProperty();
+        			whoProp.setName("who");
+        			whoProp.setValue(who);
+        			newEntry.addExtendedProperty(whoProp);
+        			
+        			//set why property
+        			ExtendedProperty whyProp = new ExtendedProperty();
+        			whyProp.setName("why");
+        			whyProp.setValue(why);
+        			newEntry.addExtendedProperty(whyProp);
+        			
+        			// set category property
+        			ExtendedProperty catProp = new ExtendedProperty();
+        			catProp.setName("category");
+        			catProp.setValue(cat);
+        			newEntry.addExtendedProperty(catProp);
+        			
+        			//set propertry of who accepted to coordinate the job
+        			ExtendedProperty acceptedByProp = new ExtendedProperty();
+        			acceptedByProp.setName( "acceptedBy" );
+        			acceptedByProp.setValue( acceptedBy );
+        			newEntry.addExtendedProperty( acceptedByProp );
 
                     newEntry.setTitle(new PlainTextConstruct( newTitle ));
 

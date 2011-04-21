@@ -228,102 +228,36 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
              // Access the description field of the calendar 
              // event, where the event description and a list 
              // of volunteers is stored. 
-             String content = entry.getPlainTextContent(); 
+          	 String description = entry.getPlainTextContent();
+          	 String forWho = "";
+          	 String who = "";
+          	 String why = "";
+          	 String category = "";
              
-             Scanner sc = new Scanner(content); 
-             String description = "";
-             String forWho = "";
-             String who = "";
-             String why = "";
-             String category = "";
-             String volList = "";
-             
-             String cur = sc.next().trim(); 
-             if(cur.equals("<description>")) 
-             {
-                cur = sc.next();
-                while(!cur.equals("</description>")) 
-                {
-                   description += cur + " ";
-                   cur = sc.next(); 
-                }
-                if (sc.hasNext()) 
-                {
-                    cur = sc.next();
-                }
-             }
-             if( cur.equals( "<for>" ) )
-             {
-                 cur = sc.next();
-                 while( !cur.equals( "</for>" ) )
-                 {
-                     forWho += cur + " ";
-                     cur = sc.next(); 
-                  }
-                  if (sc.hasNext()) 
-                  {
-                      cur = sc.next();
-                  }
-             }
-             if( cur.equals( "<who>" ) )
-             {
-                 cur = sc.next();
-                 while( !cur.equals( "</who>" ) )
-                 {
-                     who += cur + " ";
-                     cur = sc.next();
-                 }
-                 if (sc.hasNext()) 
-                 {
-                     cur = sc.next();
-                 }
-             }
-             if( cur.equals( "<why>" ) )
-             {
-                 cur = sc.next();
-                 while( !cur.equals( "</why>" ) )
-                 {
-                     why += cur + " ";
-                     cur = sc.next();
-                 }
-                 if (sc.hasNext()) 
-                 {
-                     cur = sc.next();
-                 }
-             }
-             if(cur.equals("<category>")) 
-             {
-                 cur = sc.next();
-                 while(!cur.equals("</category>")) 
-                 {
-                    category += cur + " "; 
-                    cur = sc.next(); 
-                 }
-                 if (sc.hasNext()) 
-                 {
-                     cur = sc.next();
-                 }
-             } 
-             if(cur.equals("<volunteers>")) 
-             {
-                 cur = sc.next();
-                 while(!cur.equals("</volunteers>")) 
-                 {
-                    volList += cur + " "; 
-                    cur = sc.next(); 
-                 }
-                 if (sc.hasNext()) 
-                 {
-                     cur = sc.next();
-                 }
-             }
-             
-        		List<ExtendedProperty> propList = entry.getExtendedProperty();
-        		for (ExtendedProperty prop : propList) {
-        			if (prop.getName().equals("category")) {
-        				category = prop.getValue();
-        			}
-        		}
+        	 List<ExtendedProperty> propList = entry.getExtendedProperty();
+          	 String acceptedBy = "nobody";
+        	 for (ExtendedProperty prop : propList) {
+        	 	if (prop.getName().equals("category")) 
+          		{
+          			category = prop.getValue();
+          		}
+          		if (prop.getName().equals("for")) 
+          		{
+          			forWho = prop.getValue();
+          		}
+          		if (prop.getName().equals("who")) 
+          		{
+          			who = prop.getValue();
+          		}
+          		if (prop.getName().equals("why")) 
+          		{
+          			why = prop.getValue();
+          		}
+          		if( prop.getName().equals( "acceptedBy" ) )
+          		{
+          		    acceptedBy = prop.getValue();
+          		}
+        	}
            %>
         <div class ="event">
          <!--<a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> -->

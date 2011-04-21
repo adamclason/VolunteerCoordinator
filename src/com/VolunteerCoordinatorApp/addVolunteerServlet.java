@@ -131,6 +131,7 @@ public class addVolunteerServlet extends HttpServlet {
 	                    if( prop.getName().equals( "acceptedBy" ) )
 	                    {
 	                        prop.setValue( name );
+	                      //Shouldn't we set propFound to true?
 	                    }
 	                }
 	                if( !propFound )
