@@ -260,9 +260,7 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
         	}
            %>
         <div class ="event">
-         <!--<a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> -->
          <div class="innerEvent">
-         <a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>">
          <span class="date"> 
             <%=startDay%>   
          </span>  
@@ -276,10 +274,26 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
          <span class="time">
             <%=startTime%> - <%=endTime%>
          </span>
-         </a>
+         <span class="for">
+         	<% if (!forWho.equals("") ) { %>
+         	<b>For whom:</b> <%=forWho%>
+         	<% } %>
+         </span>
+         <span class="who">
+         	<% if (!who.equals("") ) { %>
+            <b>Who should do it:</b> <%=who%>
+         	<% } %>
+         </span>
+         <span class="why">
+         	<% if (!why.equals("") ) { %>
+            <b>Why:</b> <%=why%>
+         	<% } %>
+         </span>
          </div>
-         <!---->
         </div>
+        <span class="edit">
+        	 <a href="/editJob.jsp?title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>"> Edit </a>
+        </span>
         <span class="copy" onclick="copyToggler(<%=entryNum%>)"> Link </span>
         <span class="copyURL" id="url<%=entryNum%>"> 
             <% 

@@ -154,6 +154,21 @@ h2 {
   clear: left;
   font-style: italic;
 }
+.event .innerEvent .for {
+  float: right; 
+  clear: right;
+  width: 28em;
+}
+.event .innerEvent .who {
+  float: right; 
+  clear: right;
+  width: 28em;
+}
+.event .innerEvent .why {
+  float: right; 
+  clear: right;
+  width: 28em;
+}
 .event .innerEvent:hover {
   background-color:#eeeeee;
   border-color: #774400;
@@ -234,6 +249,28 @@ h2 {
 }
 .copyButton:hover {
   background-color: #77CC00;
+}
+.edit {
+  border: 0em none #CCCCCC;
+  display: inline;
+  overflow: hidden;
+  padding: .2em;
+  float: right;
+  color: #ffffff;
+  background-color: #774400;
+  text-decoration: none;
+  margin-right: -4em;
+  position:relative;
+  bottom: 1.6em;
+  right: 11em;
+}
+.edit:hover {
+  background-color:#77CC00;
+  cursor: pointer;
+}
+.edit a {
+  color: #ffffff;
+  text-decoration: none;
 }
 
 .volunteer {

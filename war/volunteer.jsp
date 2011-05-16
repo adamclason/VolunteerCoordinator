@@ -267,6 +267,21 @@
       <div class="time">
          <%=startTime%> - <%=endTime%>
       </div><!-- /time -->
+         <span class="for">
+         	<% if (!forWho.equals("") ) { %>
+         	<b>For whom:</b> <%=forWho%>
+         	<% } %>
+         </span>
+         <span class="who">
+         	<% if (!who.equals("") ) { %>
+            <b>Who should do it:</b> <%=who%>
+         	<% } %>
+         </span>
+         <span class="why">
+         	<% if (!why.equals("") ) { %>
+            <b>Why:</b> <%=why%>
+         	<% } %>
+         </span>
       </div><!-- /innerEvent -->
       <span class="volunteer">
           <a href="/addvolunteer?date=<%=startDay%>&title=<%=title%>&name=<%=name%>&id=<%=entry.getId()%>">Volunteer</a>
