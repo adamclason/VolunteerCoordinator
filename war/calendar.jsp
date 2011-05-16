@@ -16,6 +16,8 @@
     java.net.URL,
     java.io.IOException"
     %>
+    
+<title>My Calendar</title>
 </head>
 
 <%@ include file="getCalendarService.jsp" %>
@@ -119,7 +121,7 @@ else
         {               
             CalendarEntry calendar = new CalendarEntry();
             calendar.setTitle(new PlainTextConstruct(name + "'s Jobs"));
-            calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered for."));
+            calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered to coordinate for."));
             calendar.setTimeZone(new TimeZoneProperty(timeZone));
             calendar.setHidden(HiddenProperty.FALSE);
             
@@ -315,7 +317,7 @@ else
 <body>
 
 <ul class="navigation">
-<li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
+<li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Open Jobs </a></li>
 <li><a href="/myJobs.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> My Jobs </a></li>
 <li><a href="/calendar.jsp?name=<%=name%>"> My Calendar </a></li>
 <%@ include file="LinkHome.jsp" %>

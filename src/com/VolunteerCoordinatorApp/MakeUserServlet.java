@@ -55,7 +55,7 @@ public class MakeUserServlet extends HttpServlet {
 		    //We make a new calendar for this user.
 		    CalendarEntry calendar = new CalendarEntry();
 		    calendar.setTitle(new PlainTextConstruct(name + "'s Jobs"));
-		    calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered for."));
+		    calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered  to coordinate for."));
 		    calendar.setTimeZone(new TimeZoneProperty( timeZone ));
 		    calendar.setHidden(HiddenProperty.FALSE);
 

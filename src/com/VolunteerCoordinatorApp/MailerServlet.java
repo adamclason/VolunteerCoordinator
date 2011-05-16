@@ -91,7 +91,6 @@ public class MailerServlet extends HttpServlet {
 		if (!results.isEmpty()) {
 			for (CalendarEventEntry entry : results) { // For each event...
 				// Get event details
-
 				
 				// Get the start and end times for the event 
 				When time = entry.getTimes().get(0); 
@@ -101,118 +100,47 @@ public class MailerServlet extends HttpServlet {
 
 				String title = entry.getTitle().getPlainText();
 
-				// Access the description field of the calendar 
-				// event, where the event description and a list 
-				// of volunteers is stored. 
-				String content = entry.getPlainTextContent(); 
-				Scanner sc = new Scanner(content); 
-				String description = "";
-				String forWho = "";
-				String who = "";
-				String why = "";
-				String category = "";
-				ArrayList<String> volList = new ArrayList<String>();
-
-				String cur = sc.next().trim();
-				if(cur.equals("<description>")) 
-				{
-					cur = sc.next(); 
-					while(!cur.equals("</description>")) 
-					{
-						description += cur + " ";
-						cur = sc.next(); 
-					}
-					if (sc.hasNext()) 
-					{
-						cur = sc.next();
-					}
-				}
-				if( cur.equals( "<for>" ) )
-				{
-					cur = sc.next();
-					while( !cur.equals( "</for>" ) )
-					{
-						forWho += cur + " ";
-						cur = sc.next(); 
-					}
-					if (sc.hasNext()) 
-					{
-						cur = sc.next();
-					}
-				}
-				if( cur.equals( "<who>" ) )
-				{
-					cur = sc.next();
-					while( !cur.equals( "</who>" ) )
-					{
-						who += cur + " ";
-						cur = sc.next(); 
-					}
-					if (sc.hasNext()) 
-					{
-						cur = sc.next();
-					}
-				}
-				if( cur.equals( "<why>" ) )
-				{
-					cur = sc.next();
-					while( !cur.equals( "</why>" ) )
-					{
-						why += cur + " ";
-						cur = sc.next(); 
-					}
-					if (sc.hasNext()) 
-					{
-						cur = sc.next();
-					}
-				}
-				if(cur.equals("<category>")) 
-				{
-					cur = sc.next();
-					while(!cur.equals("</category>")) 
-					{
-						category += cur + " "; 
-						cur = sc.next(); 
-					}
-					if (sc.hasNext()) 
-					{
-						cur = sc.next();
-					}
-				} 
-				if(cur.equals("<volunteers>")) 
-				{
-					cur = sc.next();
-					while(!cur.equals("</volunteers>")) 
-					{
-						String curName = new String("");
-						while (!cur.equals(";")) {
-							curName += cur + " "; 
-							cur = sc.next();
-						} 
-						volList.add(curName.trim());
-						cur = sc.next();
-					}
-					if (sc.hasNext()) 
-					{
-						cur = sc.next();
-					}
-				}
-
-				List<ExtendedProperty> propList = entry.getExtendedProperty();
-				for (ExtendedProperty prop : propList) {
-					if (prop.getName().equals("category")) {
-						category = prop.getValue();
-					}
-				}
+		           // Access the description field of the calendar 
+		           // event, where the event description and a list 
+		           // of volunteers is stored.
+		           String description = entry.getPlainTextContent();
+		           String forWho = "";
+		           String who = "";
+		           String why = "";
+		           String category = "";
+		           
+		      		List<ExtendedProperty> propList = entry.getExtendedProperty();
+		      		String acceptedBy = "nobody";
+		      		for (ExtendedProperty prop : propList) {
+		      			/*if (prop.getName().equals("category")) 
+		      			{
+		      				category = prop.getValue();
+		      			}
+		      			if (prop.getName().equals("for")) 
+		      			{
+		      				forWho = prop.getValue();
+		      			}
+		      			if (prop.getName().equals("who")) 
+		      			{
+		      				who = prop.getValue();
+		      			}
+		      			if (prop.getName().equals("why")) 
+		      			{
+		      				why = prop.getValue();
+		      			}*/
+		      			if( prop.getName().equals( "acceptedBy" ) )
+		      			{
+		      			    acceptedBy = prop.getValue();
+		      			}
+		      		}
 
 				PersistenceManager pm = PMF.get().getPersistenceManager(); 
-				if (!volList.isEmpty()) {       		
-					for (String vol : volList) { // For each volunteer...
+				if (!acceptedBy.equals("nobody")) {
 						Properties props = new Properties();
 						Session session = Session.getDefaultInstance(props, null);
 
 						// Get volunteer
-						Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), vol);
+						Key k = KeyFactory.createKey(Volunteer.class.getSimpleName(), acceptedBy);
 						Volunteer v = pm.getObjectById(Volunteer.class, k);
 
 						// Only send email if it's the right number of days, as set in their preferences
@@ -243,10 +171,10 @@ public class MailerServlet extends HttpServlet {
 							System.out.println(title+" "+startTime+" "+startDay);
 
 							// Set email subject and body
-							String msgSubj = new String("Volunteer Reminder");
-							String msgBody = new String("Dear " + vol + ",\n" + 
-									"This is a friendly reminder that you volunteered to " +
-									"help out with \"" + title + "\" on " + startDay + " at " +
+							String msgSubj = new String("Coordinator Reminder");
+							String msgBody = new String("Dear " + acceptedBy + ",\n" + 
+									"This is a friendly reminder that you volunteered to help " +
+									"out with coordinating \"" + title + "\" on " + startDay + " at " +
 									startTime + ". Don't forget!\n" +
 									"Thank you,\n" +
 							"Rock Creek Fellowship");
@@ -255,7 +183,7 @@ public class MailerServlet extends HttpServlet {
 							String senderAddress = new String("serpentine.cougar@gmail.com");
 							String senderName = new String("Rock Creek Fellowship"); //optional
 
-			/*				try {
+							try {
 								InternetAddress[] recipEmail = InternetAddress.parse(recip);
 
 								Message msg = new MimeMessage(session);
@@ -272,9 +200,9 @@ public class MailerServlet extends HttpServlet {
 								System.err.println("Address Exception");
 							} catch (MessagingException e) {
 								System.err.println("Messaging Exception");
-							} */
+							} 
 						}
-					}
+					
 				}
 			}
 		}

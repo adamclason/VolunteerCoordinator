@@ -118,7 +118,7 @@
 %> 
 <div class="navigation">
   <ul> 
-    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Jobs </a></li>
+    <li><a href="/volunteer.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Open Jobs </a></li>
     <li><a href="/myJobs.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> My Jobs </a></li>
     <li><a href="/calendar.jsp?name=<%=name%>"> My Calendar </a></li>
   </ul>
@@ -133,7 +133,7 @@
 <div class="content" id ="myJobs">
 
 	<div id="head">
-      <h2> Jobs Needing Volunteers: </h2>
+      <h2> Jobs Needing Coordinators: </h2>
       <div id="filterButton"><img src="stylesheets/images/filter_button.png"> </img></div>
       <div id="filterSettings"> 
       	

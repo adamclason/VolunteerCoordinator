@@ -39,7 +39,7 @@ if (task == null) {
 	<form action="/volunteercoordinator" method="post">	
 		I am: <input type="text" name="name" class="textfield" value="<%= name %>" size ="22"><br><br>
 		I want to: <select name="task" class ="dropdown">
-			<option value="volunteer">Volunteer</option>
+			<option value="volunteer">Volunteer to Coordinate Jobs</option>
 			<option value="initiate"<% if (task.equals("initiate")) %>selected="selected"<% ; %>>Initiate a Job</option>
 			<option value="manage"<% if (task.equals("manage")) %>selected="selected"<% ; %>>Manage Jobs</option>
 		<!-- <option value="dashboard"<% if (task.equals("dashboard")) %>selected="selected"<% ; %>>View Dashboard</option>  -->

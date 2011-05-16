@@ -2,6 +2,8 @@ package com.VolunteerCoordinatorApp;
 
 import java.io.*;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -46,8 +48,44 @@ public class addVolunteerServlet extends HttpServlet {
 
 
 			CalendarQuery myQuery = new CalendarQuery(feedUrl);
+			myQuery.setStringCustomParameter("orderby", "starttime");
+			myQuery.setStringCustomParameter("sortorder", "ascending");
 			myQuery.setStringCustomParameter("futureevents", "true");
 			myQuery.setStringCustomParameter("singleevents", "true");
+
+			//Get a date one day ahead of the event clicked on and make it the max date of the query
+			String datePattern = "MM-dd-yyyy"; 
+			SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+			DateTime searchMaxDate = null;
+			long searchMaxTime = 0;
+			try {
+				searchMaxDate = new DateTime(dateFormat.parse(date));
+				searchMaxTime = searchMaxDate.getValue();
+				searchMaxTime += 86400000; //86400000 milliseconds = 1 day
+				searchMaxDate.setValue(searchMaxTime);
+			} catch (ParseException e6) {
+				// TODO Auto-generated catch block
+				e6.printStackTrace();
+			}
+			if (searchMaxDate != null) {
+				myQuery.setMaximumStartTime(searchMaxDate);
+			}
+			
+			//Get a date one day before the event clicked on and make it the max date of the query
+			DateTime searchMinDate = null;
+			long searchMinTime = 0;
+			try {
+				searchMinDate = new DateTime(dateFormat.parse(date));
+				searchMinTime = searchMinDate.getValue();
+				searchMinTime -= 86400000; //86400000 milliseconds = 1 day
+				searchMinDate.setValue(searchMinTime);
+			} catch (ParseException e6) {
+				// TODO Auto-generated catch block
+				e6.printStackTrace();
+			}
+			if (searchMinDate != null) {
+				myQuery.setMinimumStartTime(searchMinDate);
+			}
 
 			CalendarService myService = new CalendarService("Volunteer-Coordinator-Calendar");
 			try {
@@ -82,7 +120,6 @@ public class addVolunteerServlet extends HttpServlet {
 				When time = entry.getTimes().get(0); 
 				DateTime start = time.getStartTime(); 
                 DateTime end = time.getEndTime();
-                System.err.println(entry.getTimes().get(0).getStartTime());
 
                 PersistenceManager pManager = PMF.get().getPersistenceManager(); 
 
@@ -112,17 +149,12 @@ public class addVolunteerServlet extends HttpServlet {
 				// Convert to milliseconds to get a date object, which can be formatted easier. 
 				Date entryDate = new Date(start.getValue() + 1000 * (start.getTzShift() * 60));
 
-				String datePattern = "MM-dd-yyyy"; 
-				SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
 				String startDay = dateFormat.format(entryDate);
 
 				String eventTitle = new String(entry.getTitle().getPlainText());
 
-				System.err.println(startDay+" "+date+" "+eventTitle+" "+title);
 				if (startDay.equals(date) && eventTitle.equals(title)) 
 				{
-					System.err.println("^ HERE WE ARE ^ "+entry.getTimes().get(0).getStartTime());
-					String content = entry.getPlainTextContent(); 
 					//Updates the acceptedBy tag to show the username of the acceptor
 	                List<ExtendedProperty> propList = entry.getExtendedProperty();
 	                boolean propFound = false;
@@ -142,20 +174,6 @@ public class addVolunteerServlet extends HttpServlet {
 	                    entry.addExtendedProperty( acceptedBy );
 	                }
 
-					if (content.contains("<volunteers>")) {
-						String contentArray[] = content.split("<volunteers>");
-						StringBuffer volList = new StringBuffer(contentArray[1]);
-						//make sure the user isn't already in the list
-						if (!contentArray[1].contains(name.trim())) {
-							int endIndex = volList.indexOf("</volunteers>");
-							volList.insert(endIndex, name.trim() + " ; ");
-							content = contentArray[0] + "<volunteers>" + volList;
-						}
-					}
-					else {
-						content += " <volunteers> " + name + " ; </volunteers>";
-					}
-					entry.setContent(new PlainTextConstruct(content));
 					URL editUrl = new URL(entry.getEditLink().getHref());
 					try {
 						myService.update(editUrl, entry);
@@ -178,15 +196,30 @@ public class addVolunteerServlet extends HttpServlet {
 					String usrCalUrl = vol.getCalendarId();
 					URL newUrl = new URL("http://www.google.com/calendar/feeds/" 
 							+ usrCalUrl + "/private/full");
+	                
+					CalendarEventEntry newEvent = null;
+	                // If the event is recurring, create a non-recurring clone of the event to add to the user's calendar
+	                if (entry.getOriginalEvent() != null) {
+	                	newEvent = new CalendarEventEntry();
+	                	newEvent.setTitle(entry.getTitle()); // Title
+	                	newEvent.setContent(entry.getContent()); // Description
+	                	newEvent.addTime( entry.getTimes().get(0) ); // Date/Time
+	                	for (ExtendedProperty prop : propList) { // Other details
+	                		ExtendedProperty ep = new ExtendedProperty();
+	                		ep.setName( prop.getName() );
+	                		ep.setValue( prop.getValue() );
+	                		newEvent.addExtendedProperty( ep );
+	                	}
+	                } else {
+	                	newEvent = entry;
+	                }
+					
 					//If insert is unsuccessful, we look for a way to replace the stored
 					//calendar URL, up to and including making a new calendar.
-
-					System.err.println("Inserting "+entry.getTitle().getPlainText()+" "+entry.getTimes().get(0).getStartTime());
-					System.err.println(newUrl);
 					try
 					{
 						try {
-						    myService.insert(newUrl, entry);
+						    myService.insert(newUrl, newEvent);
 						}
 						catch (IOException ioe) {
 							//Retry
@@ -196,7 +229,6 @@ public class addVolunteerServlet extends HttpServlet {
 					catch ( ServiceException e )
 					{
 						System.err.println( "Failed to insert into calendar at " + usrCalUrl );
-						System.err.println(e.getMessage());
 						e.printStackTrace();
 						URL newFeedUrl = new URL("https://www.google.com/calendar/feeds/default/owncalendars/full");
 						CalendarFeed newResultFeed = null;
@@ -257,7 +289,7 @@ public class addVolunteerServlet extends HttpServlet {
 						{
 							CalendarEntry calendar = new CalendarEntry();
 							calendar.setTitle(new PlainTextConstruct(name + "'s Jobs"));
-							calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered for."));
+							calendar.setSummary(new PlainTextConstruct("This calendar contains the jobs " + name + " has volunteered to coordinate for."));
 							calendar.setTimeZone(new TimeZoneProperty("America/New_York"));
 							calendar.setHidden(HiddenProperty.FALSE);
 
