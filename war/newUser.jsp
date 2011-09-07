@@ -5,6 +5,31 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/layout.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/colors.css">
 
+<%@ include file="errorStyle.jsp"  %>
+
+<script type="text/javascript">
+function handleErrors() { //Checks for errors in the form before sending to the servlet
+	var noErrs = true;
+	var div;
+
+	//Make sure a last name is provided, otherwise it'll 
+	//give an error when retrieving the user from the datastore 
+	var lname = document.forms["userForm"]["lastName"].value;
+	if (lname==null || lname=="") {
+		div = document.getElementById("nameError");
+		div.innerHTML = "Please provide a last name.";
+	    noErrs = false;
+	} else {
+		div = document.getElementById("nameError");
+		div.innerHTML = "";
+	}
+	
+	if (noErrs) { //If no errors, go to servlet and update event 
+		document.forms["userForm"].submit();
+	}
+}
+</script>
+
 <title>New User Setup</title>
 </head>
 <body>
@@ -24,8 +49,9 @@
 	String task = request.getQueryString().split("task=")[1];
 %>
     <h2> Create a New User: </h2>
-<form action="/makeuser?task=<%=task%>" method="post">
+<form action="/makeuser?task=<%=task%>" method="post" id="userForm">
 	First Name: <input type="text" class="textfield" id="firstName" value="<%= first %>" name="firstName" size="23" /> <br /><br />
+	<div id="nameError" <%=errorStyle%>></div> 
 	Last Name: <input type="text" class="textfield" id="lastName" value="<%= last %>" name="lastName" size="23" /> <br /><br /> 
 	E-mail: <input type="text" class="textfield" id="email" name="email" size="23" /><br /><br />
 	Phone: <input type="text" class="textfield" id="phone" name="phone" size="23" /><br /><br />
@@ -45,7 +71,7 @@
 	</select>
 <br />
 	<div class="submit">
-		<input type="submit" class="submitButton" value="Submit"/>
+		<input type="button" class="submitButton" value="Submit" onclick="handleErrors()"/>
 	</div>
 </form>
  </div>
