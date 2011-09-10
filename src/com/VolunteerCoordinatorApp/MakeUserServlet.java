@@ -41,8 +41,6 @@ public class MakeUserServlet extends HttpServlet {
 		String task = req.getQueryString().split("task=")[1];
 		
 		String name = firstName + " " + lastName;
-		System.out.println("makeuserservlet");
-		System.out.println("nam="+name+" first="+firstName+" last="+lastName);
 		
 		String timeZone = req.getParameter( "timezone" );
 	    

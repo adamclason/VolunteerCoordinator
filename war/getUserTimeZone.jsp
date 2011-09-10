@@ -8,7 +8,6 @@ com.google.appengine.api.datastore.KeyFactory"
 <%
 String tzName = request.getParameter("name");
 String timeZone = null;
-System.err.println("getTimeZone name="+tzName);
 if( tzName != null )
 {
     PersistenceManager pManager = PMF.get().getPersistenceManager(); 

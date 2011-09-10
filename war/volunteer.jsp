@@ -37,7 +37,6 @@
 
 <%
    String name = request.getParameter("name");
-   System.err.println("volun.jsp="+name);
 %>
 <%@ include file="getUserTimeZone.jsp" %>
 

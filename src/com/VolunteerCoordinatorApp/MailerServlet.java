@@ -69,6 +69,7 @@ public class MailerServlet extends HttpServlet {
 
 		myQuery.setMinimumStartTime(startDT); 
 		myQuery.setMaximumStartTime(endDT); 
+		myQuery.setStringCustomParameter("singleevents", "true");
 
 		// Send the request and get the list of events between today and tommorrow
 		CalendarEventFeed resultFeed = null;
