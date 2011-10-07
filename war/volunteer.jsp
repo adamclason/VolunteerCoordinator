@@ -36,7 +36,6 @@
 <body>
 
 <%
-
    String name = request.getParameter("name");
 %>
 <%@ include file="getUserTimeZone.jsp" %>

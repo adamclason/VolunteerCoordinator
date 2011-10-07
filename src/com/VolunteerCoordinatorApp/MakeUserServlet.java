@@ -39,10 +39,28 @@ public class MakeUserServlet extends HttpServlet {
 		String reminder = req.getParameter("reminder");
 		
 		String task = req.getQueryString().split("task=")[1];
-		//String task="";
 		
 		String name = firstName + " " + lastName;
+		
 		String timeZone = req.getParameter( "timezone" );
+	    
+	    //Translate the time zone code into something non-depreciated for Java
+	    if( timeZone.equalsIgnoreCase( "est" ) ) {
+	        timeZone = "America/New_York";
+	    }
+	    else if( timeZone.equalsIgnoreCase( "cst" ) ) {
+            timeZone = "America/Chicago";
+        }
+	    else if( timeZone.equalsIgnoreCase( "mst" ) ) {
+            timeZone = "America/Denver";
+        }
+	    else if( timeZone.equalsIgnoreCase( "pst" ) ) {
+            timeZone = "America/Los_Angeles";
+        }
+	    else {
+	        timeZone = "America/New_York";
+	    }
+		
 		//If the user fixed a typo in their name or something, we don't want to 
 		//create a new user.
 		if( userExists( name ) )
@@ -232,28 +250,6 @@ public class MakeUserServlet extends HttpServlet {
 			        e1.printStackTrace();
 			    }
 		    }
-		    
-		    //Translate the time zone code into something non-depreciated for Java
-		    if( timeZone.equalsIgnoreCase( "est" ) )
-		    {
-		        timeZone = "America/New_York";
-		    }
-		    else if( timeZone.equalsIgnoreCase( "cst" ) )
-            {
-                timeZone = "America/Chicago";
-            }
-		    else if( timeZone.equalsIgnoreCase( "mst" ) )
-            {
-                timeZone = "America/Denver";
-            }
-		    else if( timeZone.equalsIgnoreCase( "pst" ) )
-            {
-                timeZone = "America/Los_Angeles";
-            }
-		    else
-		    {
-		        timeZone = "America/New_York";
-		    }
 
 		    //Make a new volunteer and associate all the new information with it in
 		    //the datastore.
@@ -266,6 +262,8 @@ public class MakeUserServlet extends HttpServlet {
 
 		    try {
 		        pm.makePersistent(v);
+		    } catch (Exception e) {
+		    	e.printStackTrace();
 		    } finally {
 		        pm.close();
 		    } 

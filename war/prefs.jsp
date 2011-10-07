@@ -5,6 +5,8 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/layout.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/colors.css">
 
+<%@ include file="errorStyle.jsp"  %>
+
 <title>Edit Your Settings</title>
 </head>
 <body>
@@ -22,6 +24,34 @@
     }
 %>
 <%@ include file="getUserTimeZone.jsp"%>
+
+<script type="text/javascript">
+function handleErrors() { //Checks for errors in the form before sending to the servlet
+	var noErrs = true;
+	var div;
+
+	//Make sure an email is provided, and that it is a valid email address, 
+	//so email reminders can be sent 
+	var emailRegEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+	var eml = document.forms["prefForm"]["email"].value;
+	if (eml==null || eml=="") {
+		div = document.getElementById("emailError");
+		div.innerHTML = "Please provide an email address.";
+	    noErrs = false;
+	} else if (document.forms["prefForm"]["email"].value.search(emailRegEx) == -1) {
+		div = document.getElementById("emailError");
+		div.innerHTML = "Please provide a valid email address.";
+	    noErrs = false;
+	} else {
+		div = document.getElementById("emailError");
+		div.innerHTML = "";
+	}
+	
+	if (noErrs) { //If no errors, go to servlet and update event 
+		document.forms["prefForm"].submit();
+	}
+}
+</script>
 <%
 PersistenceManager pManager = PMF.get().getPersistenceManager(); 
 
@@ -55,7 +85,8 @@ if (vol.getReminder().equals("3"))
 
 %>
 <h2> Edit Preferences: </h2>
-<form action="/editprefs" method="post">
+<form action="/editprefs" method="post" id="prefForm"> 
+	<div id="emailError" <%=errorStyle%>></div> 
     E-mail: <input type="text" class="textfield" id="email" value="<%= vol.getEmail() %>" name="email" size="23" /><br /><br />
     Phone: <input type="text" class="textfield" id="phone" value="<%= vol.getPhone() %>" name="phone" size="23" /><br /><br />
     Reminder: 
@@ -75,7 +106,7 @@ if (vol.getReminder().equals("3"))
 <br />
     <input type="hidden" name="origName" value="<%= name %>"/>
     <div class="submit">
-        <input type="submit" class="submitButton" value="Submit"/>
+        <input type="button" class="submitButton" value="Submit" onclick="handleErrors()"/>
     </div>
 </form>
  </div>
