@@ -223,7 +223,7 @@ public class addVolunteerServlet extends HttpServlet {
 						}
 						catch (IOException ioe) {
 							//Retry
-							myService.insert(newUrl, entry);
+							myService.insert(newUrl, newEvent);
 						}
 					}
 					catch ( ServiceException e )

@@ -38,6 +38,7 @@ public class UpdateEventServlet extends HttpServlet
         String newTitle = request.getParameter( "newTitle" );
         String name = request.getParameter( "name" );
         String recurring = request.getParameter( "recurring" );
+        //String entryId = request.getParameter( "id" );
         String acceptedBy = "";
 
         URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/allcalendars/full");
@@ -86,19 +87,27 @@ public class UpdateEventServlet extends HttpServlet
                     if (recurring.equals("yes")) 
                     { //Select recurring event
                         ArrayList<CalendarEventEntry> recurList = new ArrayList<CalendarEventEntry>();
+                        //System.out.println( "Title: |" + title + "|" );
                         //Get the events in the series of recurring events
                         for (CalendarEventEntry foundEvent : results) 
                         {
                             String eventTitle = new String(foundEvent.getTitle().getPlainText());
+                            //System.out.println( "|" + foundEvent.getTitle().getPlainText() + "|" );
                             if (eventTitle.equals(title)) 
                             { //Check title to see if it's the correct event
                                 recurList.add(foundEvent);
                             }
                         }
-                        updatingEvent = recurList.get(0); //Set the first one (holds recurring data) to be deleted
+                        //If the calendar being examined doesn't have this event, skip to next calendar
+                        //Temporary fix only.  Gotta be a way to rejigger the logic
+                        if( recurList.size() > 0 )
+                            updatingEvent = recurList.get(0); //Set the first one (holds recurring data) to be deleted
+                        else
+                            continue;
                         //Get the volunteers
                   		List<ExtendedProperty> propList = updatingEvent.getExtendedProperty();
-                        for (ExtendedProperty prop : propList) {
+                        for (ExtendedProperty prop : propList) 
+                        {
                   			if( prop.getName().equals( "acceptedBy" ) )
                   			{
                   			    acceptedBy = prop.getValue();

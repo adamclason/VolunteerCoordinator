@@ -63,7 +63,9 @@
     URL feedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
 
     CalendarQuery myQuery = new CalendarQuery( feedUrl );
-    myQuery.setFullTextQuery( title );
+    //Using title in a fullTextQuery broke the system on some events
+    //probably has to do with apostrophes
+    //myQuery.setFullTextQuery( title );
 	myQuery.setStringCustomParameter("orderby", "starttime");
 	myQuery.setStringCustomParameter("sortorder", "ascending");
     myQuery.setStringCustomParameter( "singleevents", "true" );
@@ -163,113 +165,35 @@
         String endMeridiem = endTime.substring( 2 );
         
         Scanner sc = new Scanner(content); 
-        String description = "";
+        String description = content;
         String forWho = "";
         String who = "";
         String why = "";
         String category = "";
         String volList = "";
         String recur = "";
-
-        String cur = sc.next().trim(); 
-        if(cur.equals("<description>")) 
-        {
-            cur = sc.next();
-            while(!cur.equals("</description>")) 
-            {
-                description += cur + " ";
-                cur = sc.next(); 
-            }
-            if( description.length() > 1 )
-                description = description.substring( 0, description.length() - 1 );
-            if (sc.hasNext()) 
-            {
-                cur = sc.next();
-            }
-        }
-        description = description.trim();
-        if( cur.equals( "<for>" ) )
-        {
-            cur = sc.next();
-            while( !cur.equals( "</for>" ) )
-            {
-                forWho += cur + " ";
-                cur = sc.next(); 
-            }
-            if (sc.hasNext()) 
-            {
-                cur = sc.next();
-            }
-            if( forWho.length() > 1 )
-                forWho = forWho.substring( 0, forWho.length() - 1 );
-        }
-        forWho = forWho.trim();
-        if( cur.equals( "<who>" ) )
-        {
-            cur = sc.next();
-            while( !cur.equals( "</who>" ) )
-            {
-                who += cur + " ";
-                cur = sc.next();
-            }
-            if (sc.hasNext()) 
-            {
-                cur = sc.next();
-            }
-            if( who.length() > 1 )
-                who = who.substring( 0, who.length() - 1 );
-        }
-        who = who.trim();
-        if( cur.equals( "<why>" ) )
-        {
-            cur = sc.next();
-            while( !cur.equals( "</why>" ) )
-            {
-                why += cur + " ";
-                cur = sc.next();
-            }
-            if (sc.hasNext()) 
-            {
-                cur = sc.next();
-            }
-            if( why.length() > 1 )
-                why = why.substring( 0, why.length() - 1 );
-        }
-        why = why.trim();
-        if(cur.equals("<category>")) 
-        {
-            cur = sc.next();
-            while(!cur.equals("</category>")) 
-            {
-                category += cur + " "; 
-                cur = sc.next(); 
-            }
-            if (sc.hasNext()) 
-            {
-                cur = sc.next();
-            }
-        } 
-        category = category.trim();
-        if(cur.equals("<volunteers>")) 
-        {
-            cur = sc.next();
-            while(!cur.equals("</volunteers>")) 
-            {
-                volList += cur + " "; 
-                cur = sc.next(); 
-            }
-            if (sc.hasNext()) 
-            {
-                cur = sc.next();
-            }
-        }
         
         List<ExtendedProperty> propList = entry.getExtendedProperty();
-		for (ExtendedProperty prop : propList) {
-			if (prop.getName().equals("category")) {
+		for (ExtendedProperty prop : propList) 
+		{
+			if (prop.getName().equals("category")) 
+			{
 				category = prop.getValue();
 			}
-			if (prop.getName().equals("recurrence")) {
+			else if (prop.getName().equals("for")) 
+            {
+                forWho = prop.getValue();
+            }
+			else if (prop.getName().equals("who")) 
+            {
+                who = prop.getValue();
+            }
+			else if (prop.getName().equals("why")) 
+            {
+                why = prop.getValue();
+            }
+			else if (prop.getName().equals("recurrence")) 
+			{
 				recur = prop.getValue();
 			}
 		}
@@ -441,6 +365,7 @@
             <input name="name" type="hidden" value="<%=name%>">
             <input name="title" type="hidden" value="<%=title%>">
             <input name="recurring" type="hidden" value="<%=recurring%>">
+            <input name="id" type="hidden" value="<%=id%>">
        
         <div class="submit">
             <input type="button" class="submitButton" value="Submit" onclick="handleErrors()"/>
@@ -448,6 +373,10 @@
     </form>
     </div>
 <%
+    }
+    else
+    {
+        System.out.println( "Error: Result feed has a size of 0." );
     }
 %>
 
