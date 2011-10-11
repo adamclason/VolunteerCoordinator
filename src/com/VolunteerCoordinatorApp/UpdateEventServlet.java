@@ -49,10 +49,17 @@ public class UpdateEventServlet extends HttpServlet
             {
                 myResultsFeed = myService.query(calendarQuery, CalendarFeed.class);
             } 
-            catch (ServiceException e) 
+            catch (Exception e) 
             {
-                System.out.println( "Caught exception trying to query myService." );
-                e.printStackTrace();
+                try
+                {
+                    myResultsFeed = myService.query(calendarQuery, CalendarFeed.class);
+                }
+                catch( Exception e1 )
+                {
+                    System.out.println( "Caught exception trying to query myService." );
+                    e1.printStackTrace();
+                }
             }
 
             if (myResultsFeed.getEntries().size() > 0) 
@@ -73,11 +80,18 @@ public class UpdateEventServlet extends HttpServlet
                     {
                         eventFeed = myService.query( eventQuery, CalendarEventFeed.class );
                     }
-                    catch ( ServiceException e2 )
+                    catch ( ServiceException e )
                     {
-                        // TODO Auto-generated catch block
-                        System.out.println( "Error attepting to get an eventFeed." );
-                        e2.printStackTrace();
+                        try
+                        {
+                            eventFeed = myService.query( eventQuery, CalendarEventFeed.class );
+                        }
+                        catch( ServiceException e1 )
+                        {
+                            // TODO Auto-generated catch block
+                            System.out.println( "Error attepting to get an eventFeed." );
+                            e1.printStackTrace();
+                        }
                     }
                     
                     List<CalendarEventEntry> results = (List<CalendarEventEntry>) eventFeed.getEntries();
@@ -118,13 +132,13 @@ public class UpdateEventServlet extends HttpServlet
                         {
                             updatingEvent.delete();
                         }
-                        catch( ServiceException e )
+                        catch( Exception e )
                         {
                             try
                             {
                                 updatingEvent.delete();
                             }
-                            catch( ServiceException e1 )
+                            catch( Exception e1 )
                             {
                                 System.err.println( "Exception trying to delete calendarEventEntry" );
                                 e1.printStackTrace();
@@ -322,14 +336,14 @@ public class UpdateEventServlet extends HttpServlet
                     {
                         myService.insert( entryUrl, newEntry );
                     }
-                    catch ( ServiceException e )
+                    catch ( Exception e )
                     {
                         //Retry
                         try
                         {
                             myService.insert( entryUrl, newEntry );
                         }
-                        catch ( ServiceException e1 )
+                        catch ( Exception e1 )
                         {
                             System.err.println( "Exception inserting new calendar." );
                             //Actual error handling one of these days.
