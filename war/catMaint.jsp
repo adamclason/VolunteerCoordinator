@@ -32,12 +32,14 @@
     String name = request.getParameter("name");
 %>
 
-<ul class="navigation" id="catnav"> 
-  <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Manage Jobs </a></li>
-  <li><a href="/newCat.jsp?name=<%=name%>"> New Category </a></li>
-  <li><a href="/catMaint.jsp?name=<%=name%>"> Category Maintennance </a></li>
+<div class="navigation" id="catnav">
+  <ul style="width: 29em; padding-left: 9em"> 
+  <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Manage <br/> Jobs </a></li>
+  <li><a href="/newCat.jsp?name=<%=name%>"> New <br/> Category </a></li>
+  <li><a href="/catMaint.jsp?name=<%=name%>"> Category <br/> Maintenance </a></li>
   <%@ include file="LinkHome.jsp" %>
 </ul>
+</div>
 
 <div class="category" id="page">
 <h2> Edit Categories: </h2>

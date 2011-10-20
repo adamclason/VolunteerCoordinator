@@ -129,9 +129,9 @@ function delToggler(num) { //Shows or hides the urlbox of the given number
 %> 
 <div class="navigation" id="catnav">
   <ul style="width: 44.5em"> 
-    <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Manage Jobs </a></li>
-    <li><a href="/newCat.jsp?name=<%=name%>"> New Category </a></li>
-    <li><a href="/catMaint.jsp?name=<%=name%>"> Category Maintennance </a></li>
+    <li><a href="/manProj.jsp?pageNumber=1&resultIndex=1&name=<%=name%>"> Manage <br/> Jobs </a></li>
+    <li><a href="/newCat.jsp?name=<%=name%>"> New <br/> Category </a></li>
+    <li><a href="/catMaint.jsp?name=<%=name%>"> Category <br/> Maintenance </a></li>
   </ul>
     <%@ include file="LinkHome.jsp" %>
  </div>
